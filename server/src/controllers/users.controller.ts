@@ -6,7 +6,10 @@ const login = async (req: Request, res: Response) => {
   const user = await chechUserLogin(req.body.username, req.body.password);
   if (user === null) res.sendStatus(401);
   else {
-    const accessToken = jsonwebtoken.sign(user._id, process.env.JWT_SECRET);
+    const accessToken = jsonwebtoken.sign(
+      user._id.toString(),
+      process.env.JWT_SECRET
+    );
     res.json({ accessToken: accessToken });
   }
 };
