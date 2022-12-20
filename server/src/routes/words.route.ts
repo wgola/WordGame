@@ -4,6 +4,6 @@ import * as wordsController from "../controllers/words.controller";
 
 const router = express.Router();
 
-router.get("/", auth, wordsController.get);
+router.post("/", auth, wordsController.post);
 
 export default router;
