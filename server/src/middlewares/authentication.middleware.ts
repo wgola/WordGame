@@ -2,9 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import jsonwebtoken, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (token === null) res.sendStatus(401);
+  const token = req.cookies["jwt-token"];
+  if (token === undefined) res.sendStatus(401);
   else
     jsonwebtoken.verify(
       token,
@@ -13,7 +12,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
         if (err) res.sendStatus(403);
         else {
           const userID = req.params.userID;
-          if (userID === null || userID === decoded.userID) next();
+          if (userID === undefined || userID === decoded.userID) next();
           else res.sendStatus(403);
         }
       }

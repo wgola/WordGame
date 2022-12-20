@@ -10,7 +10,10 @@ const login = async (req: Request, res: Response) => {
       user._id.toString(),
       process.env.JWT_SECRET
     );
-    res.json({ accessToken: accessToken });
+    res.cookie("jwt-token", accessToken, {
+      httpOnly: true,
+    });
+    res.json({ userID: user._id.toString() });
   }
 };
 

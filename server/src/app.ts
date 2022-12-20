@@ -3,12 +3,14 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import wordsRouter from "./routes/words.route";
 import usersRouter from "./routes/users.route";
+import cookieParser from "cookie-parser";
 
 const app: Express = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use(cookieParser());
 
 app.use("/user", usersRouter);
 
