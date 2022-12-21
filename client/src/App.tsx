@@ -2,33 +2,31 @@ import { Button } from "./components/Button";
 import { Form } from "./components/Form";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-
-const StyledDiv = styled("div")`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
+import { Tile } from "./components/Tile";
+import { ButtonDiv } from "./components/ButtonDiv";
 
 const App = () => {
   const navigate = useNavigate();
+
   return (
-    <Form>
-      <h1>Welcome to ScrabbleApp!</h1>
-      <StyledDiv>
-        <Button
-          type="button"
-          name="Log in"
-          onClick={() => navigate("/login")}
-        />
-        or
-        <Button
-          type="button"
-          name="Create account"
-          onClick={() => navigate("/register")}
-        />
-      </StyledDiv>
-    </Form>
+    <Tile width={500}>
+      <Form>
+        <h1>Welcome to ScrabbleApp!</h1>
+        <ButtonDiv>
+          <Button
+            type="button"
+            name="Log in"
+            onClick={() => navigate("/login")}
+          />
+          or
+          <Button
+            type="button"
+            name="Create account"
+            onClick={() => navigate("/register")}
+          />
+        </ButtonDiv>
+      </Form>
+    </Tile>
   );
 };
 export default App;

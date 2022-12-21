@@ -7,12 +7,7 @@ interface FormProps {
 }
 
 const StyledForm = styled("form")`
-  border-radius: 25px;
-  padding: 40px;
-  gap: 30px;
-  width: 500px;
-  background-color: #fffff0;
-  margin: 70px auto;
+  gap: 20px;
   display: flex;
   flex-direction: column;
 `;

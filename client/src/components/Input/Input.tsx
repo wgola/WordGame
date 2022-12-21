@@ -5,13 +5,14 @@ import { FieldValues, useFormContext } from "react-hook-form";
 interface InputProps {
   fieldName: string;
   type?: string;
+  disabled?: boolean;
 }
 
 const StyledTextField = styled(TextField)`
   height: 70px;
 `;
 
-export const Input = ({ fieldName, type = "text" }: InputProps) => {
+export const Input = ({ fieldName, type = "text", disabled }: InputProps) => {
   const {
     register,
     formState: { errors },
@@ -26,6 +27,7 @@ export const Input = ({ fieldName, type = "text" }: InputProps) => {
       label={fieldName}
       error={!!errors?.[fieldName]}
       helperText={<>{errors?.[fieldName]?.message}</>}
+      disabled={disabled}
     />
   );
 };
