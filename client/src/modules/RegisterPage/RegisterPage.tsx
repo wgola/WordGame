@@ -1,9 +1,9 @@
 import { styled } from "@mui/material/styles";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { Button } from "../../components/Button";
 import { Form } from "../../components/Form";
 import { Input } from "../../components/Input";
-import { LoginFieldsNames, LoginFieldsTypes } from "./types";
+import { Button } from "../../components/Button";
+import { RegisterFieldsNames, RegisterFieldsTypes } from "./types";
 import validationSchema from "./validationSchema";
 
 const StyledDiv = styled("div")`
@@ -12,18 +12,20 @@ const StyledDiv = styled("div")`
   justify-content: space-around;
 `;
 
-export const LoginPage = () => {
-  const formMethods = useForm<LoginFieldsTypes>({
+export const RegisterPage = () => {
+  const formMethods = useForm<RegisterFieldsTypes>({
     defaultValues: {
-      [LoginFieldsNames.USERNAME]: "",
-      [LoginFieldsNames.PASSWORD]: "",
+      [RegisterFieldsNames.USERNAME]: "",
+      [RegisterFieldsNames.EMAIL]: "",
+      [RegisterFieldsNames.PASSWORD]: "",
+      [RegisterFieldsNames.COLOR]: "",
     },
     resolver: validationSchema,
     mode: "onTouched",
     reValidateMode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<LoginFieldsTypes> = (data) => {
+  const onSubmit: SubmitHandler<RegisterFieldsTypes> = (data) => {
     formMethods.reset();
     console.log(JSON.stringify(data));
   };
@@ -31,9 +33,11 @@ export const LoginPage = () => {
   return (
     <FormProvider {...formMethods}>
       <Form onSubmit={formMethods.handleSubmit(onSubmit)}>
-        <h1>Login</h1>
+        <h1>Register</h1>
         <Input fieldName="username" />
+        <Input fieldName="email" />
         <Input fieldName="password" type="password" />
+        <Input type="color" fieldName="color" />
         <StyledDiv>
           <Button name="login" type="submit" />
           <Button name="register" type="button" />
