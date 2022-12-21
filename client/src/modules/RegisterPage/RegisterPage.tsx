@@ -5,6 +5,7 @@ import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
 import { RegisterFieldsNames, RegisterFieldsTypes } from "./types";
 import validationSchema from "./validationSchema";
+import { useNavigate } from "react-router-dom";
 
 const StyledDiv = styled("div")`
   display: flex;
@@ -13,6 +14,8 @@ const StyledDiv = styled("div")`
 `;
 
 export const RegisterPage = () => {
+  const navigate = useNavigate();
+
   const formMethods = useForm<RegisterFieldsTypes>({
     defaultValues: {
       [RegisterFieldsNames.USERNAME]: "",
@@ -39,8 +42,12 @@ export const RegisterPage = () => {
         <Input fieldName="password" type="password" />
         <Input type="color" fieldName="color" />
         <StyledDiv>
-          <Button name="login" type="submit" />
-          <Button name="register" type="button" />
+          <Button name="register" type="submit" />
+          <Button
+            name="login"
+            type="button"
+            onClick={() => navigate("/login")}
+          />
         </StyledDiv>
       </Form>
     </FormProvider>

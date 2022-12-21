@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button";
 import { Form } from "../../components/Form";
 import { Input } from "../../components/Input";
@@ -13,6 +14,8 @@ const StyledDiv = styled("div")`
 `;
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
+
   const formMethods = useForm<LoginFieldsTypes>({
     defaultValues: {
       [LoginFieldsNames.USERNAME]: "",
@@ -36,7 +39,11 @@ export const LoginPage = () => {
         <Input fieldName="password" type="password" />
         <StyledDiv>
           <Button name="login" type="submit" />
-          <Button name="register" type="button" />
+          <Button
+            name="register"
+            type="button"
+            onClick={() => navigate("/register")}
+          />
         </StyledDiv>
       </Form>
     </FormProvider>
