@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import jsonwebtoken from "jsonwebtoken";
 import { chechUserLogin, createUser } from "../services/users.service";
 
+const authorize = (req: Request, res: Response) => res.sendStatus(200);
+
 const login = async (req: Request, res: Response) => {
   const user = await chechUserLogin(req.body.username, req.body.password);
   if (user === null) res.sendStatus(401);
@@ -27,4 +29,4 @@ const register = async (req: Request, res: Response) => {
   registered ? res.sendStatus(201) : res.sendStatus(500);
 };
 
-export { login, register };
+export { authorize, login, register };
