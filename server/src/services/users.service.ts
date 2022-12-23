@@ -3,10 +3,9 @@ import bcrypt from "bcrypt";
 
 const chechUserLogin = async (username: string, password: string) => {
   const user = await users.findOne({ username: username });
-  if (user === null) return null;
-  else {
-    return (await bcrypt.compare(password, user.password)) ? user : null;
-  }
+  return user !== null && (await bcrypt.compare(password, user.password))
+    ? user
+    : null;
 };
 
 const createUser = async (
