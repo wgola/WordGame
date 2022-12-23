@@ -1,7 +1,7 @@
 import users from "../models/users.model";
 import bcrypt from "bcrypt";
 
-const chechUserLogin = async (username: string, password: string) => {
+const checkUserLogin = async (username: string, password: string) => {
   const user = await users.findOne({ username: username });
   return user !== null && (await bcrypt.compare(password, user.password))
     ? user
@@ -28,4 +28,4 @@ const createUser = async (
   }
 };
 
-export { chechUserLogin, createUser };
+export { checkUserLogin, createUser };
