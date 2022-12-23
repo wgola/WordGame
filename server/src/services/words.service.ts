@@ -1,8 +1,6 @@
 import words from "../models/words.model";
 
-const checkIfWordExists = async (word: string) => {
-  const foundWord = await words.findOne({ word: word });
-  return foundWord !== null;
-};
+const checkIfWordExists = async (word: string) =>
+  (await words.findOne({ word: word })) !== null;
 
 export { checkIfWordExists };
