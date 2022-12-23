@@ -7,7 +7,8 @@ const dbConnect = () => {
 
   mongoose
     .connect(connectionString)
-    .then(() => console.log("Connected to MongoDB"));
+    .then(() => console.log("Connected to MongoDB"))
+    .catch((err) => console.log(err));
 };
 
 export default dbConnect;
