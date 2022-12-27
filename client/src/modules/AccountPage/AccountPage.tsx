@@ -1,9 +1,11 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Avatar } from "../../components/Avatar";
 import { Tile } from "../../components/Tile";
-import { getUser } from "../../state/UserSlice";
+import { deleteUserData, getUser } from "../../state/UserSlice";
 import { styled } from "@mui/material/styles";
 import { Button } from "../../components/Button";
+import { deleteAccount } from "../../utils/deleteAccount";
+import { useNavigate } from "react-router-dom";
 
 const StyledNavDiv = styled("div")`
   display: flex;
@@ -19,6 +21,8 @@ const StyledDiv = styled("div")`
 `;
 
 export const AccountPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector(getUser);
 
   return (
@@ -30,7 +34,20 @@ export const AccountPage = () => {
           <p>{user.email}</p>
         </StyledDiv>
         <Button name="edit" type="button" />
-        <Button name="delete" type="button" />
+        or
+        <Button
+          name="delete account"
+          type="button"
+          onClick={async () => {
+            const result = await deleteAccount();
+            if (result) {
+              dispatch(deleteUserData());
+              navigate("/login");
+            } else {
+              navigate("/home/account");
+            }
+          }}
+        />
       </StyledNavDiv>
     </Tile>
   );
