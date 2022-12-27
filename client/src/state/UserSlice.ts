@@ -1,14 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
-export const userData = createSlice({
+interface userState {
+  _id?: string;
+  email?: string;
+  username?: string;
+  password?: string;
+  color?: string;
+}
+
+const initialState: userState = {};
+
+export const userSlice = createSlice({
   name: "userData",
-  initialState: {},
+  initialState,
   reducers: {
-    saveUserData: (state, action) => (state = action.payload),
+    saveUserData: (state, action: PayloadAction<userState>) =>
+      (state = action.payload),
     deleteUserData: (state) => (state = {}),
   },
 });
 
-export const { saveUserData, deleteUserData } = userData.actions;
+export const { saveUserData, deleteUserData } = userSlice.actions;
 
-export const userDataReducer = userData.reducer;
+export const userDataReducer = userSlice.reducer;
+
+export const getUser = (state: RootState) => state.userData;
