@@ -5,6 +5,7 @@ import {
   deleteUser,
   getUser,
   login,
+  logout,
   register,
   updateUser,
 } from "../controllers/users.controller";
@@ -14,6 +15,8 @@ const router = express.Router();
 router.get("/authorize", auth, authorize);
 
 router.post("/login", login);
+
+router.post("/logout", auth, logout);
 
 router.post("/register", register);
 

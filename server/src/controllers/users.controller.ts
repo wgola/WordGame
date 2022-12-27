@@ -26,6 +26,9 @@ const login = async (req: Request, res: Response) => {
   return res.json({ userData: user });
 };
 
+const logout = async (req: Request, res: Response) =>
+  res.clearCookie("jwt-token").sendStatus(200);
+
 const register = async (req: Request, res: Response) =>
   (await createUser(
     req.body.username,
@@ -59,7 +62,4 @@ const deleteUser = async (req: Request, res: Response) =>
     ? res.sendStatus(204)
     : res.sendStatus(500);
 
-const logout = async (req: Request, res: Response) =>
-  res.clearCookie("jwt-token").sendStatus(200);
-
-export { authorize, login, register, getUser, updateUser, deleteUser };
+export { authorize, login, logout, register, getUser, updateUser, deleteUser };
