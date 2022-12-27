@@ -1,11 +1,13 @@
 import { CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../../components/Button";
 import { ButtonDiv } from "../../../components/ButtonDiv";
 import { ErrorDiv } from "../../../components/ErrorDiv";
 import { Form } from "../../../components/Form";
+import { saveUserData } from "../../../state/UserSlice";
 import { login } from "../../../utils";
 import { LoginFormFields } from "./LoginFormFields";
 import { LoginFieldsNames, LoginFieldsTypes } from "./types";
@@ -15,6 +17,7 @@ export const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(<p></p>);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const formMethods = useForm<LoginFieldsTypes>({
@@ -31,7 +34,8 @@ export const LoginForm = () => {
     setError(<p></p>);
     setLoading(true);
     try {
-      await login(data);
+      const response = await login(data);
+      dispatch(saveUserData(response.data.userData));
       navigate("/");
     } catch (e) {
       setLoading(false);
