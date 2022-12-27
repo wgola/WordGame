@@ -5,6 +5,7 @@ import {
   getUser,
   login,
   register,
+  updateUser,
 } from "../controllers/users.controller";
 
 const router = express.Router();
@@ -16,5 +17,7 @@ router.post("/login", login);
 router.post("/register", register);
 
 router.get("/:userID", auth, getUser);
+
+router.put("/:userID", updateUser);
 
 export default router;

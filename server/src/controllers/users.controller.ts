@@ -4,6 +4,7 @@ import {
   checkUserLogin,
   createUser,
   findUserByID,
+  updateUserByID,
 } from "../services/users.service";
 
 const authorize = (req: Request, res: Response) => res.sendStatus(200);
@@ -24,8 +25,8 @@ const login = async (req: Request, res: Response) => {
   return res.json({ userData: user });
 };
 
-const register = async (req: Request, res: Response) => {
-  return (await createUser(
+const register = async (req: Request, res: Response) =>
+  (await createUser(
     req.body.username,
     req.body.password,
     req.body.email,
@@ -33,11 +34,23 @@ const register = async (req: Request, res: Response) => {
   ))
     ? res.sendStatus(201)
     : res.sendStatus(500);
-};
 
 const getUser = async (req: Request, res: Response) => {
   const user = await findUserByID(req.params.userID);
   return user ? res.json({ userData: user }) : res.sendStatus(404);
 };
 
-export { authorize, login, register, getUser };
+const updateUser = async (req: Request, res: Response) => {
+  const ifUserUpdated = await updateUserByID(
+    req.params.userID,
+    req.body.username,
+    req.body.password,
+    req.body.email,
+    req.body.color
+  );
+  return ifUserUpdated
+    ? res.json({ userData: await findUserByID(req.params.userID) })
+    : res.sendStatus(500);
+};
+
+export { authorize, login, register, getUser, updateUser };
