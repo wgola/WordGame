@@ -2,6 +2,7 @@ import express from "express";
 import auth from "../middlewares/authentication.middleware";
 import {
   authorize,
+  deleteUser,
   getUser,
   login,
   register,
@@ -18,6 +19,8 @@ router.post("/register", register);
 
 router.get("/:userID", auth, getUser);
 
-router.put("/:userID", updateUser);
+router.put("/:userID", auth, updateUser);
+
+router.delete("/:userID", auth, deleteUser);
 
 export default router;
