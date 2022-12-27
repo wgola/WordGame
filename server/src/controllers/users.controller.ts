@@ -10,7 +10,7 @@ const authorize = (req: Request, res: Response) => res.sendStatus(200);
 
 const login = async (req: Request, res: Response) => {
   const user = await checkUserLogin(req.body.username, req.body.password);
-  if (user === null) res.sendStatus(401);
+  if (user === null) return res.sendStatus(401);
 
   const accessToken = jsonwebtoken.sign(
     user._id.toString(),
@@ -21,11 +21,11 @@ const login = async (req: Request, res: Response) => {
     httpOnly: true,
   });
 
-  res.json({ userData: user });
+  return res.json({ userData: user });
 };
 
 const register = async (req: Request, res: Response) => {
-  (await createUser(
+  return (await createUser(
     req.body.username,
     req.body.password,
     req.body.email,
@@ -37,7 +37,7 @@ const register = async (req: Request, res: Response) => {
 
 const getUser = async (req: Request, res: Response) => {
   const user = await findUserByID(req.params.userID);
-  user ? res.json({ userData: user }) : res.sendStatus(404);
+  return user ? res.json({ userData: user }) : res.sendStatus(404);
 };
 
-export { authorize, login, register };
+export { authorize, login, register, getUser };

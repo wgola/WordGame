@@ -3,16 +3,16 @@ import jsonwebtoken, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies["jwt-token"];
-  if (token === undefined) res.sendStatus(401);
+  if (token === undefined) return res.sendStatus(401);
 
   jsonwebtoken.verify(
     token,
     process.env.JWT_SECRET,
     (err: JsonWebTokenError, decoded: JwtPayload) => {
-      if (err) res.sendStatus(403);
+      if (err) return res.sendStatus(403);
 
       const userID = req.params.userID;
-      userID === undefined || userID === decoded.userID
+      return userID === undefined || userID === decoded.toString()
         ? next()
         : res.sendStatus(403);
     }
