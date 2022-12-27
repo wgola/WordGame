@@ -32,7 +32,13 @@ export const NavBar = () => {
           type="button"
           onClick={() => navigate("/home")}
         />
-        <Button name="logout" type="button" onClick={() => navigate("/home")} />
+        <Button
+          name="logout"
+          type="button"
+          onClick={() => {
+            navigate("/home");
+          }}
+        />
       </StyledDiv>
     </Tile>
   );

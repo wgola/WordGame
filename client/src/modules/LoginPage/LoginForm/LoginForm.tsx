@@ -33,11 +33,11 @@ export const LoginForm = () => {
   const onSubmit: SubmitHandler<LoginFieldsTypes> = async (data) => {
     setError(<p></p>);
     setLoading(true);
-    try {
-      const response = await login(data);
-      dispatch(saveUserData(response.data.userData));
+    const user = await login(data);
+    if (user !== null) {
+      dispatch(saveUserData(user));
       navigate("/");
-    } catch (e) {
+    } else {
       setLoading(false);
       setError(<p>Wrong login data!</p>);
     }
