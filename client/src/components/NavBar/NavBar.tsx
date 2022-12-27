@@ -1,7 +1,9 @@
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../utils/logout";
+import { deleteUserData } from "../../state/UserSlice";
+import { logout } from "../../utils";
 import { Button } from "../Button";
 import { Tile } from "../Tile";
 
@@ -16,6 +18,8 @@ const StyledDiv = styled("div")`
 export const NavBar = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   return (
     <Tile width={1200}>
@@ -43,7 +47,9 @@ export const NavBar = () => {
           type="button"
           onClick={async () => {
             setLoading(true);
-            (await logout()) ? navigate("/login") : navigate("/home");
+            await logout();
+            dispatch(deleteUserData());
+            navigate("/login");
           }}
           disabled={loading}
         />
