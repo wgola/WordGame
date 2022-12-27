@@ -1,6 +1,5 @@
 import users from "../models/users.model";
 import bcrypt from "bcrypt";
-import { User } from "../types/User";
 
 const checkUserLogin = async (username: string, password: string) => {
   const user = await users.findOne({ username: username });
@@ -52,4 +51,19 @@ const updateUserByID = async (
   }
 };
 
-export { checkUserLogin, createUser, findUserByID, updateUserByID };
+const deleteUserByID = async (userID: string) => {
+  try {
+    await users.findByIdAndDelete(userID);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+export {
+  checkUserLogin,
+  createUser,
+  findUserByID,
+  updateUserByID,
+  deleteUserByID,
+};
