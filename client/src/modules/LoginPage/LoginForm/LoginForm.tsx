@@ -36,7 +36,7 @@ export const LoginForm = () => {
     const user = await login(data);
     if (user !== null) {
       dispatch(saveUserData(user));
-      navigate("/");
+      navigate("/home/play");
     } else {
       setLoading(false);
       setError(<p>Wrong login data!</p>);

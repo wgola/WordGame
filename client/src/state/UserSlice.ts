@@ -4,8 +4,8 @@ export const userData = createSlice({
   name: "userData",
   initialState: {},
   reducers: {
-    saveUserData: (state, action) => action.payload,
-    deleteUserData: (state) => {},
+    saveUserData: (state, action) => (state = action.payload),
+    deleteUserData: (state) => (state = {}),
   },
 });
 
