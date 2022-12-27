@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import jsonwebtoken from "jsonwebtoken";
-import { checkUserLogin, createUser } from "../services/users.service";
+import {
+  checkUserLogin,
+  createUser,
+  findUserByID,
+} from "../services/users.service";
 
 const authorize = (req: Request, res: Response) => res.sendStatus(200);
 
@@ -29,6 +33,11 @@ const register = async (req: Request, res: Response) => {
   ))
     ? res.sendStatus(201)
     : res.sendStatus(500);
+};
+
+const getUser = async (req: Request, res: Response) => {
+  const user = await findUserByID(req.params.userID);
+  user ? res.json({ userData: user }) : res.sendStatus(404);
 };
 
 export { authorize, login, register };
