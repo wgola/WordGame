@@ -20,7 +20,7 @@ export const HomePage = () => {
           setLoading(false);
         })
         .catch((err) => navigate("/login"));
-    }
+    } else setLoading(false);
   }, [user]);
 
   return loading ? (

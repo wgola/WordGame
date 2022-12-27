@@ -33,7 +33,7 @@ export const NavBar = () => {
         <Button
           name="account"
           type="button"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/home/account")}
           disabled={loading}
         />
         <Button
