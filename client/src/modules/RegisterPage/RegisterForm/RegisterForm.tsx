@@ -31,17 +31,16 @@ export const RegsiterForm = () => {
   const onSubmit: SubmitHandler<RegisterFieldsTypes> = async (data) => {
     setError(<p></p>);
     setLoading(true);
-    try {
-      await register(data);
-      setLoading(false);
+    const result = await register(data);
+    setLoading(false);
+    if (result) {
       setError(
         <p style={{ color: "green" }}>
           You have registered succesfully! Redirecting to login page...
         </p>
       );
       setTimeout(() => navigate("/login"), 3200);
-    } catch (e) {
-      setLoading(false);
+    } else {
       setError(<p>Invalid register data: login or email taken!</p>);
     }
   };
