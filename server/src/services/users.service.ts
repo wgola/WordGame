@@ -28,4 +28,6 @@ const createUser = async (
   }
 };
 
-export { checkUserLogin, createUser };
+const findUserByID = async (userID: string) => await users.findById(userID);
+
+export { checkUserLogin, createUser, findUserByID };
