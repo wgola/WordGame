@@ -59,4 +59,7 @@ const deleteUser = async (req: Request, res: Response) =>
     ? res.sendStatus(204)
     : res.sendStatus(500);
 
+const logout = async (req: Request, res: Response) =>
+  res.clearCookie("jwt-token").sendStatus(200);
+
 export { authorize, login, register, getUser, updateUser, deleteUser };
