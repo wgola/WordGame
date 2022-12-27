@@ -44,20 +44,20 @@ const getUser = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   const ifUserUpdated = await updateUserByID(
-    req.params.userID,
+    res.locals.userID,
     req.body.username,
     req.body.password,
     req.body.email,
     req.body.color
   );
   return ifUserUpdated
-    ? res.json({ userData: await findUserByID(req.params.userID) })
+    ? res.json({ userData: await findUserByID(res.locals.userID) })
     : res.sendStatus(500);
 };
 
 const deleteUser = async (req: Request, res: Response) =>
-  (await deleteUserByID(req.params.userID))
-    ? res.sendStatus(204)
+  (await deleteUserByID(res.locals.userID))
+    ? res.clearCookie("jwt-token").sendStatus(204)
     : res.sendStatus(500);
 
 export { login, logout, register, getUser, updateUser, deleteUser };
