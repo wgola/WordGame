@@ -11,6 +11,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     (err: JsonWebTokenError, decoded: JwtPayload) => {
       if (err) return res.sendStatus(403);
 
+      res.locals.userID = decoded.toString();
       const userID = req.params.userID;
       return userID === undefined || userID === decoded.toString()
         ? next()

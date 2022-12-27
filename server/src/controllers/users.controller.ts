@@ -8,8 +8,6 @@ import {
   updateUserByID,
 } from "../services/users.service";
 
-const authorize = (req: Request, res: Response) => res.sendStatus(200);
-
 const login = async (req: Request, res: Response) => {
   const user = await checkUserLogin(req.body.username, req.body.password);
   if (user === null) return res.sendStatus(401);
@@ -40,7 +38,7 @@ const register = async (req: Request, res: Response) =>
     : res.sendStatus(500);
 
 const getUser = async (req: Request, res: Response) => {
-  const user = await findUserByID(req.params.userID);
+  const user = await findUserByID(res.locals.userID);
   return user ? res.json({ userData: user }) : res.sendStatus(404);
 };
 
@@ -62,4 +60,4 @@ const deleteUser = async (req: Request, res: Response) =>
     ? res.sendStatus(204)
     : res.sendStatus(500);
 
-export { authorize, login, logout, register, getUser, updateUser, deleteUser };
+export { login, logout, register, getUser, updateUser, deleteUser };

@@ -1,7 +1,6 @@
 import express from "express";
 import auth from "../middlewares/authentication.middleware";
 import {
-  authorize,
   deleteUser,
   getUser,
   login,
@@ -12,15 +11,13 @@ import {
 
 const router = express.Router();
 
-router.get("/authorize", auth, authorize);
+router.get("/", auth, getUser);
 
 router.post("/login", login);
 
 router.post("/logout", auth, logout);
 
 router.post("/register", register);
-
-router.get("/:userID", auth, getUser);
 
 router.put("/:userID", auth, updateUser);
 
