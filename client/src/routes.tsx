@@ -25,6 +25,10 @@ const routes: RouteObject[] = [
     ],
   },
   {
+    path: "/game/:gameID",
+    element: <p>Game page</p>,
+  },
+  {
     path: "/",
     element: <App />,
   },
