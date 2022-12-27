@@ -10,6 +10,7 @@ interface ButtonProps {
 
 const StyledButton = styled(MUIButton)`
   width: 180px;
+  height: 40px;
 `;
 
 export const Button = ({ name, type, onClick, disabled }: ButtonProps) => (

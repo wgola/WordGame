@@ -17,7 +17,11 @@ export const NavBar = () => {
   return (
     <Tile width={1200}>
       <StyledDiv>
-        <Button name="play" type="button" onClick={() => navigate("/home")} />
+        <Button
+          name="play"
+          type="button"
+          onClick={() => navigate("/home/play")}
+        />
         <Button
           name="account"
           type="button"

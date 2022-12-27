@@ -1,4 +1,4 @@
-import { Input } from "../../../components/Input";
+import { FormInput } from "../../../components/FormInput";
 
 interface LoginFormFieldsProps {
   loading: boolean;
@@ -6,7 +6,7 @@ interface LoginFormFieldsProps {
 
 export const LoginFormFields = ({ loading }: LoginFormFieldsProps) => (
   <>
-    <Input fieldName="username" disabled={loading} />
-    <Input fieldName="password" type="password" disabled={loading} />
+    <FormInput fieldName="username" disabled={loading} />
+    <FormInput fieldName="password" type="password" disabled={loading} />
   </>
 );
