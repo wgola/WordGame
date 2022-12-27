@@ -3,6 +3,7 @@ import jsonwebtoken from "jsonwebtoken";
 import {
   checkUserLogin,
   createUser,
+  deleteUserByID,
   findUserByID,
   updateUserByID,
 } from "../services/users.service";
@@ -53,4 +54,9 @@ const updateUser = async (req: Request, res: Response) => {
     : res.sendStatus(500);
 };
 
-export { authorize, login, register, getUser, updateUser };
+const deleteUser = async (req: Request, res: Response) =>
+  (await deleteUserByID(req.params.userID))
+    ? res.sendStatus(204)
+    : res.sendStatus(500);
+
+export { authorize, login, register, getUser, updateUser, deleteUser };
