@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 import App from "./App";
 import { AccountPage } from "./modules/AccountPage";
+import { EditAccountPage } from "./modules/EditAccountPage";
 import { HomePage } from "./modules/HomePage";
 import { LoginPage } from "./modules/LoginPage";
 import { PlayPage } from "./modules/PlayPage";
@@ -26,6 +27,10 @@ const routes: RouteObject[] = [
       {
         path: "/home/account",
         element: <AccountPage />,
+      },
+      {
+        path: "/home/account/edit",
+        element: <EditAccountPage />,
       },
     ],
   },

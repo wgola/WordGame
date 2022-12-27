@@ -26,14 +26,18 @@ export const AccountPage = () => {
   const user = useSelector(getUser);
 
   return (
-    <Tile width={800}>
+    <Tile width={900}>
       <StyledNavDiv>
         <Avatar size={85} color={user.color} children={user.username} />
         <StyledDiv>
           <h2 style={{ margin: 0 }}>{user.username}</h2>
           <p>{user.email}</p>
         </StyledDiv>
-        <Button name="edit" type="button" />
+        <Button
+          name="edit"
+          type="button"
+          onClick={() => navigate("/home/account/edit")}
+        />
         or
         <Button
           name="delete account"
