@@ -1,9 +1,11 @@
 import express from "express";
 import auth from "../middlewares/authentication.middleware";
-import * as wordsController from "../controllers/words.controller";
+import { post, get } from "../controllers/words.controller";
 
 const router = express.Router();
 
-router.post("/", auth, wordsController.post);
+router.post("/", auth, post);
+
+router.get("/", auth, get);
 
 export default router;
