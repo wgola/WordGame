@@ -1,16 +1,31 @@
+import { RegisterFieldsNames } from "../../modules/RegisterPage/RegisterForm/registerTypes";
 import { FormInput } from "../FormInput";
 
 interface AccountFieldsProps {
   loading: boolean;
+  editForm?: boolean;
 }
 
-export const AccountFields = ({ loading }: AccountFieldsProps) => {
+export const AccountFields = ({
+  loading,
+  editForm = false,
+}: AccountFieldsProps) => {
   return (
     <>
-      <FormInput fieldName="username" disabled={loading} />
-      <FormInput fieldName="email" disabled={loading} />
-      <FormInput fieldName="password" type="password" disabled={loading} />
-      <FormInput type="color" fieldName="color" disabled={loading} />
+      <FormInput fieldName={RegisterFieldsNames.USERNAME} disabled={loading} />
+      <FormInput fieldName={RegisterFieldsNames.EMAIL} disabled={loading} />
+      {!editForm && (
+        <FormInput
+          fieldName={RegisterFieldsNames.PASSWORD}
+          type="password"
+          disabled={loading}
+        />
+      )}
+      <FormInput
+        type="color"
+        fieldName={RegisterFieldsNames.COLOR}
+        disabled={loading}
+      />
     </>
   );
 };

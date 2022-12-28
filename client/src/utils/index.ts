@@ -1,5 +1,3 @@
-export * from "./accountTypes";
-export * from "./accountValidationSchema";
 export * from "./deleteAccount";
 export * from "./getFontColor";
 export * from "./getUserData";

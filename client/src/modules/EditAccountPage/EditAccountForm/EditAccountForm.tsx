@@ -1,28 +1,49 @@
-import { useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Tile } from "../../../components/Tile";
+import { useNavigate } from "react-router-dom";
+import { AccountFields } from "../../../components/AccountFields";
+import { Button } from "../../../components/Button";
+import { ButtonDiv } from "../../../components/ButtonDiv";
+import { ErrorDiv } from "../../../components/ErrorDiv";
+import { Form } from "../../../components/Form";
 import { getUser } from "../../../state/UserSlice";
-import {
-  AccountFieldsNames,
-  AccountFieldsTypes,
-  accountValidationSchema,
-} from "../../../utils";
+import { EditFieldsNames, EditFieldsTypes } from "./editTypes";
+import editValidationSchema from "./editValidationSchema";
 
-export const EditAccountPage = () => {
+export const EditAccountForm = () => {
   const dispatch = useDispatch();
   const user = useSelector(getUser);
+  const navigate = useNavigate();
 
-  const formMethods = useForm<AccountFieldsTypes>({
+  const formMethods = useForm<EditFieldsTypes>({
     defaultValues: {
-      [AccountFieldsNames.USERNAME]: user.username,
-      [AccountFieldsNames.EMAIL]: user.email,
-      [AccountFieldsNames.PASSWORD]: user.password,
-      [AccountFieldsNames.COLOR]: user.color,
+      [EditFieldsNames.USERNAME]: user.username,
+      [EditFieldsNames.EMAIL]: user.email,
+      [EditFieldsNames.COLOR]: user.color,
     },
-    resolver: accountValidationSchema,
+    resolver: editValidationSchema,
     mode: "onTouched",
     reValidateMode: "onChange",
   });
 
-  return <Tile width={900}>Edit account</Tile>;
+  const onSubmit: SubmitHandler<EditFieldsTypes> = (data) => {
+    console.log(data);
+  };
+
+  return (
+    <FormProvider {...formMethods}>
+      <Form onSubmit={formMethods.handleSubmit(onSubmit)}>
+        <AccountFields loading={false} editForm={true} />
+        <ErrorDiv />
+        <ButtonDiv>
+          <Button name="submit changes" type="submit" />
+          <Button
+            name="back"
+            type="button"
+            onClick={() => navigate("/home/account")}
+          />
+        </ButtonDiv>
+      </Form>
+    </FormProvider>
+  );
 };
