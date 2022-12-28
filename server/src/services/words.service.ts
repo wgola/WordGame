@@ -6,4 +6,4 @@ const checkIfWordExists = async (word: string) =>
 const getWordsPage = async (page: number, limit: number) =>
   await words.paginate({}, { page: page, limit: limit });
 
-export { checkIfWordExists };
+export { checkIfWordExists, getWordsPage };
