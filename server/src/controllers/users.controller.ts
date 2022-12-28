@@ -46,7 +46,6 @@ const updateUser = async (req: Request, res: Response) => {
   const ifUserUpdated = await updateUserByID(
     res.locals.userID,
     req.body.username,
-    req.body.password,
     req.body.email,
     req.body.color
   );

@@ -33,13 +33,11 @@ const findUserByID = async (userID: string) => await users.findById(userID);
 const updateUserByID = async (
   userID: string,
   username: string,
-  password: string,
   email: string,
   color: string
 ) => {
   const updatedUser = {
     username: username,
-    password: await bcrypt.hash(password, parseInt(process.env.BCRYPT_SECRET)),
     email: email,
     color: color,
   };
