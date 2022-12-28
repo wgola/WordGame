@@ -2,10 +2,10 @@ import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteUserData } from "../../state/UserSlice";
-import { logout } from "../../utils";
-import { Button } from "../Button";
-import { Tile } from "../Tile";
+import { deleteUserData } from "../../../state/UserSlice";
+import { logout } from "../../../utils";
+import { Button } from "../../../components/Button";
+import { Tile } from "../../../components/Tile";
 
 const StyledDiv = styled("div")`
   margin: auto;

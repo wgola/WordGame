@@ -4,7 +4,7 @@ import { Tile } from "../../components/Tile";
 import { deleteUserData, getUser } from "../../state/UserSlice";
 import { styled } from "@mui/material/styles";
 import { Button } from "../../components/Button";
-import { deleteAccount } from "../../utils/deleteAccount";
+import { deleteAccount } from "../../utils";
 import { useNavigate } from "react-router-dom";
 
 const StyledNavDiv = styled("div")`

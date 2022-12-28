@@ -3,32 +3,35 @@ import { ErrorDiv } from "../../../components/ErrorDiv";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { Form } from "../../../components/Form";
 import { Button } from "../../../components/Button";
-import { RegisterFieldsNames, RegisterFieldsTypes } from "./types";
-import validationSchema from "./validationSchema";
+import {
+  AccountFieldsNames,
+  AccountFieldsTypes,
+  register,
+  accountValidationSchema,
+} from "../../../utils";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material";
-import { RegisterFormFields } from "./RegisterFormFields";
-import { register } from "../../../utils";
+import { AccountFields } from "../../../components/AccountFields/";
 
 export const RegsiterForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(<p></p>);
   const navigate = useNavigate();
 
-  const formMethods = useForm<RegisterFieldsTypes>({
+  const formMethods = useForm<AccountFieldsTypes>({
     defaultValues: {
-      [RegisterFieldsNames.USERNAME]: "",
-      [RegisterFieldsNames.EMAIL]: "",
-      [RegisterFieldsNames.PASSWORD]: "",
-      [RegisterFieldsNames.COLOR]: "",
+      [AccountFieldsNames.USERNAME]: "",
+      [AccountFieldsNames.EMAIL]: "",
+      [AccountFieldsNames.PASSWORD]: "",
+      [AccountFieldsNames.COLOR]: "",
     },
-    resolver: validationSchema,
+    resolver: accountValidationSchema,
     mode: "onTouched",
     reValidateMode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<RegisterFieldsTypes> = async (data) => {
+  const onSubmit: SubmitHandler<AccountFieldsTypes> = async (data) => {
     setError(<p></p>);
     setLoading(true);
     const result = await register(data);
@@ -48,7 +51,7 @@ export const RegsiterForm = () => {
   return (
     <FormProvider {...formMethods}>
       <Form onSubmit={formMethods.handleSubmit(onSubmit)}>
-        <RegisterFormFields loading={loading} />
+        <AccountFields loading={loading} />
         <ErrorDiv>{loading ? <CircularProgress size={25} /> : error}</ErrorDiv>
         <ButtonDiv>
           <Button name="register" type="submit" disabled={loading} />

@@ -1,10 +1,10 @@
-import { FormInput } from "../../../components/FormInput";
+import { FormInput } from "../FormInput";
 
-interface RegisterFormFieldsProps {
+interface AccountFieldsProps {
   loading: boolean;
 }
 
-export const RegisterFormFields = ({ loading }: RegisterFormFieldsProps) => {
+export const AccountFields = ({ loading }: AccountFieldsProps) => {
   return (
     <>
       <FormInput fieldName="username" disabled={loading} />

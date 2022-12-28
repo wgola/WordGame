@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { NavBar } from "../../components/NavBar";
+import { NavBar } from "./NavBar";
 import { getUser, saveUserData } from "../../state/UserSlice";
-import { getUserData } from "../../utils/getUserData";
+import { getUserData } from "../../utils";
 import { LoadingPage } from "../LoadingPage";
 
 export const HomePage = () => {
