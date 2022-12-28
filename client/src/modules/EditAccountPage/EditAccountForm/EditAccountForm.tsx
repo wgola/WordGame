@@ -8,8 +8,8 @@ import { Button } from "../../../components/Button";
 import { ButtonDiv } from "../../../components/ButtonDiv";
 import { ErrorDiv } from "../../../components/ErrorDiv";
 import { Form } from "../../../components/Form";
-import { getUser } from "../../../state/UserSlice";
-import { updateAccount } from "../../../utils";
+import { getUser, saveUserData } from "../../../state/UserSlice";
+import { getUserData, updateAccount } from "../../../utils";
 import { EditFieldsNames, EditFieldsTypes } from "./editTypes";
 import editValidationSchema from "./editValidationSchema";
 
@@ -38,7 +38,12 @@ export const EditAccountForm = () => {
     const result = await updateAccount(data);
     setLoading(false);
     if (result) {
-      navigate("/home/account");
+      getUserData()
+        .then((res) => {
+          dispatch(saveUserData(res.data.userData));
+          navigate("/home/account");
+        })
+        .catch((err) => navigate("/login"));
     } else setError(<p>Invalid account data: login or email taken!</p>);
   };
 
