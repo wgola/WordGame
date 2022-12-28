@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 import { Word } from "../types/Word";
 
 const { Schema } = mongoose;
@@ -12,6 +13,12 @@ const wordSchema = new Schema<Word>({
   description: String,
 });
 
-const words = mongoose.model<Word>("Words", wordSchema, "words");
+wordSchema.plugin(mongoosePaginate);
+
+const words = mongoose.model<Word, mongoose.PaginateModel<Word>>(
+  "Words",
+  wordSchema,
+  "words"
+);
 
 export default words;
