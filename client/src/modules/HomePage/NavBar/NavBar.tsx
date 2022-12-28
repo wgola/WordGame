@@ -49,7 +49,7 @@ export const NavBar = () => {
             setLoading(true);
             await logout();
             dispatch(deleteUserData());
-            navigate("/login");
+            navigate("/");
           }}
           disabled={loading}
         />
