@@ -6,6 +6,7 @@ import { HomePage } from "./modules/HomePage";
 import { LoginPage } from "./modules/LoginPage";
 import { PlayPage } from "./modules/PlayPage";
 import { RegisterPage } from "./modules/RegisterPage";
+import { WordsListPage } from "./modules/WordsListPage";
 
 const routes: RouteObject[] = [
   {
@@ -23,6 +24,10 @@ const routes: RouteObject[] = [
       {
         path: "/home/play",
         element: <PlayPage />,
+      },
+      {
+        path: "/home/wordslist",
+        element: <WordsListPage />,
       },
       {
         path: "/home/account",

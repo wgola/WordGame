@@ -39,7 +39,7 @@ export const NavBar = () => {
         <Button
           name="words list"
           type="button"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/home/wordslist")}
           disabled={loading}
         />
         <Button
