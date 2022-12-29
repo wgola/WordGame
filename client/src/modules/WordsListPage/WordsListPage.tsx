@@ -1,21 +1,12 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  CircularProgress,
-  TablePagination,
-} from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { TablePagination } from "@mui/material";
+import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { IDInput } from "../../components/IDInput";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import {
-  clearData,
-  fetchNewPage,
-  getIsFetching,
-  getWordsCount,
-  getWordsFromPage,
-} from "../../state/WordsSlice";
+import { clearData, getWordsCount } from "../../state/WordsSlice";
+import { Tile } from "../../components/Tile";
+import { ButtonDiv } from "../../components/ButtonDiv";
+import { WordsList } from "./WordsList/WordsList";
+import { SearchForm } from "./SearchForm";
 
 export const WordsListPage = () => {
   const [params, setParams] = useSearchParams();
@@ -26,72 +17,57 @@ export const WordsListPage = () => {
   const rowsPerPage = parseInt(params.get("limit") || "10");
 
   const count = useAppSelector(getWordsCount);
-  const isFetching = useAppSelector(getIsFetching);
-  const words = useAppSelector(getWordsFromPage(page + 1));
 
-  const isSecondRender = useRef(false);
-  useEffect(() => {
-    if (isSecondRender.current && words.length === 0 && !isFetching) {
-      dispatch(fetchNewPage(search, page + 1, rowsPerPage));
-    }
-    isSecondRender.current = true;
-  }, [page, rowsPerPage, search]);
+  const handleChangePage = useCallback(
+    (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+      newPage: number
+    ) => {
+      setParams({
+        page: (newPage + 1).toString(),
+        limit: params.get("limit") || "",
+        word: params.get("word") || "",
+      });
+    },
+    [params]
+  );
 
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
-    newPage: number
-  ) => {
-    setParams({
-      page: (newPage + 1).toString(),
-      limit: params.get("limit") || "",
-      word: params.get("word") || "",
-    });
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    dispatch(clearData());
-    setParams({
-      page: "1",
-      limit: parseInt(event.target.value, 10).toString(),
-      word: params.get("word") || "",
-    });
-  };
-
-  const handleSearchChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    dispatch(clearData());
-    setParams({
-      page: "1",
-      limit: params.get("limit") || "",
-      word: event.target.value,
-    });
-  };
+  const handleChangeRowsPerPage = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      dispatch(clearData());
+      setParams({
+        page: "1",
+        limit: parseInt(event.target.value, 10).toString(),
+        word: params.get("word") || "",
+      });
+    },
+    [params]
+  );
 
   return (
-    <>
-      <IDInput onChange={handleSearchChange} />
+    <Tile width={900}>
+      <ButtonDiv>
+        <SearchForm />
+        <TablePagination
+          component="div"
+          count={count}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          labelRowsPerPage="Number of words:"
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </ButtonDiv>
+      <WordsList search={search} page={page} rowsPerPage={rowsPerPage} />
       <TablePagination
         component="div"
         count={count}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
-        labelRowsPerPage="Number of words"
+        labelRowsPerPage="Number of words:"
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      {isFetching ? (
-        <CircularProgress />
-      ) : (
-        words.map((entry, index) => (
-          <Accordion key={index}>
-            <AccordionSummary>{entry.word}</AccordionSummary>
-            <AccordionDetails>{entry.description}</AccordionDetails>
-          </Accordion>
-        ))
-      )}
-    </>
+    </Tile>
   );
 };
