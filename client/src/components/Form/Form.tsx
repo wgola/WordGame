@@ -1,9 +1,9 @@
 import { styled } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { FormEventHandler, ReactNode } from "react";
 
 interface FormProps {
   children?: ReactNode;
-  onSubmit?: any;
+  onSubmit?: FormEventHandler<HTMLFormElement>;
 }
 
 const StyledForm = styled("form")`

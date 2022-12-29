@@ -2,8 +2,8 @@ import { styled } from "@mui/material/styles";
 import { ReactNode } from "react";
 
 interface TileProps {
-  children?: ReactNode;
   width: number;
+  children?: ReactNode;
 }
 
 const StyledDiv = styled("div", {
@@ -16,6 +16,6 @@ const StyledDiv = styled("div", {
   margin: 70px auto;
 `;
 
-export const Tile = ({ children, width }: TileProps) => (
+export const Tile = ({ width, children }: TileProps) => (
   <StyledDiv width={width}>{children}</StyledDiv>
 );

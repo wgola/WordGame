@@ -1,4 +1,4 @@
-import { RegisterFieldsNames } from "../../modules/RegisterPage/RegisterForm/registerTypes";
+import { RegisterFieldsNames } from "../../types";
 import { FormInput } from "../FormInput";
 
 interface AccountFieldsProps {

@@ -1,6 +1,6 @@
 import { Avatar as MUIAvatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { getFontColor } from "../../utils/getFontColor";
+import { getFontColor } from "../../utils";
 
 interface AvatarProps {
   color: string | undefined;

@@ -1,6 +1,6 @@
-import API from "../axios";
+import API from "./axios";
 
-export const deleteAccount = async () => {
+export const deleteAccount = async (): Promise<boolean> => {
   try {
     await API.delete("/user");
     return true;

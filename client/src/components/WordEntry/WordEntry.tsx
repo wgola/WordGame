@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { wordType } from "../../state/WordsSlice";
+import { wordType } from "../../types";
 import { styled } from "@mui/material/styles";
 
 const StyledAccordion = styled(Accordion)`

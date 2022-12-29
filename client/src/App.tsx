@@ -1,8 +1,5 @@
-import { Button } from "./components/Button";
-import { Form } from "./components/Form";
+import { Button, Form, Tile, ButtonDiv } from "./components";
 import { useNavigate } from "react-router-dom";
-import { Tile } from "./components/Tile";
-import { ButtonDiv } from "./components/ButtonDiv";
 
 const App = () => {
   const navigate = useNavigate();
@@ -28,4 +25,5 @@ const App = () => {
     </Tile>
   );
 };
+
 export default App;
