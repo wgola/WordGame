@@ -3,18 +3,20 @@ import { styled } from "@mui/material/styles";
 
 interface IDInputProps {
   onChange?: any;
+  label?: string;
+  required?: true;
 }
 
 const StyledInput = styled(TextField)`
   width: 160px;
 `;
 
-export const IDInput = ({ onChange }: IDInputProps) => {
+export const Input = ({ onChange, label, required }: IDInputProps) => {
   return (
     <StyledInput
       variant="outlined"
-      label="Enter game ID"
-      required={true}
+      label={label}
+      required={required}
       size="small"
       onChange={onChange}
     />
