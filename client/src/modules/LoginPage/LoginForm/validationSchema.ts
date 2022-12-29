@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { LoginFieldsNames } from "./types";
+import { LoginFieldsNames } from "../../../types";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 const validationSchema = Yup.object().shape({

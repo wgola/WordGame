@@ -1,4 +1,11 @@
 import { userType } from "../types";
 import API from "./axios";
 
-export const getUserData = (): Promise<userType> => API.get("/user");
+export const getUserData = async (): Promise<userType | null> => {
+  try {
+    const result = await API.get("/user");
+    return result.data.userData;
+  } catch {
+    return null;
+  }
+};

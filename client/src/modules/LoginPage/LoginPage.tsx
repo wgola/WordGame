@@ -1,25 +1,31 @@
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tile } from "../../components/Tile";
-import { getUser, saveUserData } from "../../state/UserSlice";
-import { getUserData } from "../../utils";
+import { Tile } from "../../components";
 import { LoadingPage } from "../LoadingPage";
 import { LoginForm } from "./LoginForm";
+import { getUser, saveUserData } from "../../state/UserSlice";
+import { getUserData } from "../../api";
 
 export const LoginPage = () => {
-  const user = useSelector(getUser);
-  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(true);
+  const user = useSelector(getUser);
+
+  const isSecondRender = useRef(false);
   useEffect(() => {
-    getUserData()
-      .then((res) => {
-        dispatch(saveUserData(res.data.userData));
-        navigate("/home");
-      })
-      .catch((err) => setLoading(false));
+    if (isSecondRender) {
+      getUserData().then((user) => {
+        if (user !== null) {
+          dispatch(saveUserData(user));
+          navigate("/home");
+        }
+        setLoading(false);
+      });
+    }
+    isSecondRender.current = true;
   }, [user]);
 
   return loading ? (

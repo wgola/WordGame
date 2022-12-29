@@ -1,4 +1,4 @@
-import { FormInput } from "../../../components/FormInput";
+import { FormInput } from "../../../components";
 
 interface LoginFormFieldsProps {
   loading: boolean;
