@@ -24,25 +24,25 @@ export const NavBar = () => {
     <Tile width={1200}>
       <StyledDiv>
         <Button
-          name="play"
+          children="play"
           type="button"
           onClick={() => navigate("/home/play")}
           disabled={loading}
         />
         <Button
-          name="account"
+          children="account"
           type="button"
           onClick={() => navigate("/home/account")}
           disabled={loading}
         />
         <Button
-          name="words list"
+          children="words list"
           type="button"
           onClick={() => navigate("/home/wordslist/?page=1&limit=10&word=")}
           disabled={loading}
         />
         <Button
-          name="logout"
+          children="logout"
           type="button"
           onClick={async () => {
             setLoading(true);
