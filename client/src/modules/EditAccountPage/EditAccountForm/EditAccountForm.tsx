@@ -55,9 +55,9 @@ export const EditAccountForm = () => {
         <AccountFields loading={loading} editForm={true} />
         <ErrorDiv>{loading ? <CircularProgress size={25} /> : error}</ErrorDiv>
         <ButtonDiv>
-          <Button name="submit changes" type="submit" disabled={loading} />
+          <Button children="submit changes" type="submit" disabled={loading} />
           <Button
-            name="back"
+            children="back"
             type="button"
             onClick={() => navigate("/home/account")}
             disabled={loading}
