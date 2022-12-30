@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../store";
 import { getWords } from "../api";
 import { wordType } from "../types";
@@ -8,6 +8,11 @@ interface wordsState {
   pages: { [index: number]: Array<string> };
   isFetching: boolean;
   wordsCount: number;
+}
+
+interface addNewPagePayload {
+  words: Array<wordType>;
+  page: number;
 }
 
 const initialState: wordsState = {
@@ -21,7 +26,7 @@ export const wordsSlice = createSlice({
   name: "wordsList",
   initialState,
   reducers: {
-    addNewPage: (state, action) => {
+    addNewPage: (state, action: PayloadAction<addNewPagePayload>) => {
       action.payload.words.map((word: wordType) => {
         state.words[word._id] = word;
         if (state.pages[action.payload.page] === undefined) {
@@ -30,10 +35,10 @@ export const wordsSlice = createSlice({
         state.pages[action.payload.page].push(word._id);
       });
     },
-    setIsFetching: (state, action) => {
+    setIsFetching: (state, action: PayloadAction<boolean>) => {
       state.isFetching = action.payload;
     },
-    setWordsCount: (state, action) => {
+    setWordsCount: (state, action: PayloadAction<number>) => {
       if (state.wordsCount !== action.payload)
         state.wordsCount = action.payload;
     },
