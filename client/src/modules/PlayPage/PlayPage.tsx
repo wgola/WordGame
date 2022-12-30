@@ -20,7 +20,7 @@ export const PlayPage = () => {
     <Tile width={900}>
       <StyledDiv>
         <Button
-          name="Create new game"
+          children="Create new game"
           type="button"
           onClick={() => navigate("/game/0")}
         />
@@ -34,7 +34,7 @@ export const PlayPage = () => {
             label="Enter game ID"
           />
           <Button
-            name="Join game"
+            children="Join game"
             type="button"
             onClick={() => navigate(`/game/${gameID}`)}
           />
