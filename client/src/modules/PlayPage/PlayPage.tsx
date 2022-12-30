@@ -1,9 +1,7 @@
-import { Button } from "../../components/Button";
-import { Tile } from "../../components/Tile";
-import { styled } from "@mui/material/styles";
+import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
-import { Input } from "../../components/Input";
+import { styled } from "@mui/material/styles";
+import { Button, Tile, Input } from "../../components";
 
 const StyledDiv = styled("div")`
   display: flex;
@@ -15,6 +13,7 @@ const StyledDiv = styled("div")`
 
 export const PlayPage = () => {
   const navigate = useNavigate();
+
   const [gameID, setGameID] = useState("");
 
   return (
@@ -28,7 +27,7 @@ export const PlayPage = () => {
         or
         <div>
           <Input
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setGameID(event.target.value)
             }
             required={true}
