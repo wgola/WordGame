@@ -1,11 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Avatar } from "../../components/Avatar";
-import { Tile } from "../../components/Tile";
-import { deleteUserData, getUser } from "../../state/UserSlice";
-import { styled } from "@mui/material/styles";
-import { Button } from "../../components/Button";
-import { deleteAccount } from "../../utils";
 import { useNavigate } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+import { Avatar, Tile, Button } from "../../components/";
+import { deleteUserData, getUser } from "../../state/UserSlice";
+import { deleteAccount } from "../../api";
 
 const StyledNavDiv = styled("div")`
   display: flex;
@@ -23,6 +21,7 @@ const StyledDiv = styled("div")`
 export const AccountPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const user = useSelector(getUser);
 
   return (
