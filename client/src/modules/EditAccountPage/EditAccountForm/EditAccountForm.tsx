@@ -3,15 +3,17 @@ import { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AccountFields } from "../../../components/AccountFields";
-import { Button } from "../../../components/Button";
-import { ButtonDiv } from "../../../components/ButtonDiv";
-import { ErrorDiv } from "../../../components/ErrorDiv";
-import { Form } from "../../../components/Form";
+import {
+  AccountFields,
+  Button,
+  ButtonDiv,
+  ErrorDiv,
+  Form,
+} from "../../../components";
 import { getUser, saveUserData } from "../../../state/UserSlice";
-import { getUserData, updateAccount } from "../../../utils";
-import { EditFieldsNames, EditFieldsTypes } from "./editTypes";
-import editValidationSchema from "./editValidationSchema";
+import { getUserData, updateAccount } from "../../../api";
+import { EditFieldsNames, editFieldsTypes } from "../../../types";
+import editValidationSchema from "./validationSchema";
 
 export const EditAccountForm = () => {
   const dispatch = useDispatch();
@@ -21,7 +23,7 @@ export const EditAccountForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(<p></p>);
 
-  const formMethods = useForm<EditFieldsTypes>({
+  const formMethods = useForm<editFieldsTypes>({
     defaultValues: {
       [EditFieldsNames.USERNAME]: user.username,
       [EditFieldsNames.EMAIL]: user.email,
@@ -32,18 +34,18 @@ export const EditAccountForm = () => {
     reValidateMode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<EditFieldsTypes> = async (data) => {
+  const onSubmit: SubmitHandler<editFieldsTypes> = async (data) => {
     setError(<p></p>);
     setLoading(true);
     const result = await updateAccount(data);
     setLoading(false);
     if (result) {
-      getUserData()
-        .then((res) => {
-          dispatch(saveUserData(res.data.userData));
-          navigate("/home/account");
-        })
-        .catch((err) => navigate("/login"));
+      const userData = await getUserData();
+      if (userData !== null) {
+        dispatch(saveUserData(userData));
+        navigate("/home/account");
+      }
+      navigate("/login");
     } else setError(<p>Invalid account data: login or email taken!</p>);
   };
 

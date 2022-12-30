@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { EditFieldsNames } from "./editTypes";
+import { EditFieldsNames } from "../../../types";
 
-const editValidation = Yup.object().shape({
+const validationSchema = Yup.object().shape({
   [EditFieldsNames.USERNAME]: Yup.string()
     .required(`${EditFieldsNames.USERNAME} is required!`)
     .min(5)
@@ -15,4 +15,4 @@ const editValidation = Yup.object().shape({
   ),
 });
 
-export default yupResolver(editValidation);
+export default yupResolver(validationSchema);

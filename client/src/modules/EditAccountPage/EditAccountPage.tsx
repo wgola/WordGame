@@ -1,4 +1,4 @@
-import { Tile } from "../../components/Tile";
+import { Tile } from "../../components";
 import { EditAccountForm } from "./EditAccountForm";
 
 export const EditAccountPage = () => (
