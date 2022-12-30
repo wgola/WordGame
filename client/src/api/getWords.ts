@@ -6,9 +6,13 @@ export const getWords = async (
   page: number,
   limit: number
 ): Promise<getWordsResponse> => {
-  const result = await API.get(
-    `/word/?page=${page}&limit=${limit}&word=${word}`
-  );
-  const { docs, totalDocs, totalPages, ...other } = result.data;
-  return { docs, totalDocs, totalPages };
+  try {
+    const result = await API.get(
+      `/word/?page=${page}&limit=${limit}&word=${word}`
+    );
+    const { docs, totalDocs, totalPages, ...other } = result.data;
+    return { docs, totalDocs, totalPages };
+  } catch (e) {
+    return { docs: [], totalDocs: 0, totalPages: 0 };
+  }
 };
