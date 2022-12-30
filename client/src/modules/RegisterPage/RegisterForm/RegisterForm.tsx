@@ -54,9 +54,9 @@ export const RegsiterForm = () => {
         <AccountFields loading={loading} />
         <ErrorDiv>{loading ? <CircularProgress size={25} /> : error}</ErrorDiv>
         <ButtonDiv>
-          <Button name="register" type="submit" disabled={loading} />
+          <Button children="register" type="submit" disabled={loading} />
           <Button
-            name="login"
+            children="login"
             type="button"
             onClick={() => navigate("/login")}
             disabled={loading}
