@@ -11,13 +11,13 @@ const App = () => {
         <ButtonDiv>
           <Button
             type="button"
-            name="Log in"
+            children="Log in"
             onClick={() => navigate("/login")}
           />
           or
           <Button
             type="button"
-            name="Create account"
+            children="Create account"
             onClick={() => navigate("/register")}
           />
         </ButtonDiv>
