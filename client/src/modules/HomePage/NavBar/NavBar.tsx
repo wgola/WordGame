@@ -1,11 +1,10 @@
-import { styled } from "@mui/material/styles";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { styled } from "@mui/material/styles";
+import { Button, Tile } from "../../../components";
 import { deleteUserData } from "../../../state/UserSlice";
-import { logout } from "../../../utils";
-import { Button } from "../../../components/Button";
-import { Tile } from "../../../components/Tile";
+import { logout } from "../../../api";
 
 const StyledDiv = styled("div")`
   margin: auto;
@@ -16,10 +15,10 @@ const StyledDiv = styled("div")`
 `;
 
 export const NavBar = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
 
   return (
     <Tile width={1200}>
