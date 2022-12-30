@@ -1,12 +1,12 @@
-import { CircularProgress } from "@mui/material";
 import { useEffect, useMemo, useRef } from "react";
-import { WordEntry } from "../../../components/WordEntry";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { CircularProgress } from "@mui/material";
+import { WordEntry } from "../../../components";
 import {
   fetchNewPage,
   getIsFetching,
   getWordsFromPage,
 } from "../../../state/WordsSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { styled } from "@mui/material/styles";
 
 interface WordsListProps {

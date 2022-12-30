@@ -1,22 +1,21 @@
-import { TablePagination } from "@mui/material";
-import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearData, getWordsCount } from "../../state/WordsSlice";
-import { Tile } from "../../components/Tile";
-import { ButtonDiv } from "../../components/ButtonDiv";
+import { useCallback } from "react";
+import { TablePagination } from "@mui/material";
+import { Tile, ButtonDiv } from "../../components";
 import { WordsList } from "./WordsList/WordsList";
 import { SearchForm } from "./SearchForm";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { clearData, getWordsCount } from "../../state/WordsSlice";
 
 export const WordsListPage = () => {
   const [params, setParams] = useSearchParams();
   const dispatch = useAppDispatch();
 
+  const count = useAppSelector(getWordsCount);
+
   const search = params.get("word") || "";
   const page = parseInt(params.get("page") || "1") - 1;
   const rowsPerPage = parseInt(params.get("limit") || "10");
-
-  const count = useAppSelector(getWordsCount);
 
   const handleChangePage = useCallback(
     (

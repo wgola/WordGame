@@ -1,9 +1,8 @@
-import { useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { Button } from "../../../components/Button";
-import { Input } from "../../../components/Input";
+import { useDispatch } from "react-redux";
+import { useCallback } from "react";
+import { Button, Input } from "../../../components";
 import { clearData } from "../../../state/WordsSlice";
 
 interface SearchType {
