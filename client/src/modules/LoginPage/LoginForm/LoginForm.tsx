@@ -46,9 +46,9 @@ export const LoginForm = () => {
         <LoginFormFields loading={loading} />
         <ErrorDiv>{loading ? <CircularProgress size={25} /> : error}</ErrorDiv>
         <ButtonDiv>
-          <Button name="login" type="submit" disabled={loading} />
+          <Button children="login" type="submit" disabled={loading} />
           <Button
-            name="register"
+            children="register"
             type="button"
             onClick={() => navigate("/register")}
             disabled={loading}
