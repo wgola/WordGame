@@ -1,12 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../store";
-import { getWords } from "../utils/getWords";
-
-export interface wordType {
-  _id: string;
-  word: string;
-  description: string;
-}
+import { getWords } from "../api";
+import { wordType } from "../types";
 
 interface wordsState {
   words: { [index: string]: wordType };
