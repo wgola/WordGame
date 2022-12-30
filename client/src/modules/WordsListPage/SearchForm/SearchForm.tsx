@@ -34,7 +34,7 @@ export const SearchForm = () => {
     <form onSubmit={handleSubmit(handleSearch)}>
       <div>
         <Input label={"Enter word"} inputRef={inputRef} {...inputProps} />
-        <Button type="submit" name="search" />
+        <Button type="submit" children="search" />
       </div>
     </form>
   );
