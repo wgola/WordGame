@@ -44,8 +44,9 @@ export const EditAccountForm = () => {
       if (userData !== null) {
         dispatch(saveUserData(userData));
         navigate("/home/account");
+      } else {
+        navigate("/login");
       }
-      navigate("/login");
     } else setError(<p>Invalid account data: login or email taken!</p>);
   };
 
