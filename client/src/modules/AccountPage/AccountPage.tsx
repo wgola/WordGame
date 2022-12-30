@@ -33,13 +33,13 @@ export const AccountPage = () => {
           <p>{user.email}</p>
         </StyledDiv>
         <Button
-          name="edit"
+          children="edit"
           type="button"
           onClick={() => navigate("/home/account/edit")}
         />
         or
         <Button
-          name="delete account"
+          children="delete account"
           type="button"
           onClick={async () => {
             const result = await deleteAccount();
