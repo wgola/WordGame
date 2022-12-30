@@ -1,34 +1,37 @@
-import { ButtonDiv } from "../../../components/ButtonDiv";
-import { ErrorDiv } from "../../../components/ErrorDiv";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { Form } from "../../../components/Form";
-import { Button } from "../../../components/Button";
-import { register } from "../../../utils";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material";
-import { AccountFields } from "../../../components/AccountFields/";
-import accountValidationSchema from "./registerValidationSchema";
-import { RegisterFieldsNames, RegisterFieldsTypes } from "./registerTypes";
+import {
+  ButtonDiv,
+  ErrorDiv,
+  Form,
+  Button,
+  AccountFields,
+} from "../../../components";
+import { RegisterFieldsNames, registerFieldsTypes } from "../../../types";
+import validationSchema from "./validationSchema";
+import { register } from "../../../api";
 
 export const RegsiterForm = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(<p></p>);
   const navigate = useNavigate();
 
-  const formMethods = useForm<RegisterFieldsTypes>({
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(<p></p>);
+
+  const formMethods = useForm<registerFieldsTypes>({
     defaultValues: {
       [RegisterFieldsNames.USERNAME]: "",
       [RegisterFieldsNames.EMAIL]: "",
       [RegisterFieldsNames.PASSWORD]: "",
       [RegisterFieldsNames.COLOR]: "",
     },
-    resolver: accountValidationSchema,
+    resolver: validationSchema,
     mode: "onTouched",
     reValidateMode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<RegisterFieldsTypes> = async (data) => {
+  const onSubmit: SubmitHandler<registerFieldsTypes> = async (data) => {
     setError(<p></p>);
     setLoading(true);
     const result = await register(data);
@@ -39,7 +42,7 @@ export const RegsiterForm = () => {
           You have registered succesfully! Redirecting to login page...
         </p>
       );
-      setTimeout(() => navigate("/login"), 3200);
+      setTimeout(() => navigate("/login"), 2500);
     } else {
       setError(<p>Invalid register data: login or email taken!</p>);
     }

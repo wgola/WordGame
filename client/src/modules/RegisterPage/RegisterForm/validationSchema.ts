@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { RegisterFieldsNames } from "./registerTypes";
+import { RegisterFieldsNames } from "../../../types";
 
-const registerValidation = Yup.object().shape({
+const validationSchema = Yup.object().shape({
   [RegisterFieldsNames.USERNAME]: Yup.string()
     .required(`${RegisterFieldsNames.USERNAME} is required!`)
     .min(5)
@@ -19,4 +19,4 @@ const registerValidation = Yup.object().shape({
   ),
 });
 
-export default yupResolver(registerValidation);
+export default yupResolver(validationSchema);
