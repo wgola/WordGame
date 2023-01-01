@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Button, Tile, Input } from "../../components";
+import { JoinGameForm } from "./JoinGameForm";
 
 const StyledDiv = styled("div")`
   display: flex;
@@ -25,20 +26,7 @@ export const PlayPage = () => {
           onClick={() => navigate("/game/0")}
         />
         or
-        <div>
-          <Input
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setGameID(event.target.value)
-            }
-            required={true}
-            label="Enter game ID"
-          />
-          <Button
-            children="Join game"
-            type="button"
-            onClick={() => navigate(`/game/${gameID}`)}
-          />
-        </div>
+        <JoinGameForm />
       </StyledDiv>
     </Tile>
   );
