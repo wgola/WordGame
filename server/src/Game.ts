@@ -11,7 +11,12 @@ class Game {
   }
 
   setOpponent = (opponent: Player) => {
+    if (this.opponent !== undefined) {
+      return false;
+    }
+
     this.opponent = opponent;
+    return true;
   };
 
   toJson = () => {

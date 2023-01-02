@@ -1,4 +1,5 @@
 export interface Player {
-  login: string;
+  userID: string;
+  username: string;
   color: string;
 }

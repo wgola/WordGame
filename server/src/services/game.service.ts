@@ -11,4 +11,13 @@ const createGame = (host: Player) => {
   return gameID;
 };
 
-export { createGame };
+const getGame = (gameID: string) => {
+  return games[gameID] ? games[gameID].toJson() : null;
+};
+
+const deleteGame = (gameID: string) => delete games[gameID];
+
+const joinGame = (gameID: string, opponent: Player) =>
+  games[gameID] ? games[gameID].setOpponent(opponent) : false;
+
+export { createGame, getGame, deleteGame, joinGame };
