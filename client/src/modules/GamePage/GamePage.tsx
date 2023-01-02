@@ -6,14 +6,13 @@ import { Tile } from "../../components";
 import { GameScoreTile } from "../../components/GameScoreTile";
 import { getGameData, saveGame } from "../../state/GameSlice";
 import { getUser, saveUserData } from "../../state/UserSlice";
-import mqtt from "precompiled-mqtt";
 import { useAppDispatch, useAppSelector } from "../../hooks";
+import mqttConnect from "../../mqtt";
 
 export const GamePage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const client = mqtt.connect("ws://localhost:9000/mqtt");
   const { gameID } = useParams();
   const user = useAppSelector(getUser);
   const game = useAppSelector(getGameData);
@@ -29,6 +28,7 @@ export const GamePage = () => {
             } else navigate("/login");
             if (res.data.gameData !== null) {
               dispatch(saveGame(res.data.gameData));
+              mqttConnect(gameID || "");
             } else navigate("/home/play");
           })
           .catch((err) => navigate("/login"));
@@ -45,7 +45,7 @@ export const GamePage = () => {
       <Grid item xs={4}>
         <Grid container direction="column" justifyContent="flex-start">
           <Grid item xs={1}>
-            <GameScoreTile client={client} />
+            <GameScoreTile />
           </Grid>
           <Grid item xs={1}>
             <Tile>Chat tile</Tile>

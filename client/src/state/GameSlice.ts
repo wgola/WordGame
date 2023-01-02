@@ -23,13 +23,16 @@ export const gameSlice = createSlice({
       state.host = action.payload.host;
       state.opponent = action.payload.opponent || initialState.opponent;
     },
+    addOpponent: (state, action) => {
+      state.opponent = action.payload;
+    },
     clearGame: (state) => {
       state = initialState;
     },
   },
 });
 
-export const { saveGame, clearGame } = gameSlice.actions;
+export const { saveGame, addOpponent, clearGame } = gameSlice.actions;
 
 export const gameDataReducer = gameSlice.reducer;
 

@@ -5,10 +5,6 @@ import { Avatar } from "../Avatar";
 import { Tile } from "../Tile";
 import { styled } from "@mui/material/styles";
 
-interface GameScoreTileProps {
-  client: MqttClient;
-}
-
 const UserDiv = styled("div")`
   border-radius: 15px;
   border: 1px solid grey;
@@ -19,7 +15,7 @@ const UserDiv = styled("div")`
   align-items: center;
 `;
 
-export const GameScoreTile = ({ client }: GameScoreTileProps) => {
+export const GameScoreTile = () => {
   const { host, opponent } = useSelector(getPlayers);
 
   return (
