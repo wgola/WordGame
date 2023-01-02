@@ -7,3 +7,4 @@ export * from "./getUserData";
 export * from "./getWords";
 export * from "./createGame";
 export * from "./joinGame";
+export * from "./getGame";
