@@ -18,3 +18,5 @@ class Game {
     return { gameID: this.gameID, host: this.host, opponent: this.opponent };
   };
 }
+
+export default Game;
