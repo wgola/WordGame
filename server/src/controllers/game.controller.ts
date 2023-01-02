@@ -17,8 +17,12 @@ const createGame = async (req: Request, res: Response) => {
   res.send(gameID);
 };
 
-const getGame = (req: Request, res: Response) =>
-  res.json(get(req.params.gameID));
+const getGame = async (req: Request, res: Response) => {
+  const user = await findUserByID(res.locals.userID);
+  return user
+    ? res.json({ userData: user, gameData: get(req.params.gameID) })
+    : res.sendStatus(404);
+};
 
 const deleteGame = (req: Request, res: Response) => {
   const game = get(req.params.gameID);
