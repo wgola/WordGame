@@ -21,12 +21,21 @@ export const gameSlice = createSlice({
     saveGame: (state, action) => {
       state.gameID = action.payload.gameID;
       state.host = action.payload.host;
+      state.opponent = action.payload.opponent || initialState.opponent;
+    },
+    clearGame: (state) => {
+      state = initialState;
     },
   },
 });
 
-export const { saveGame } = gameSlice.actions;
+export const { saveGame, clearGame } = gameSlice.actions;
 
 export const gameDataReducer = gameSlice.reducer;
 
 export const getGameData = (state: RootState) => state.gameData;
+
+export const getPlayers = (state: RootState) => ({
+  host: state.gameData.host,
+  opponent: state.gameData.opponent,
+});

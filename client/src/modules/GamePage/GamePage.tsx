@@ -1,19 +1,22 @@
 import { Grid } from "@mui/material";
 import { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getGame } from "../../api";
 import { Tile } from "../../components";
+import { GameScoreTile } from "../../components/GameScoreTile";
 import { getGameData, saveGame } from "../../state/GameSlice";
 import { getUser, saveUserData } from "../../state/UserSlice";
+import mqtt from "precompiled-mqtt";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 
 export const GamePage = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
+  const client = mqtt.connect("ws://localhost:9000/mqtt");
   const { gameID } = useParams();
-  const user = useSelector(getUser);
-  const game = useSelector(getGameData);
+  const user = useAppSelector(getUser);
+  const game = useAppSelector(getGameData);
 
   const isSecondRender = useRef(false);
   useEffect(() => {
@@ -42,7 +45,7 @@ export const GamePage = () => {
       <Grid item xs={4}>
         <Grid container direction="column" justifyContent="flex-start">
           <Grid item xs={1}>
-            <Tile>Game score tile</Tile>
+            <GameScoreTile client={client} />
           </Grid>
           <Grid item xs={1}>
             <Tile>Chat tile</Tile>

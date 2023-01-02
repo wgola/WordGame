@@ -4,6 +4,8 @@ import { styled } from "@mui/material/styles";
 import { Button, Tile } from "../../components";
 import { JoinGameForm } from "./JoinGameForm";
 import { createGame } from "../../api";
+import { useAppDispatch } from "../../hooks";
+import { clearGame } from "../../state/GameSlice";
 
 const StyledDiv = styled("div")`
   display: flex;
@@ -15,10 +17,12 @@ const StyledDiv = styled("div")`
 
 export const PlayPage = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [message, setMessage] = useState("");
 
   const onCreateGame = async () => {
+    dispatch(clearGame);
     setMessage("Loading...");
     const result = await createGame();
     navigate(`/game/${result.data}`);
