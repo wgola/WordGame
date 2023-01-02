@@ -10,8 +10,8 @@ interface gameState {
 
 const initialState: gameState = {
   gameID: "",
-  host: { userID: "", username: "", color: "" },
-  opponent: { userID: "", username: "", color: "" },
+  host: { userID: "", username: "", color: "", score: 0 },
+  opponent: { userID: "", username: "", color: "", score: 0 },
 };
 
 export const gameSlice = createSlice({

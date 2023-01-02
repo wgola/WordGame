@@ -27,7 +27,7 @@ export const GameScoreTile = ({ client }: GameScoreTileProps) => {
       <UserDiv>
         <Avatar size={30} color={host.color} children={host.username} />
         <span>{host.username}</span>
-        <span>Score: 0</span>
+        <span>Score: {host.score}</span>
       </UserDiv>
       <UserDiv>
         {opponent.userID !== "" ? (
@@ -38,7 +38,7 @@ export const GameScoreTile = ({ client }: GameScoreTileProps) => {
               children={opponent.username}
             />
             <span>{opponent.username}</span>
-            <span>Score: 0</span>
+            <span>Score: {opponent.score}</span>
           </>
         ) : (
           <span>Waiting for opponent...</span>

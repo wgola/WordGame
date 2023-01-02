@@ -13,6 +13,7 @@ const createGame = async (req: Request, res: Response) => {
     userID: res.locals.userID,
     username: user.username,
     color: user.color,
+    score: 0,
   });
   res.send(gameID);
 };
@@ -39,6 +40,7 @@ const joinGame = async (req: Request, res: Response) => {
       userID: res.locals.userID,
       username: user.username,
       color: user.color,
+      score: 0,
     })
   );
 };
