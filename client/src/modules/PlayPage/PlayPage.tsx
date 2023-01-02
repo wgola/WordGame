@@ -1,8 +1,9 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import { Button, Tile, Input } from "../../components";
+import { Button, Tile } from "../../components";
 import { JoinGameForm } from "./JoinGameForm";
+import { createGame } from "../../api";
 
 const StyledDiv = styled("div")`
   display: flex;
@@ -15,7 +16,13 @@ const StyledDiv = styled("div")`
 export const PlayPage = () => {
   const navigate = useNavigate();
 
-  const [gameID, setGameID] = useState("");
+  const [message, setMessage] = useState("");
+
+  const onCreateGame = async () => {
+    setMessage("Loading...");
+    const result = await createGame();
+    navigate(`/game/${result.data}`);
+  };
 
   return (
     <Tile width={900}>
@@ -23,11 +30,12 @@ export const PlayPage = () => {
         <Button
           children="Create new game"
           type="button"
-          onClick={() => navigate("/game/0")}
+          onClick={onCreateGame}
         />
         or
-        <JoinGameForm />
+        <JoinGameForm setMessage={setMessage} />
       </StyledDiv>
+      <p>{message}</p>
     </Tile>
   );
 };
