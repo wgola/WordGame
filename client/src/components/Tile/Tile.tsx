@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import { ReactNode } from "react";
 
 interface TileProps {
-  width: number;
+  width?: number;
   children?: ReactNode;
 }
 
