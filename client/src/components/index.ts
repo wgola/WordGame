@@ -8,3 +8,5 @@ export * from "./FormInput";
 export * from "./Input";
 export * from "./Tile";
 export * from "./WordEntry";
+export * from "./GameScoreTile";
+export * from "./GameChat";

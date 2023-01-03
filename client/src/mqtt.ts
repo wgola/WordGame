@@ -1,28 +1,34 @@
-import mqtt from "precompiled-mqtt";
+import mqtt, { OnMessageCallback } from "precompiled-mqtt";
 import { addOpponent } from "./state/GameSlice";
 import { store } from "./store";
 
-const mqttConnect = (gameID: string) => {
+const mqttConnect = (connectedTopic: string) => {
   const client = mqtt.connect("ws://localhost:9000/mqtt");
 
-  client.on("connect", () => {
-    if (store.getState().gameData.opponent.userID !== "")
-      client.publish(
-        `game/${gameID}/connected`,
-        JSON.stringify(store.getState().gameData.opponent)
-      );
-  });
-
-  client.subscribe(`game/${gameID}/connected`);
+  client.subscribe(connectedTopic);
 
   client.on("message", (topic: string, payload: Buffer) => {
-    const data = JSON.parse(payload.toString());
-    switch (topic) {
-      case `game/${gameID}/connected`:
-        if (store.getState().gameData.opponent.userID === "")
-          store.dispatch(addOpponent(data));
+    const data = payload.toString();
+    if (topic === connectedTopic) {
+      const message = JSON.parse(data);
+      if (store.getState().gameData.opponent.userID === "")
+        store.dispatch(addOpponent(message));
     }
   });
+
+  const publish = (topic: string, message: string) => {
+    client.publish(topic, message);
+  };
+
+  const subscribe = (topic: string) => {
+    client.subscribe(topic);
+  };
+
+  const onMessage = (callback: OnMessageCallback) => {
+    client.on("message", callback);
+  };
+
+  return { publish, subscribe, onMessage };
 };
 
 export default mqttConnect;

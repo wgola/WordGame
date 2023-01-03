@@ -15,7 +15,7 @@ export const HomePage = () => {
 
   const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender) {
+    if (isSecondRender.current) {
       if (user._id === undefined) {
         getUserData().then((user) => {
           if (user !== null) {

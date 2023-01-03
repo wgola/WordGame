@@ -16,7 +16,7 @@ export const LoginPage = () => {
 
   const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender) {
+    if (isSecondRender.current) {
       getUserData().then((user) => {
         if (user !== null) {
           dispatch(saveUserData(user));
