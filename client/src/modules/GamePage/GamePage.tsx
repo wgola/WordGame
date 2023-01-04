@@ -18,31 +18,36 @@ export const GamePage = () => {
   const user = useAppSelector(getUser);
   const game = useAppSelector(getGameData);
 
-  const [methods, setMethods] = useState<{
+  const methods: {
     publish: (topic: string, message: string) => void;
     subscribe: (topic: string) => void;
     onMessage: (callback: OnMessageCallback) => void;
-  }>(mqttConnect(`game/${gameID}/connected`));
+  } = mqttConnect(`game/${gameID}/connected`);
+
+  const onRender = async () => {
+    if (user._id === undefined || game.gameID === "") {
+      try {
+        const {
+          data: { userData, gameData },
+        } = await getGame(gameID);
+        dispatch(saveUserData(userData));
+        if (gameData !== null) {
+          dispatch(saveGame(gameData));
+          if (gameData.opponent)
+            methods.publish(
+              `game/${gameID}/connected`,
+              JSON.stringify(gameData.opponent)
+            );
+        } else navigate("/home/play");
+      } catch (e) {
+        navigate("/login");
+      }
+    }
+  };
 
   const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) {
-      if (user._id === undefined || game.gameID === "") {
-        getGame(gameID)
-          .then((res) => {
-            dispatch(saveUserData(res.data.userData));
-            if (res.data.gameData !== null) {
-              dispatch(saveGame(res.data.gameData));
-              if (res.data.gameData.opponent)
-                methods.publish(
-                  `game/${gameID}/connected`,
-                  JSON.stringify(res.data.gameData.opponent)
-                );
-            } else navigate("/home/play");
-          })
-          .catch((err) => navigate("/login"));
-      }
-    }
+    if (isSecondRender.current) onRender();
     isSecondRender.current = true;
   }, [user]);
 

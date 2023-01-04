@@ -15,7 +15,6 @@ const StyledDiv = styled("div", {
   padding: 10px;
   margin: 5px;
   background-color: ${({ ownMessage }) => (ownMessage ? "grey" : "cyan")};
-  overflow-x: scroll;
 `;
 
 export const MessageDiv = ({ ownMessage, children }: MessageDivProps) => (
