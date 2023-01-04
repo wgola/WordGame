@@ -34,9 +34,8 @@ export const WordsList = ({ search, page, rowsPerPage }: WordsListProps) => {
 
   const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current && words.length === 0) {
+    if (isSecondRender.current && words.length === 0)
       dispatch(fetchNewPage(search, page + 1, rowsPerPage));
-    }
     isSecondRender.current = true;
   }, [page, rowsPerPage, search]);
 
