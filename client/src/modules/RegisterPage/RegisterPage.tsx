@@ -14,17 +14,22 @@ export const RegisterPage = () => {
   const [loading, setLoading] = useState(true);
   const user = useSelector(getUser);
 
+  const onRender = async () => {
+    try {
+      const user = await getUserData();
+      if (user !== null) {
+        dispatch(saveUserData(user));
+        navigate("/home/play");
+      }
+      setLoading(false);
+    } catch (e) {
+      navigate("/");
+    }
+  };
+
   const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) {
-      getUserData().then((user) => {
-        if (user !== null) {
-          dispatch(saveUserData(user));
-          navigate("/home");
-        }
-        setLoading(false);
-      });
-    }
+    if (isSecondRender.current) onRender();
     isSecondRender.current = true;
   }, [user]);
 
