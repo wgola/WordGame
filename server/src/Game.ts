@@ -5,13 +5,25 @@ import { Word } from "./types/Word";
 import { checkLetters } from "./utils/checkLetters";
 import { generateLetters } from "./utils/generateLetters";
 
+interface wordAnswer {
+  id: number;
+  word: string;
+  points: number;
+}
+
+interface guessedWord {
+  id: number;
+  word: string;
+  length: number;
+}
+
 class Game {
   gameID: string;
   host: Player;
   opponent: Player;
   letters: Array<string>;
-  words: Array<string>;
-  guessedWords: Array<string>;
+  wordsAnswers: Array<wordAnswer>;
+  guessedWords: Array<guessedWord>;
   generatingWords: boolean = true;
   mqttClient: MqttClient;
 
@@ -45,12 +57,18 @@ class Game {
     } while (filteredWords.length < 10);
 
     this.letters = letters;
-    this.words = [];
+    this.wordsAnswers = [];
+    this.guessedWords = [];
 
     for (let i = 0; i < 10; i++) {
-      this.words.push(
-        filteredWords[Math.floor(Math.random() * filteredWords.length)].word
-      );
+      const chosenWord =
+        filteredWords[Math.floor(Math.random() * filteredWords.length)].word;
+      this.wordsAnswers.push({
+        id: i,
+        word: chosenWord,
+        points: chosenWord.length,
+      });
+      this.guessedWords.push({ id: i, word: "", length: chosenWord.length });
     }
 
     this.generatingWords = false;
@@ -58,7 +76,7 @@ class Game {
       `game/${this.gameID}/generatedGame`,
       JSON.stringify({
         letters: this.letters,
-        guessedWords: [],
+        guessedWords: this.guessedWords,
         generatingWords: this.generatingWords,
       })
     );

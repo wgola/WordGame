@@ -34,9 +34,9 @@ export const GamePage = () => {
 
   const OnMessageCallback = (topic: string, payload: Buffer) => {
     const data = JSON.parse(payload.toString());
-    if (topic === `game/${gameID}/connected`) {
+    if (topic === connectedTopic) {
       if (game.opponent.userID === "") dispatch(addOpponent(data));
-    } else if (topic === `game/${gameID}/generatedGame`) {
+    } else if (topic === gameReadyTopic) {
       dispatch(saveGeneratedGame(data));
     }
   };

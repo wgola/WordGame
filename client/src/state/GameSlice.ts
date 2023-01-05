@@ -2,12 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Player } from "../types";
 
+interface guessedWord {
+  id: number;
+  word: string;
+  length: number;
+}
+
 interface gameState {
   gameID: string;
   host: Player;
   opponent: Player;
   letters: Array<string>;
-  guessedWords: Array<string>;
+  guessedWords: Array<guessedWord>;
   generatingWords: boolean;
 }
 
