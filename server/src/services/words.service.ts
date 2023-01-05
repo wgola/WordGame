@@ -13,4 +13,6 @@ const getWordsPage = async (word: string, page: number, limit: number) =>
     }
   );
 
-export { checkIfWordExists, getWordsPage };
+const getAllWords = async () => await words.find();
+
+export { checkIfWordExists, getWordsPage, getAllWords };
