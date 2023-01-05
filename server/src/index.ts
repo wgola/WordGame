@@ -7,7 +7,7 @@ dotenv.config();
 
 dbConnect();
 
-const client = mqttConnect();
+const mqttClient = mqttConnect();
 
 const port = process.env.PORT;
 
@@ -15,4 +15,4 @@ app.listen(port, () => {
   console.log(`Server is running at https://localhost:${port}`);
 });
 
-export { client };
+export { mqttClient };

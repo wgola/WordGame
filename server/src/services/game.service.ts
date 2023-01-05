@@ -1,12 +1,13 @@
 import { Player } from "../types/Player";
 import * as uuid from "short-uuid";
 import Game from "../Game";
+import { mqttClient } from "../index";
 
 const games: { [index: string]: Game } = {};
 
 const createGame = (host: Player) => {
   const gameID = uuid.generate();
-  const newGame = new Game(gameID, host);
+  const newGame = new Game(gameID, host, mqttClient);
   games[gameID] = newGame;
   return gameID;
 };
