@@ -1,10 +1,15 @@
 import { Grid } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getGame } from "../../api";
 import { GameChat, Tile } from "../../components";
 import { GameScoreTile } from "../../components/GameScoreTile";
-import { getGameData, saveGame } from "../../state/GameSlice";
+import {
+  addOpponent,
+  getGameData,
+  saveGame,
+  saveGeneratedGame,
+} from "../../state/GameSlice";
 import { getUser, saveUserData } from "../../state/UserSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import mqttConnect from "../../mqtt";
@@ -20,9 +25,21 @@ export const GamePage = () => {
 
   const methods: {
     publish: (topic: string, message: string) => void;
-    subscribe: (topic: string) => void;
+    subscribe: (topic: string | Array<string>) => void;
     onMessage: (callback: OnMessageCallback) => void;
-  } = mqttConnect(`game/${gameID}/connected`);
+  } = mqttConnect();
+
+  const connectedTopic = `game/${gameID}/connected`;
+  const gameReadyTopic = `game/${gameID}/generatedGame`;
+
+  const OnMessageCallback = (topic: string, payload: Buffer) => {
+    const data = JSON.parse(payload.toString());
+    if (topic === `game/${gameID}/connected`) {
+      if (game.opponent.userID === "") dispatch(addOpponent(data));
+    } else if (topic === `game/${gameID}/generatedGame`) {
+      dispatch(saveGeneratedGame(data));
+    }
+  };
 
   const onRender = async () => {
     if (user._id === undefined || game.gameID === "") {
@@ -31,6 +48,8 @@ export const GamePage = () => {
           data: { userData, gameData },
         } = await getGame(gameID);
         dispatch(saveUserData(userData));
+        methods.subscribe([connectedTopic, gameReadyTopic]);
+        methods.onMessage(OnMessageCallback);
         if (gameData !== null) {
           dispatch(saveGame(gameData));
           if (gameData.opponent)

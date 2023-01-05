@@ -54,7 +54,14 @@ class Game {
     }
 
     this.generatingWords = false;
-    this.mqttClient.publish(`game/${this.gameID}/generatedWords`, "true");
+    this.mqttClient.publish(
+      `game/${this.gameID}/generatedGame`,
+      JSON.stringify({
+        letters: this.letters,
+        guessedWords: [],
+        generatingWords: this.generatingWords,
+      })
+    );
   };
 
   toJson = () => {

@@ -1,26 +1,15 @@
 import mqtt, { OnMessageCallback } from "precompiled-mqtt";
-import { addOpponent } from "./state/GameSlice";
+import { addOpponent, saveGeneratedGame } from "./state/GameSlice";
 import { store } from "./store";
 
-const mqttConnect = (connectedTopic: string) => {
+const mqttConnect = () => {
   const client = mqtt.connect("ws://localhost:9000/mqtt");
-
-  client.subscribe(connectedTopic);
-
-  client.on("message", (topic: string, payload: Buffer) => {
-    const data = payload.toString();
-    if (topic === connectedTopic) {
-      const message = JSON.parse(data);
-      if (store.getState().gameData.opponent.userID === "")
-        store.dispatch(addOpponent(message));
-    }
-  });
 
   const publish = (topic: string, message: string) => {
     client.publish(topic, message);
   };
 
-  const subscribe = (topic: string) => {
+  const subscribe = (topic: string | Array<string>) => {
     client.subscribe(topic);
   };
 
