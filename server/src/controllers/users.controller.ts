@@ -1,3 +1,4 @@
+import { strict } from "assert";
 import { Request, Response } from "express";
 import jsonwebtoken from "jsonwebtoken";
 import {
@@ -19,6 +20,8 @@ const login = async (req: Request, res: Response) => {
 
   res.cookie("jwt-token", accessToken, {
     httpOnly: true,
+    secure: true,
+    sameSite: "strict",
   });
 
   return res.json({ userData: user });
