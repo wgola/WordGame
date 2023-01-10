@@ -1,5 +1,5 @@
-import { userType } from "../types";
-import API from "./axios";
+import { userType } from "../../types";
+import API from "../axios";
 
 export const getUserData = async (): Promise<userType | null> => {
   try {

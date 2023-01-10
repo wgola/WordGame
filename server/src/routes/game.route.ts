@@ -9,9 +9,9 @@ import {
 
 const router = express.Router();
 
-router.post("/create", auth, createGame);
+router.post("/", auth, createGame);
 
-router.post("/:gameID/join", auth, joinGame);
+router.put("/:gameID/", auth, joinGame);
 
 router.get("/:gameID", auth, getGame);
 

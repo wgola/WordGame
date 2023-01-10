@@ -54,7 +54,7 @@ export const GameChat = ({ publish, subscribe, onMessage }: GameChatProps) => {
   }, []);
 
   return (
-    <Tile>
+    <Tile dontAddMargin={true}>
       <h2>Chat</h2>
       <ChatDiv ref={messageDiv}>
         {messages.map((message, index) => (

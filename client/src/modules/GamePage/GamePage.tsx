@@ -14,6 +14,9 @@ import { getUser, saveUserData } from "../../state/UserSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import mqttConnect from "../../mqtt";
 import { OnMessageCallback } from "precompiled-mqtt";
+import { GameBoard } from "../../components/GameBoard";
+import { LettersTile } from "../../components/LetterTile";
+import { ButtonsTile } from "../../components/ButtonsTile";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -71,29 +74,37 @@ export const GamePage = () => {
   }, [user]);
 
   return (
-    <Grid container spacing={2} margin={"auto"} width={"1300px"}>
+    <Grid container spacing={2} margin={"40px auto"} width={"1300px"}>
       <Grid item xs={8}>
-        <Tile>BOARD TILE</Tile>
+        <Grid
+          container
+          direction="column"
+          justifyContent="flex-start"
+          rowGap={2}
+        >
+          <Grid item xs={9}>
+            <GameBoard />
+          </Grid>
+          <Grid item xs={3}>
+            <LettersTile />
+          </Grid>
+        </Grid>
       </Grid>
       <Grid item xs={4}>
         <Grid
           container
           direction="column"
           justifyContent="flex-start"
-          height={"1300px"}
-          rowGap={0}
+          rowGap={2}
         >
           <Grid item xs={3}>
             <GameScoreTile />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6}>
             <GameChat {...methods} />
           </Grid>
           <Grid item xs={3}>
-            <Tile>Letters tile</Tile>
-          </Grid>
-          <Grid item xs={3}>
-            <Tile>Button tile</Tile>
+            <ButtonsTile />
           </Grid>
         </Grid>
       </Grid>

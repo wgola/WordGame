@@ -1,12 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Player } from "../types";
-
-interface guessedWord {
-  id: number;
-  word: string;
-  length: number;
-}
+import { guessedWord } from "../types/guessedWord";
 
 interface gameState {
   gameID: string;
@@ -49,7 +44,12 @@ export const gameSlice = createSlice({
       state.generatingWords = action.payload.generatingWords;
     },
     clearGame: (state) => {
-      state = initialState;
+      state.gameID = initialState.gameID;
+      state.generatingWords = initialState.generatingWords;
+      state.guessedWords = initialState.guessedWords;
+      state.host = initialState.host;
+      state.letters = initialState.letters;
+      state.opponent = initialState.opponent;
     },
   },
 });
@@ -68,3 +68,6 @@ export const getPlayers = (state: RootState) => ({
 
 export const getGameLoading = (state: RootState) =>
   state.gameData.generatingWords;
+
+export const getGuessedWords = (state: RootState) =>
+  state.gameData.guessedWords;

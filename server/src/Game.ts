@@ -24,7 +24,7 @@ class Game {
   letters: Array<string>;
   wordsAnswers: Array<wordAnswer>;
   guessedWords: Array<guessedWord>;
-  generatingWords: boolean = true;
+  generatingWords: boolean = false;
   mqttClient: MqttClient;
 
   constructor(gameID: string, host: Player, mqttClient: MqttClient) {
@@ -45,6 +45,7 @@ class Game {
   };
 
   private generateWords = async () => {
+    this.generatingWords = true;
     const allWords = await getAllWords();
 
     let letters: Array<string>;

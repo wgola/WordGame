@@ -19,7 +19,7 @@ export const GameScoreTile = () => {
   const { host, opponent } = useSelector(getPlayers);
 
   return (
-    <Tile>
+    <Tile dontAddMargin={true}>
       <UserDiv>
         <Avatar size={30} color={host.color} children={host.username} />
         <span>{host.username}</span>

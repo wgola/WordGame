@@ -1,5 +1,5 @@
-import { getWordsResponse } from "../types";
-import API from "./axios";
+import { getWordsResponse } from "../../types";
+import API from "../axios";
 
 export const getWords = async (
   word: string,
