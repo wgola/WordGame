@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
-import { useAppSelector } from "../../hooks";
-import { getLetters } from "../../state/GameSlice";
+import { useEffect, useRef, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { getLetters, saveCorrectWord } from "../../state/GameSlice";
 import { Letter } from "../../types/letter";
 import { Button } from "../Button";
 import { LettersDiv } from "../LettersDiv";
 import { SubmitDiv } from "../SubmitDiv";
 import { Tile } from "../Tile";
 import { styled } from "@mui/material/styles";
+import { MqttMethods } from "../../types/mqttMethods";
+import { useParams } from "react-router-dom";
 
 const StyledDiv = styled("div")`
   display: flex;
@@ -14,11 +16,14 @@ const StyledDiv = styled("div")`
   justify-content: space-between;
 `;
 
-export const LettersTile = () => {
+export const LettersTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
   const availableLetters = useAppSelector(getLetters);
+  const dispatch = useAppDispatch();
 
   const [showedLetters, setShowedLetters] = useState<Array<Letter>>([]);
   const [answer, setAnswer] = useState("");
+
+  const { gameID } = useParams();
 
   useEffect(() => setShowedLetters(availableLetters), [availableLetters]);
 
@@ -35,9 +40,29 @@ export const LettersTile = () => {
   };
 
   const onSubmit = () => {
-    console.log(answer);
+    publish(`/game/${gameID}/checkWord`, answer);
     onReset();
   };
+
+  const isSecondRender = useRef(false);
+  useEffect(() => {
+    if (isSecondRender.current) {
+      subscribe(`/game/${gameID}/wordChecked`);
+      onMessage((topic, payload) => {
+        if (topic === `/game/${gameID}/wordChecked`) {
+          const message = JSON.parse(payload.toString());
+          console.log(message);
+          if (message.correct) {
+            dispatch(saveCorrectWord(message));
+            console.log("good");
+          } else {
+            console.log("bad");
+          }
+        }
+      });
+    }
+    isSecondRender.current = true;
+  }, []);
 
   return (
     <Tile dontAddMargin={true}>
@@ -45,7 +70,11 @@ export const LettersTile = () => {
       <SubmitDiv answer={answer} onDrop={onDrop} />
       <StyledDiv>
         <Button onClick={onReset} children="Reset" />
-        <Button onClick={onSubmit} children="Submit" />
+        <Button
+          onClick={onSubmit}
+          children="Submit"
+          disabled={answer.length < 2}
+        />
       </StyledDiv>
     </Tile>
   );

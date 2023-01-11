@@ -37,13 +37,49 @@ class Game {
     this.host = host;
     this.mqttClient = mqttClient;
 
+    this.mqttClient.subscribe(`/game/${this.gameID}/checkWord`);
+    this.mqttClient.on("message", this.onWordCheck);
     this.generateWords();
   }
+
+  onWordCheck = (topic: string, payload: Buffer) => {
+    if (topic === `/game/${this.gameID}/checkWord`) {
+      const word = payload.toString();
+
+      const foundWord = this.wordsAnswers.find(
+        (wordAnswer) => wordAnswer.word === word
+      );
+
+      const ifAlreadyGuessed =
+        this.guessedWords.find((guessedWord) => guessedWord.word === word) !==
+        undefined;
+
+      const guessedWord = this.guessedWords.find(
+        (guessedWord) => guessedWord.id === foundWord?.id
+      );
+
+      if (guessedWord) guessedWord.word = word;
+
+      const response = {
+        correct: foundWord !== undefined && !ifAlreadyGuessed,
+        ...foundWord,
+      };
+
+      this.mqttClient.publish(
+        `/game/${this.gameID}/wordChecked`,
+        JSON.stringify(response)
+      );
+    }
+  };
 
   setOpponent = (opponent: Player) => {
     if (this.opponent !== undefined) return false;
 
-    if (this.opponent?.userID === opponent.userID) return true;
+    if (
+      this.opponent?.userID === opponent.userID ||
+      this.host.userID === opponent.userID
+    )
+      return true;
 
     this.opponent = opponent;
     return true;
@@ -76,6 +112,8 @@ class Game {
       });
       this.guessedWords.push({ id: i, word: "", length: chosenWord.length });
     }
+
+    console.log(this.wordsAnswers);
 
     this.generatingWords = false;
     this.mqttClient.publish(

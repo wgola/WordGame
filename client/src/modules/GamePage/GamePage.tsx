@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getGame } from "../../api";
-import { GameChat, Tile } from "../../components";
+import { GameChat } from "../../components";
 import { GameScoreTile } from "../../components/GameScoreTile";
 import {
   addOpponent,
@@ -13,7 +13,6 @@ import {
 import { getUser, saveUserData } from "../../state/UserSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import mqttConnect from "../../mqtt";
-import { OnMessageCallback } from "precompiled-mqtt";
 import { GameBoard } from "../../components/GameBoard";
 import { LettersTile } from "../../components/LettersTile";
 import { ButtonsTile } from "../../components/ButtonsTile";
@@ -26,11 +25,7 @@ export const GamePage = () => {
   const user = useAppSelector(getUser);
   const game = useAppSelector(getGameData);
 
-  const methods: {
-    publish: (topic: string, message: string) => void;
-    subscribe: (topic: string | Array<string>) => void;
-    onMessage: (callback: OnMessageCallback) => void;
-  } = mqttConnect();
+  const methods = mqttConnect();
 
   const connectedTopic = `game/${gameID}/connected`;
   const gameReadyTopic = `game/${gameID}/generatedGame`;
@@ -86,7 +81,7 @@ export const GamePage = () => {
             <GameBoard />
           </Grid>
           <Grid item xs={3}>
-            <LettersTile />
+            <LettersTile {...methods} />
           </Grid>
         </Grid>
       </Grid>

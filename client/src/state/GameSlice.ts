@@ -46,6 +46,12 @@ export const gameSlice = createSlice({
       state.guessedWords = action.payload.guessedWords;
       state.generatingWords = action.payload.generatingWords;
     },
+    saveCorrectWord: (state, action) => {
+      const foundWord = state.guessedWords.find(
+        (guessedWord) => guessedWord.id === action.payload.id
+      );
+      if (foundWord) foundWord.word = action.payload.word;
+    },
     clearGame: (state) => {
       state.gameID = initialState.gameID;
       state.generatingWords = initialState.generatingWords;
@@ -57,8 +63,13 @@ export const gameSlice = createSlice({
   },
 });
 
-export const { saveGame, addOpponent, saveGeneratedGame, clearGame } =
-  gameSlice.actions;
+export const {
+  saveGame,
+  addOpponent,
+  saveGeneratedGame,
+  saveCorrectWord,
+  clearGame,
+} = gameSlice.actions;
 
 export const gameDataReducer = gameSlice.reducer;
 

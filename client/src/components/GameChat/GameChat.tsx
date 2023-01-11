@@ -8,6 +8,7 @@ import { Tile } from "../Tile";
 import { MessageForm } from "./MessageForm";
 import { styled } from "@mui/material/styles";
 import { MessageDiv } from "./MessageDiv";
+import { MqttMethods } from "../../types/mqttMethods";
 
 const ChatDiv = styled("div")`
   border: 1px solid grey;
@@ -18,13 +19,7 @@ const ChatDiv = styled("div")`
   overflow-y: scroll;
 `;
 
-interface GameChatProps {
-  publish: (topic: string, message: string) => void;
-  subscribe: (topic: string) => void;
-  onMessage: (callback: OnMessageCallback) => void;
-}
-
-export const GameChat = ({ publish, subscribe, onMessage }: GameChatProps) => {
+export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
   const user = useAppSelector(getUser);
   const { gameID } = useParams();
 
