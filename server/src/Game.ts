@@ -17,11 +17,16 @@ interface guessedWord {
   length: number;
 }
 
+interface Letter {
+  id: number;
+  letter: string;
+}
+
 class Game {
   gameID: string;
   host: Player;
   opponent: Player;
-  letters: Array<string>;
+  letters: Array<Letter>;
   wordsAnswers: Array<wordAnswer>;
   guessedWords: Array<guessedWord>;
   generatingWords: boolean = false;
@@ -57,7 +62,7 @@ class Game {
       );
     } while (filteredWords.length < 10);
 
-    this.letters = letters;
+    this.letters = letters.map((elem, index) => ({ id: index, letter: elem }));
     this.wordsAnswers = [];
     this.guessedWords = [];
 

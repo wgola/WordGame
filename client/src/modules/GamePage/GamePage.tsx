@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import mqttConnect from "../../mqtt";
 import { OnMessageCallback } from "precompiled-mqtt";
 import { GameBoard } from "../../components/GameBoard";
-import { LettersTile } from "../../components/LetterTile";
+import { LettersTile } from "../../components/LettersTile";
 import { ButtonsTile } from "../../components/ButtonsTile";
 
 export const GamePage = () => {

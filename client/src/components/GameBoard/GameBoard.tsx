@@ -18,7 +18,7 @@ export const GameBoard = () => {
   const boardWords = wordsData.map((word) => <BoardWord boardWord={word} />);
 
   return (
-    <Tile dontAddMargin={true} height={576}>
+    <Tile dontAddMargin={true} height={570}>
       {isGameLoading ? "Game is loading..." : "BOARD TILE"}
       <StlyedBoardDiv>{...boardWords}</StlyedBoardDiv>
     </Tile>
