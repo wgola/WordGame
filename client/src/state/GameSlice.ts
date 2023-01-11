@@ -34,7 +34,9 @@ export const gameSlice = createSlice({
       state.guessedWords =
         action.payload.guessedWords || initialState.guessedWords;
       state.generatingWords =
-        action.payload.generatingWords || initialState.generatingWords;
+        action.payload.generatingWords !== undefined
+          ? action.payload.generatingWords
+          : initialState.generatingWords;
     },
     addOpponent: (state, action) => {
       state.opponent = action.payload;
