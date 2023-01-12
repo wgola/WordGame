@@ -102,15 +102,19 @@ class Game {
     this.wordsAnswers = [];
     this.guessedWords = [];
 
-    for (let i = 0; i < 10; i++) {
+    while (this.wordsAnswers.length < 10) {
       const chosenWord =
         filteredWords[Math.floor(Math.random() * filteredWords.length)].word;
-      this.wordsAnswers.push({
-        id: i,
-        word: chosenWord,
-        points: chosenWord.length,
-      });
-      this.guessedWords.push({ id: i, word: "", length: chosenWord.length });
+      if (this.wordsAnswers.findIndex((elem) => elem.word === chosenWord) < 0) {
+        const id = this.wordsAnswers.length - 1;
+
+        this.wordsAnswers.push({
+          id: id,
+          word: chosenWord,
+          points: chosenWord.length,
+        });
+        this.guessedWords.push({ id: id, word: "", length: chosenWord.length });
+      }
     }
 
     console.log(this.wordsAnswers);
