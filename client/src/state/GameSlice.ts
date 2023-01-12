@@ -55,7 +55,14 @@ export const gameSlice = createSlice({
       const foundWord = state.guessedWords.find(
         (guessedWord) => guessedWord.id === action.payload.id
       );
-      if (foundWord) foundWord.word = action.payload.word;
+      if (foundWord) {
+        foundWord.word = action.payload.word;
+        const player =
+          state.host.userID === action.payload.player
+            ? state.host
+            : state.opponent;
+        player.score += action.payload.points;
+      }
     },
     changeTurn: (state, action) => {
       state.currentTurn = action.payload;

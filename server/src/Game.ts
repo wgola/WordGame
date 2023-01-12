@@ -63,20 +63,25 @@ class Game {
 
       const response = {
         correct: foundWord !== undefined && !ifAlreadyGuessed,
+        player: this.currentTurn,
         ...foundWord,
       };
+
+      const player =
+        this.host.userID === this.currentTurn ? this.host : this.opponent;
+
+      player.score += foundWord?.points || 0;
 
       this.currentTurn =
         this.currentTurn === this.host.userID
           ? this.opponent.userID
           : this.host.userID;
 
-      this.changeTurn();
-
       this.mqttClient.publish(
         `/game/${this.gameID}/wordChecked`,
         JSON.stringify(response)
       );
+      this.changeTurn();
     }
   };
 
