@@ -57,8 +57,9 @@ export const gameSlice = createSlice({
       );
       if (foundWord) foundWord.word = action.payload.word;
     },
-    changeTurn: (state, action) =>
-      (state.currentTurn = action.payload.currentTurn),
+    changeTurn: (state, action) => {
+      state.currentTurn = action.payload;
+    },
     clearGame: (state) => {
       state.gameID = initialState.gameID;
       state.generatingWords = initialState.generatingWords;
@@ -75,6 +76,7 @@ export const {
   addOpponent,
   saveGeneratedGame,
   saveCorrectWord,
+  changeTurn,
   clearGame,
 } = gameSlice.actions;
 

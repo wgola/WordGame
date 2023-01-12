@@ -71,10 +71,7 @@ class Game {
           ? this.opponent.userID
           : this.host.userID;
 
-      this.mqttClient.publish(
-        `/game/${this.gameID}/changeTurn`,
-        this.currentTurn
-      );
+      this.changeTurn();
 
       this.mqttClient.publish(
         `/game/${this.gameID}/wordChecked`,
@@ -96,6 +93,8 @@ class Game {
     this.currentTurn = Math.round(Math.random())
       ? this.host.userID
       : this.opponent.userID;
+
+    this.changeTurn();
     return true;
   };
 
@@ -120,7 +119,7 @@ class Game {
       const chosenWord =
         filteredWords[Math.floor(Math.random() * filteredWords.length)].word;
       if (this.wordsAnswers.findIndex((elem) => elem.word === chosenWord) < 0) {
-        const id = this.wordsAnswers.length - 1;
+        const id = this.wordsAnswers.length;
 
         this.wordsAnswers.push({
           id: id,
@@ -141,6 +140,13 @@ class Game {
         guessedWords: this.guessedWords,
         generatingWords: this.generatingWords,
       })
+    );
+  };
+
+  changeTurn = () => {
+    this.mqttClient.publish(
+      `/game/${this.gameID}/changeTurn`,
+      this.currentTurn
     );
   };
 

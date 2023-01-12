@@ -6,6 +6,7 @@ import { GameChat } from "../../components";
 import { GameScoreTile } from "../../components/GameScoreTile";
 import {
   addOpponent,
+  changeTurn,
   getGameData,
   saveGame,
   saveGeneratedGame,
@@ -29,13 +30,18 @@ export const GamePage = () => {
 
   const connectedTopic = `game/${gameID}/connected`;
   const gameReadyTopic = `game/${gameID}/generatedGame`;
+  const changeTurnTopic = `/game/${gameID}/changeTurn`;
 
   const OnMessageCallback = (topic: string, payload: Buffer) => {
-    const data = JSON.parse(payload.toString());
     if (topic === connectedTopic) {
+      const data = JSON.parse(payload.toString());
       if (game.opponent.userID === "") dispatch(addOpponent(data));
     } else if (topic === gameReadyTopic) {
+      const data = JSON.parse(payload.toString());
       dispatch(saveGeneratedGame(data));
+    } else if (topic === changeTurnTopic) {
+      const data = payload.toString();
+      dispatch(changeTurn(data));
     }
   };
 
@@ -46,7 +52,7 @@ export const GamePage = () => {
           data: { userData, gameData },
         } = await getGame(gameID);
         dispatch(saveUserData(userData));
-        methods.subscribe([connectedTopic, gameReadyTopic]);
+        methods.subscribe([connectedTopic, gameReadyTopic, changeTurnTopic]);
         methods.onMessage(OnMessageCallback);
         if (gameData !== null) {
           dispatch(saveGame(gameData));

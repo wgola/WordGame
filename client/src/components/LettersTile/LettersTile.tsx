@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { getLetters, saveCorrectWord } from "../../state/GameSlice";
+import {
+  getLetters,
+  isPlayerTurn,
+  saveCorrectWord,
+} from "../../state/GameSlice";
 import { Letter } from "../../types/letter";
 import { Button } from "../Button";
 import { LettersDiv } from "../LettersDiv";
@@ -18,6 +22,7 @@ const StyledDiv = styled("div")`
 
 export const LettersTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
   const availableLetters = useAppSelector(getLetters);
+  const ifPlayerTurn = useAppSelector(isPlayerTurn);
   const dispatch = useAppDispatch();
 
   const [showedLetters, setShowedLetters] = useState<Array<Letter>>([]);
@@ -77,7 +82,7 @@ export const LettersTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
         <Button
           onClick={onSubmit}
           children="Submit"
-          disabled={answer.length < 2}
+          disabled={answer.length < 2 || !ifPlayerTurn}
         />
       </StyledDiv>
     </Tile>
