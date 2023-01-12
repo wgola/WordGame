@@ -1,4 +1,3 @@
-import { OnMessageCallback } from "precompiled-mqtt";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
