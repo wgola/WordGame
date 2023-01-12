@@ -11,6 +11,7 @@ interface gameState {
   letters: Array<Letter>;
   guessedWords: Array<guessedWord>;
   generatingWords: boolean;
+  currentTurn: string;
 }
 
 const initialState: gameState = {
@@ -20,6 +21,7 @@ const initialState: gameState = {
   letters: [],
   guessedWords: [],
   generatingWords: true,
+  currentTurn: "",
 };
 
 export const gameSlice = createSlice({
@@ -37,6 +39,9 @@ export const gameSlice = createSlice({
         action.payload.generatingWords !== undefined
           ? action.payload.generatingWords
           : initialState.generatingWords;
+      state.currentTurn = action.payload.currentTurn
+        ? action.payload.currentTurn
+        : initialState.currentTurn;
     },
     addOpponent: (state, action) => {
       state.opponent = action.payload;
@@ -52,6 +57,8 @@ export const gameSlice = createSlice({
       );
       if (foundWord) foundWord.word = action.payload.word;
     },
+    changeTurn: (state, action) =>
+      (state.currentTurn = action.payload.currentTurn),
     clearGame: (state) => {
       state.gameID = initialState.gameID;
       state.generatingWords = initialState.generatingWords;
@@ -87,3 +94,6 @@ export const getGuessedWords = (state: RootState) =>
   state.gameData.guessedWords;
 
 export const getLetters = (state: RootState) => state.gameData.letters;
+
+export const isPlayerTurn = (state: RootState) =>
+  state.gameData.currentTurn === state.userData._id;
