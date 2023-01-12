@@ -44,23 +44,27 @@ export const LettersTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
     onReset();
   };
 
+  const onWordChecked = (topic: string, payload: Buffer) => {
+    if (topic === `/game/${gameID}/wordChecked`) {
+      const message = JSON.parse(payload.toString());
+      console.log(message);
+      if (message.correct) {
+        dispatch(saveCorrectWord(message));
+        console.log("good");
+      } else {
+        console.log("bad");
+      }
+    }
+  };
+
+  const onRender = () => {
+    subscribe(`/game/${gameID}/wordChecked`);
+    onMessage(onWordChecked);
+  };
+
   const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) {
-      subscribe(`/game/${gameID}/wordChecked`);
-      onMessage((topic, payload) => {
-        if (topic === `/game/${gameID}/wordChecked`) {
-          const message = JSON.parse(payload.toString());
-          console.log(message);
-          if (message.correct) {
-            dispatch(saveCorrectWord(message));
-            console.log("good");
-          } else {
-            console.log("bad");
-          }
-        }
-      });
-    }
+    if (isSecondRender.current) onRender();
     isSecondRender.current = true;
   }, []);
 
