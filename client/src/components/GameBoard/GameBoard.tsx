@@ -18,6 +18,13 @@ const StyledTitle = styled("p")`
   text-align: center;
 `;
 
+const StyledID = styled("span")`
+  :hover {
+    color: grey;
+    cursor: pointer;
+  }
+`;
+
 export const GameBoard = () => {
   const isGameLoading = useAppSelector(getGameLoading);
 
@@ -30,7 +37,19 @@ export const GameBoard = () => {
   return (
     <Tile dontAddMargin={true} height={610}>
       <StyledTitle>
-        {isGameLoading ? "Game is loading..." : `Welcome to game ${gameID}!`}
+        {isGameLoading ? (
+          <span>Game is loading...</span>
+        ) : (
+          <span>
+            Welcome to game #
+            <StyledID
+              onClick={() => navigator.clipboard.writeText(gameID || "")}
+            >
+              {gameID}
+            </StyledID>
+            !
+          </span>
+        )}
       </StyledTitle>
       <StlyedBoardDiv>{...boardWords}</StlyedBoardDiv>
     </Tile>

@@ -52,13 +52,7 @@ export const LettersTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
   const onWordChecked = (topic: string, payload: Buffer) => {
     if (topic === `/game/${gameID}/wordChecked`) {
       const message = JSON.parse(payload.toString());
-      console.log(message);
-      if (message.correct) {
-        dispatch(saveCorrectWord(message));
-        console.log("good");
-      } else {
-        console.log("bad");
-      }
+      if (message.correct) dispatch(saveCorrectWord(message));
     }
   };
 

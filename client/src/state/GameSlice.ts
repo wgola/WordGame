@@ -106,3 +106,11 @@ export const getLetters = (state: RootState) => state.gameData.letters;
 
 export const isPlayerTurn = (state: RootState) =>
   state.gameData.currentTurn === state.userData._id;
+
+export const getCurrentPlayer = (state: RootState) => {
+  if (state.gameData.currentTurn === "") return null;
+  else
+    return state.gameData.currentTurn === state.gameData.host.userID
+      ? state.gameData.host
+      : state.gameData.opponent;
+};

@@ -12,7 +12,7 @@ import { MqttMethods } from "../../types/mqttMethods";
 const ChatDiv = styled("div")`
   border: 1px solid grey;
   border-radius: 15px;
-  height: 200px;
+  height: 250px;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -54,7 +54,7 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
 
   return (
     <Tile dontAddMargin={true}>
-      <h2>Chat</h2>
+      <h2 style={{ textAlign: "center", margin: 0 }}>Chat</h2>
       <ChatDiv ref={messageDiv}>
         {messages.map((message, index) => (
           <MessageDiv

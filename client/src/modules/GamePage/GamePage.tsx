@@ -17,6 +17,7 @@ import mqttConnect from "../../mqtt";
 import { GameBoard } from "../../components/GameBoard";
 import { LettersTile } from "../../components/LettersTile";
 import { ButtonsTile } from "../../components/ButtonsTile";
+import { GameMessageDiv } from "../../components/GameMessageDiv";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -98,13 +99,16 @@ export const GamePage = () => {
           justifyContent="flex-start"
           rowGap={2}
         >
-          <Grid item xs={3}>
+          <Grid item>
             <GameScoreTile />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item>
             <GameChat {...methods} />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item>
+            <GameMessageDiv />
+          </Grid>
+          <Grid item>
             <ButtonsTile />
           </Grid>
         </Grid>
