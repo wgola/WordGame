@@ -26,25 +26,30 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
   const [messages, setMessages] = useState<Array<Message>>([]);
 
   const messageDiv = useRef<HTMLDivElement>(null);
-  const isSecondRender = useRef(false);
-  useEffect(() => {
-    if (isSecondRender.current) {
-      if (messageDiv) {
-        messageDiv.current?.addEventListener("DOMNodeInserted", (event) => {
-          messageDiv.current?.scroll({
-            top: messageDiv.current.scrollHeight,
-            behavior: "smooth",
-          });
+
+  const onChatMessage = (topic: string, payload: Buffer) => {
+    if (topic === `game/${gameID}/chat`) {
+      const message = JSON.parse(payload.toString());
+      setMessages((messages) => [...messages, message]);
+    }
+  };
+
+  const onRender = () => {
+    if (messageDiv) {
+      messageDiv.current?.addEventListener("DOMNodeInserted", (event) => {
+        messageDiv.current?.scroll({
+          top: messageDiv.current.scrollHeight,
+          behavior: "smooth",
         });
-      }
-      subscribe(`game/${gameID}/chat`);
-      onMessage((topic: string, payload: Buffer) => {
-        if (topic === `game/${gameID}/chat`) {
-          const message = JSON.parse(payload.toString());
-          setMessages((messages) => [...messages, message]);
-        }
       });
     }
+    subscribe(`game/${gameID}/chat`);
+    onMessage(onChatMessage);
+  };
+
+  const isSecondRender = useRef(false);
+  useEffect(() => {
+    if (isSecondRender.current) onRender();
     isSecondRender.current = true;
   }, []);
 
