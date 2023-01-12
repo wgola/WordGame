@@ -26,6 +26,7 @@ class Game {
   gameID: string;
   host: Player;
   opponent: Player;
+  currentTurn: string;
   letters: Array<Letter>;
   wordsAnswers: Array<wordAnswer>;
   guessedWords: Array<guessedWord>;
@@ -65,6 +66,16 @@ class Game {
         ...foundWord,
       };
 
+      this.currentTurn =
+        this.currentTurn === this.host.userID
+          ? this.opponent.userID
+          : this.host.userID;
+
+      this.mqttClient.publish(
+        `/game/${this.gameID}/changeTurn`,
+        this.currentTurn
+      );
+
       this.mqttClient.publish(
         `/game/${this.gameID}/wordChecked`,
         JSON.stringify(response)
@@ -82,6 +93,9 @@ class Game {
       return true;
 
     this.opponent = opponent;
+    this.currentTurn = Math.round(Math.random())
+      ? this.host.userID
+      : this.opponent.userID;
     return true;
   };
 
@@ -138,6 +152,7 @@ class Game {
       letters: this.letters,
       guessedWords: this.guessedWords,
       generatingWords: this.generatingWords,
+      currentTurn: this.currentTurn,
     };
   };
 }
