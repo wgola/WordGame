@@ -22,7 +22,7 @@ export const PlayPage = () => {
   const [message, setMessage] = useState("");
 
   const onCreateGame = async () => {
-    dispatch(clearGame);
+    dispatch(clearGame());
     setMessage("Loading...");
     const result = await createGame();
     navigate(`/game/${result.data}`);
