@@ -30,17 +30,14 @@ interface MovableLetterProps {
 export const MovableLetter = ({ letter }: MovableLetterProps) => {
   const ifPlayerTurn = useAppSelector(isPlayerTurn);
 
-  const [{ canDrag }, drag] = useDrag({
+  const [, drag] = useDrag({
     type: "letter",
     item: letter,
     canDrag: ifPlayerTurn,
-    collect: (monitor) => ({
-      canDrag: !!monitor.canDrag(),
-    }),
   });
 
   return (
-    <StyledDiv ref={drag} canDrag={canDrag}>
+    <StyledDiv ref={drag} canDrag={ifPlayerTurn}>
       {letter.letter}
     </StyledDiv>
   );

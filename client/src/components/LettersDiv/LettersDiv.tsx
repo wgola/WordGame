@@ -4,14 +4,14 @@ import { Letter } from "../../types/letter";
 
 const StyledDiv = styled("div")`
   display: flex;
-  border: 1px solid black;
+  border: 1px solid grey;
   border-radius: 10px;
   height: 57px;
 `;
 
 const MessageDiv = styled("div")`
   padding: 13px;
-  border-right: 1px solid black;
+  border-right: 1px solid grey;
   font-size: 18px;
   width: 160px;
 `;

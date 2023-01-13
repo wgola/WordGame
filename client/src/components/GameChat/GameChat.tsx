@@ -22,7 +22,7 @@ const TitledDiv = styled("div")`
 `;
 
 const ChatDiv = styled("div")`
-  height: 225px;
+  height: 214px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
