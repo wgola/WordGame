@@ -106,7 +106,7 @@ export const GamePage = () => {
             <GameChat {...methods} />
           </Grid>
           <Grid item>
-            <GameMessageDiv />
+            <GameMessageDiv {...methods} />
           </Grid>
           <Grid item>
             <ButtonsTile />

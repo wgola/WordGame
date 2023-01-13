@@ -43,7 +43,7 @@ class Game {
     this.generateWords();
   }
 
-  onWordCheck = (topic: string, payload: Buffer) => {
+  private onWordCheck = (topic: string, payload: Buffer) => {
     if (topic === `/game/${this.gameID}/checkWord`) {
       const word = payload.toString();
 
@@ -81,23 +81,35 @@ class Game {
         `/game/${this.gameID}/wordChecked`,
         JSON.stringify(response)
       );
+
+      const info = response.correct
+        ? `${player.username} scored ${foundWord.points} points!`
+        : `${player.username} didn't guess the word!`;
+
+      this.mqttClient.publish(`/game/${this.gameID}/info`, info);
+
       this.changeTurn();
     }
   };
 
   setOpponent = (opponent: Player) => {
-    if (this.opponent !== undefined) return false;
-
     if (
       this.opponent?.userID === opponent.userID ||
       this.host.userID === opponent.userID
     )
       return true;
 
+    if (this.opponent !== undefined) return false;
+
     this.opponent = opponent;
     this.currentTurn = Math.round(Math.random())
       ? this.host.userID
       : this.opponent.userID;
+
+    this.mqttClient.publish(
+      `/game/${this.gameID}/info`,
+      `Player ${opponent.username} joined game!`
+    );
 
     this.changeTurn();
     return true;
@@ -138,6 +150,12 @@ class Game {
     console.log(this.wordsAnswers);
 
     this.generatingWords = false;
+
+    this.mqttClient.publish(
+      `/game/${this.gameID}/info`,
+      "Finished generating game."
+    );
+
     this.mqttClient.publish(
       `game/${this.gameID}/generatedGame`,
       JSON.stringify({
@@ -148,10 +166,18 @@ class Game {
     );
   };
 
-  changeTurn = () => {
+  private changeTurn = () => {
+    const player =
+      this.host.userID === this.currentTurn ? this.host : this.opponent;
+
     this.mqttClient.publish(
       `/game/${this.gameID}/changeTurn`,
       this.currentTurn
+    );
+
+    this.mqttClient.publish(
+      `/game/${this.gameID}/info`,
+      `It's ${player.username} turn now!`
     );
   };
 

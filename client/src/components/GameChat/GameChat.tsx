@@ -9,13 +9,23 @@ import { styled } from "@mui/material/styles";
 import { MessageDiv } from "./MessageDiv";
 import { MqttMethods } from "../../types/mqttMethods";
 
-const ChatDiv = styled("div")`
+const StyledDiv = styled("div")`
   border: 1px solid grey;
   border-radius: 15px;
-  height: 250px;
+`;
+
+const TitledDiv = styled("div")`
+  font-style: italic;
+  text-align: center;
+  border-radius: 15px;
+  border-bottom: 1px solid grey;
+`;
+
+const ChatDiv = styled("div")`
+  height: 225px;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
 
 export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
@@ -24,25 +34,25 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
 
   const [messages, setMessages] = useState<Array<Message>>([]);
 
-  const messageDiv = useRef<HTMLDivElement>(null);
+  const chatDiv = useRef<HTMLDivElement>(null);
 
   const onChatMessage = (topic: string, payload: Buffer) => {
-    if (topic === `game/${gameID}/chat`) {
+    if (topic === `/game/${gameID}/chat`) {
       const message = JSON.parse(payload.toString());
       setMessages((messages) => [...messages, message]);
     }
   };
 
   const onRender = () => {
-    if (messageDiv) {
-      messageDiv.current?.addEventListener("DOMNodeInserted", (event) => {
-        messageDiv.current?.scroll({
-          top: messageDiv.current.scrollHeight,
+    if (chatDiv) {
+      chatDiv.current?.addEventListener("DOMNodeInserted", (event) => {
+        chatDiv.current?.scroll({
+          top: chatDiv.current.scrollHeight,
           behavior: "smooth",
         });
       });
     }
-    subscribe(`game/${gameID}/chat`);
+    subscribe(`/game/${gameID}/chat`);
     onMessage(onChatMessage);
   };
 
@@ -54,16 +64,18 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
 
   return (
     <Tile dontAddMargin={true}>
-      <h2 style={{ textAlign: "center", margin: 0 }}>Chat</h2>
-      <ChatDiv ref={messageDiv}>
-        {messages.map((message, index) => (
-          <MessageDiv
-            key={index}
-            ownMessage={message.author === user.username}
-            children={message.body}
-          />
-        ))}
-      </ChatDiv>
+      <StyledDiv>
+        <TitledDiv>Welcome to chat!</TitledDiv>
+        <ChatDiv ref={chatDiv}>
+          {messages.map((message, index) => (
+            <MessageDiv
+              key={index}
+              ownMessage={message.author === user.username}
+              children={message.body}
+            />
+          ))}
+        </ChatDiv>
+      </StyledDiv>
       <MessageForm publish={publish} />
     </Tile>
   );

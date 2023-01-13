@@ -24,14 +24,19 @@ export const MessageForm = ({ publish }: MessageFormProps) => {
   const onSubmit: SubmitHandler<MessageType> = (data) => {
     reset();
     const message = { author: user.username || "", body: data.message };
-    publish(`game/${gameID}/chat`, JSON.stringify(message));
+    publish(`/game/${gameID}/chat`, JSON.stringify(message));
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div style={{ display: "flex" }}>
-        <Input inputRef={inputRef} {...inputProps} required />
-        <Button type="submit" children="send" />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Input
+          inputRef={inputRef}
+          {...inputProps}
+          required
+          style={{ width: "85%" }}
+        />
+        <Button type="submit" children="send" style={{ width: "15%" }} />
       </div>
     </form>
   );
