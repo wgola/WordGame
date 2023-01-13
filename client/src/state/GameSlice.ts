@@ -114,3 +114,6 @@ export const getCurrentPlayer = (state: RootState) => {
       ? state.gameData.host
       : state.gameData.opponent;
 };
+
+export const isHost = (state: RootState) =>
+  state.gameData.host.userID === state.userData._id;
