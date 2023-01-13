@@ -5,17 +5,26 @@ import { Tile } from "../Tile";
 import { styled } from "@mui/material/styles";
 import { useParams } from "react-router-dom";
 
+const StyledDiv = styled("div")`
+  border: 1px solid grey;
+  border-radius: 15px;
+`;
+
 const StlyedBoardDiv = styled("div")`
+  height: 467.5px;
+  margin: 10px;
   display: flex;
   flex-direction: column;
   gap: 7.5px;
 `;
 
-const StyledTitle = styled("p")`
-  padding: 0;
+const StyledTitle = styled("div")`
+  padding: 10px;
   font-weight: bold;
   font-size: 20px;
   text-align: center;
+  border-bottom: 1px solid grey;
+  border-radius: 15px;
 `;
 
 const StyledID = styled("span")`
@@ -35,23 +44,25 @@ export const GameBoard = () => {
   const boardWords = wordsData.map((word) => <BoardWord boardWord={word} />);
 
   return (
-    <Tile dontAddMargin={true} height={610}>
-      <StyledTitle>
-        {isGameLoading ? (
-          <span>Game is loading...</span>
-        ) : (
-          <span>
-            Welcome to game #
-            <StyledID
-              onClick={() => navigator.clipboard.writeText(gameID || "")}
-            >
-              {gameID}
-            </StyledID>
-            !
-          </span>
-        )}
-      </StyledTitle>
-      <StlyedBoardDiv>{...boardWords}</StlyedBoardDiv>
+    <Tile dontAddMargin={true}>
+      <StyledDiv>
+        <StyledTitle>
+          {isGameLoading ? (
+            <span>Game is loading...</span>
+          ) : (
+            <span>
+              Welcome to game #
+              <StyledID
+                onClick={() => navigator.clipboard.writeText(gameID || "")}
+              >
+                {gameID}
+              </StyledID>
+              !
+            </span>
+          )}
+        </StyledTitle>
+        <StlyedBoardDiv>{...boardWords}</StlyedBoardDiv>
+      </StyledDiv>
     </Tile>
   );
 };
