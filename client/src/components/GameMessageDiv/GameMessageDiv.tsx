@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { MqttMethods } from "../../types/mqttMethods";
 import { Tile } from "../Tile";
 import { styled } from "@mui/material/styles";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { addNewLog, getInfoLogs } from "../../state/GameSlice";
 
 const StyledDiv = styled("div")`
   border: 1px solid grey;
@@ -24,16 +26,15 @@ const StyledInfoDiv = styled("div")`
 export const GameMessageDiv = ({ subscribe, onMessage }: MqttMethods) => {
   const { gameID } = useParams();
 
-  const [messages, setMessages] = useState<Array<string>>([]);
+  const dispatch = useAppDispatch();
+  const messages = useAppSelector(getInfoLogs);
 
   const infoTopic = `/game/${gameID}/info`;
 
   const messageDiv = useRef<HTMLDivElement>(null);
 
   const onNewMessage = (topic: string, payload: Buffer) => {
-    if (topic === infoTopic) {
-      setMessages((messages) => [...messages, payload.toString()]);
-    }
+    if (topic === infoTopic) dispatch(addNewLog(payload.toString()));
   };
 
   const onRender = () => {

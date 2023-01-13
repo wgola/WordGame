@@ -26,11 +26,15 @@ class Game {
   gameID: string;
   host: Player;
   opponent: Player;
-  currentTurn: string;
+
   letters: Array<Letter>;
   wordsAnswers: Array<wordAnswer>;
   guessedWords: Array<guessedWord>;
+
+  currentTurn: string;
   generatingWords: boolean = false;
+  infoLogs: Array<string> = [];
+
   mqttClient: MqttClient;
 
   constructor(gameID: string, host: Player, mqttClient: MqttClient) {
@@ -86,10 +90,15 @@ class Game {
         ? `${player.username} scored ${foundWord.points} points!`
         : `${player.username} didn't guess the word!`;
 
-      this.mqttClient.publish(`/game/${this.gameID}/info`, info);
+      this.sendInfo(info);
 
       this.changeTurn();
     }
+  };
+
+  private sendInfo = (message: string) => {
+    this.infoLogs.push(message);
+    this.mqttClient.publish(`/game/${this.gameID}/info`, message);
   };
 
   setOpponent = (opponent: Player) => {
@@ -106,10 +115,7 @@ class Game {
       ? this.host.userID
       : this.opponent.userID;
 
-    this.mqttClient.publish(
-      `/game/${this.gameID}/info`,
-      `Player ${opponent.username} joined game!`
-    );
+    this.sendInfo(`Player ${opponent.username} joined game!`);
 
     this.changeTurn();
     return true;
@@ -151,10 +157,7 @@ class Game {
 
     this.generatingWords = false;
 
-    this.mqttClient.publish(
-      `/game/${this.gameID}/info`,
-      "Finished generating game."
-    );
+    this.sendInfo("Finished generating game.");
 
     this.mqttClient.publish(
       `game/${this.gameID}/generatedGame`,
@@ -175,10 +178,7 @@ class Game {
       this.currentTurn
     );
 
-    this.mqttClient.publish(
-      `/game/${this.gameID}/info`,
-      `It's ${player.username} turn now!`
-    );
+    this.sendInfo(`It's ${player.username} turn now!`);
   };
 
   toJson = () => {
@@ -190,6 +190,7 @@ class Game {
       guessedWords: this.guessedWords,
       generatingWords: this.generatingWords,
       currentTurn: this.currentTurn,
+      infoLogs: this.infoLogs,
     };
   };
 }

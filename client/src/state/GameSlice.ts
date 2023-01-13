@@ -12,6 +12,7 @@ interface gameState {
   guessedWords: Array<guessedWord>;
   generatingWords: boolean;
   currentTurn: string;
+  infoLogs: Array<string>;
 }
 
 const initialState: gameState = {
@@ -22,6 +23,7 @@ const initialState: gameState = {
   guessedWords: [],
   generatingWords: true,
   currentTurn: "",
+  infoLogs: [],
 };
 
 export const gameSlice = createSlice({
@@ -42,6 +44,7 @@ export const gameSlice = createSlice({
       state.currentTurn = action.payload.currentTurn
         ? action.payload.currentTurn
         : initialState.currentTurn;
+      state.infoLogs = action.payload.infoLogs || initialState.infoLogs;
     },
     addOpponent: (state, action) => {
       state.opponent = action.payload;
@@ -67,6 +70,9 @@ export const gameSlice = createSlice({
     changeTurn: (state, action) => {
       state.currentTurn = action.payload;
     },
+    addNewLog: (state, action) => {
+      state.infoLogs.push(action.payload);
+    },
     clearGame: (state) => {
       state.gameID = initialState.gameID;
       state.generatingWords = initialState.generatingWords;
@@ -84,6 +90,7 @@ export const {
   saveGeneratedGame,
   saveCorrectWord,
   changeTurn,
+  addNewLog,
   clearGame,
 } = gameSlice.actions;
 
@@ -117,3 +124,5 @@ export const getCurrentPlayer = (state: RootState) => {
 
 export const isHost = (state: RootState) =>
   state.gameData.host.userID === state.userData._id;
+
+export const getInfoLogs = (state: RootState) => state.gameData.infoLogs;
