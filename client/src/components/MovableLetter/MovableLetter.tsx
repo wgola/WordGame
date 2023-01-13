@@ -1,13 +1,15 @@
 import { useDrag } from "react-dnd";
 import { styled } from "@mui/material/styles";
 import { Letter } from "../../types/letter";
+import { useAppSelector } from "../../hooks";
+import { isPlayerTurn } from "../../state/GameSlice";
 
 interface StyledDivProps {
-  isDragging: boolean;
+  canDrag: boolean;
 }
 
 const StyledDiv = styled("div", {
-  shouldForwardProp: (prop) => prop !== "isDragging",
+  shouldForwardProp: (prop) => prop !== "canDrag",
 })<StyledDivProps>`
   border: 1px solid black;
   display: flex;
@@ -17,7 +19,7 @@ const StyledDiv = styled("div", {
   height: 40px;
   border-radius: 15px;
   margin: 7.5px;
-  background-color: ${({ isDragging }) => (isDragging ? "grey" : "white")};
+  background-color: ${({ canDrag }) => (!canDrag ? "lightgrey" : "white")};
   font-weight: bold;
 `;
 
@@ -26,16 +28,19 @@ interface MovableLetterProps {
 }
 
 export const MovableLetter = ({ letter }: MovableLetterProps) => {
-  const [{ isDragging }, drag] = useDrag({
+  const ifPlayerTurn = useAppSelector(isPlayerTurn);
+
+  const [{ canDrag }, drag] = useDrag({
     type: "letter",
     item: letter,
+    canDrag: ifPlayerTurn,
     collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
+      canDrag: !!monitor.canDrag(),
     }),
   });
 
   return (
-    <StyledDiv ref={drag} isDragging={isDragging}>
+    <StyledDiv ref={drag} canDrag={canDrag}>
       {letter.letter}
     </StyledDiv>
   );
