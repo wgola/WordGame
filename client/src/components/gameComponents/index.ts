@@ -1,5 +1,4 @@
 export * from "./BoardWord";
-export * from "./ButtonDiv";
 export * from "./ButtonsTile";
 export * from "./GameBoard";
 export * from "./GameChat";

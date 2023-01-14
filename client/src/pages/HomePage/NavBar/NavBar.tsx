@@ -44,6 +44,7 @@ export const NavBar = () => {
         <Button
           children="logout"
           type="button"
+          deleteButton={true}
           onClick={async () => {
             setLoading(true);
             await logout();

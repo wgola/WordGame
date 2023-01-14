@@ -8,3 +8,4 @@ export * from "./Input";
 export * from "./Tile";
 export * from "./WordEntry";
 export * from "./gameComponents";
+export * from "./ButtonDiv";

@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { deleteGame } from "../../../api/gameAPI/deleteGame";
 import { MqttMethods } from "../../../types/mqttMethods";
 import { useNavigate, useParams } from "react-router-dom";
-import { ButtonDiv } from "../ButtonDiv";
+import { ButtonDiv } from "../../ButtonDiv";
 import { Button } from "../../Button";
 import { Tile } from "../../Tile";
 import { useEffect, useRef } from "react";
@@ -57,6 +57,7 @@ export const ButtonsTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
         <Button children={"Exit"} onClick={onExit} />
         <Button
           children={"Delete game"}
+          deleteButton={true}
           onClick={onDelete}
           disabled={!isPlayerHost}
         />

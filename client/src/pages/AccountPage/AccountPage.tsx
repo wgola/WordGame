@@ -41,6 +41,7 @@ export const AccountPage = () => {
         <Button
           children="delete account"
           type="button"
+          deleteButton={true}
           onClick={async () => {
             const result = await deleteAccount();
             if (result) {
