@@ -14,7 +14,7 @@ const StyledDiv = styled("div", {
   align-self: ${({ ownMessage }) => (ownMessage ? "flex-end" : "flex-start")};
   padding: 10px;
   margin: 5px;
-  background-color: ${({ ownMessage }) => (ownMessage ? "grey" : "cyan")};
+  background-color: ${({ ownMessage }) => (ownMessage ? "lightgrey" : "white")};
 `;
 
 export const MessageDiv = ({ ownMessage, children }: MessageDivProps) => (
