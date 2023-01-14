@@ -4,6 +4,7 @@ import dbConnect from "./configs/db.config";
 import mqttConnect from "./configs/mqtt.config";
 import https from "https";
 import fs from "fs";
+import log from "./configs/logs.config";
 
 dotenv.config();
 
@@ -20,8 +21,8 @@ const credentials = { key: privateKey, cert: certificate };
 
 const server = https.createServer(credentials, app);
 
-server.listen(port, () => {
-  console.log(`Server is running at https://localhost:${port}`);
-});
+server.listen(port, () =>
+  log.info(`Server is running at https://localhost:${port}`)
+);
 
 export { mqttClient };
