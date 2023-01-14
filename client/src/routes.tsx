@@ -1,13 +1,13 @@
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 import App from "./App";
-import { AccountPage } from "./modules/AccountPage";
-import { EditAccountPage } from "./modules/EditAccountPage";
-import { GamePage } from "./modules/GamePage";
-import { HomePage } from "./modules/HomePage";
-import { LoginPage } from "./modules/LoginPage";
-import { PlayPage } from "./modules/PlayPage";
-import { RegisterPage } from "./modules/RegisterPage";
-import { WordsListPage } from "./modules/WordsListPage";
+import { AccountPage } from "./pages/AccountPage";
+import { EditAccountPage } from "./pages/EditAccountPage";
+import { GamePage } from "./pages/GamePage";
+import { HomePage } from "./pages/HomePage";
+import { LoginPage } from "./pages/LoginPage";
+import { PlayPage } from "./pages/PlayPage";
+import { RegisterPage } from "./pages/RegisterPage";
+import { WordsListPage } from "./pages/WordsListPage";
 
 const routes: RouteObject[] = [
   {

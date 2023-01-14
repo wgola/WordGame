@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import { Avatar, Tile, Button } from "../../components/";
+import { Avatar, Tile, Button } from "../../components";
 import { deleteUserData, getUser } from "../../state/UserSlice";
 import { deleteAccount } from "../../api";
 

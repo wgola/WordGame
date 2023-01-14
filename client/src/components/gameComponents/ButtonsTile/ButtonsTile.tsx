@@ -21,32 +21,30 @@ export const ButtonsTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
     navigate("/home/play");
   };
 
-  const onDelete = async () => {
-    try {
-      publish(
-        `/game/${gameID}/info`,
-        "This game has been deleted! You will be redirected to home page in 5 seconds..."
-      );
-      publish(gameDeletedTopic, "game deleted");
-      await deleteGame(gameID);
-      dispatch(clearGame());
-      navigate("/home/play");
-    } catch (e) {
-      navigate("/home/play");
-    }
+  const onDelete = () => {
+    publish(
+      `/game/${gameID}/info`,
+      "Host deleted this game! You will be redirected to home page in 5 seconds..."
+    );
+    publish(gameDeletedTopic, "game deleted");
   };
 
   const onGameDeleted = (topic: string, payload: Buffer) => {
     if (topic === gameDeletedTopic) {
-      setTimeout(() => navigate("/home/play"), 5000);
+      setTimeout(async () => {
+        try {
+          await deleteGame(gameID);
+        } finally {
+          navigate("/home/play");
+          dispatch(clearGame());
+        }
+      }, 5000);
     }
   };
 
   const isSecondRender = useRef(false);
   useEffect(() => {
     if (isSecondRender.current) {
-      console.log("test");
-
       subscribe(gameDeletedTopic);
       onMessage(onGameDeleted);
     }

@@ -13,5 +13,7 @@ const StyledForm = styled("form")`
 `;
 
 export const Form = ({ children, onSubmit }: FormProps) => (
-  <StyledForm onSubmit={onSubmit}>{children}</StyledForm>
+  <StyledForm onSubmit={onSubmit} autoComplete="off">
+    {children}
+  </StyledForm>
 );

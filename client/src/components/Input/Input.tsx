@@ -6,5 +6,12 @@ const StyledInput = styled(TextField)`
 `;
 
 export const Input = (props: TextFieldProps) => {
-  return <StyledInput variant="outlined" size="small" {...props} />;
+  return (
+    <StyledInput
+      variant="outlined"
+      size="small"
+      {...props}
+      autoComplete="off"
+    />
+  );
 };

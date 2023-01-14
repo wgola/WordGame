@@ -2,6 +2,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { joinGame } from "../../../api";
 import { Button, Input } from "../../../components";
+import { useAppDispatch } from "../../../hooks";
+import { clearGame } from "../../../state/GameSlice";
 
 interface JoinGameFormType {
   gameID: string;
@@ -13,6 +15,7 @@ export const JoinGameForm = ({
   setMessage: (value: string) => void;
 }) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const { register, handleSubmit } = useForm<JoinGameFormType>({
     defaultValues: { gameID: "" },
@@ -22,6 +25,7 @@ export const JoinGameForm = ({
   const handleJoinGame: SubmitHandler<JoinGameFormType> = async ({
     gameID,
   }) => {
+    dispatch(clearGame());
     setMessage("Loading...");
     const result = await joinGame(gameID);
     if (result.data) navigate(`/game/${gameID}`);
