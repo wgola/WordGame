@@ -29,8 +29,8 @@ export const GamePage = () => {
 
   const methods = mqttConnect();
 
-  const connectedTopic = `game/${gameID}/connected`;
-  const gameReadyTopic = `game/${gameID}/generatedGame`;
+  const connectedTopic = `/game/${gameID}/connected`;
+  const gameReadyTopic = `/game/${gameID}/generatedGame`;
   const changeTurnTopic = `/game/${gameID}/changeTurn`;
 
   const OnMessageCallback = (topic: string, payload: Buffer) => {
@@ -59,7 +59,7 @@ export const GamePage = () => {
           dispatch(saveGame(gameData));
           if (gameData.opponent)
             methods.publish(
-              `game/${gameID}/connected`,
+              `/game/${gameID}/connected`,
               JSON.stringify(gameData.opponent)
             );
         } else navigate("/home/play");

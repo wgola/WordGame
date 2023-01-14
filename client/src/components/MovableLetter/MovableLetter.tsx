@@ -11,7 +11,7 @@ interface StyledDivProps {
 const StyledDiv = styled("div", {
   shouldForwardProp: (prop) => prop !== "canDrag",
 })<StyledDivProps>`
-  border: 1px solid black;
+  border: 1px solid grey;
   display: flex;
   align-items: center;
   justify-content: center;

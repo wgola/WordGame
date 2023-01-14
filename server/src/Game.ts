@@ -1,4 +1,5 @@
 import { MqttClient } from "mqtt";
+import log from "./configs/logs.config";
 import { getAllWords } from "./services/words.service";
 import { Player } from "./types/Player";
 import { Word } from "./types/Word";
@@ -45,83 +46,59 @@ class Game {
 
     this.mqttClient.subscribe(`/game/${this.gameID}/checkWord`);
     this.mqttClient.on("message", this.onWordCheck);
-    this.generateWords();
+    this.generateGame();
   }
 
   private onWordCheck = (topic: string, payload: Buffer) => {
-    if (topic === `/game/${this.gameID}/checkWord`) {
-      const word = payload.toString();
+    const word = payload.toString();
 
-      const foundWord = this.wordsAnswers.find(
-        (wordAnswer) => wordAnswer.word === word
-      );
+    const foundWord = this.wordsAnswers.find(
+      (wordAnswer) => wordAnswer.word === word
+    );
 
-      const ifAlreadyGuessed =
-        this.guessedWords.find((guessedWord) => guessedWord.word === word) !==
-        undefined;
+    const ifAlreadyGuessed =
+      this.guessedWords.find((guessedWord) => guessedWord.word === word) !==
+      undefined;
 
-      const guessedWord = this.guessedWords.find(
-        (guessedWord) => guessedWord.id === foundWord?.id
-      );
+    const guessedWord = this.guessedWords.find(
+      (guessedWord) => guessedWord.id === foundWord?.id
+    );
 
-      if (guessedWord) guessedWord.word = word;
+    if (guessedWord) guessedWord.word = word;
 
-      if (foundWord !== undefined && !ifAlreadyGuessed)
-        this.howManyGuessed += 1;
+    if (foundWord !== undefined && !ifAlreadyGuessed) this.howManyGuessed += 1;
 
-      const response = {
-        correct: foundWord !== undefined && !ifAlreadyGuessed,
-        player: this.currentTurn,
-        ...foundWord,
-      };
+    const response = {
+      correct: foundWord !== undefined && !ifAlreadyGuessed,
+      player: this.currentTurn,
+      ...foundWord,
+    };
 
-      const player =
-        this.host.userID === this.currentTurn ? this.host : this.opponent;
+    const player =
+      this.host.userID === this.currentTurn ? this.host : this.opponent;
 
-      player.score += foundWord?.points || 0;
+    player.score += foundWord?.points || 0;
 
-      this.mqttClient.publish(
-        `/game/${this.gameID}/wordChecked`,
-        JSON.stringify(response)
-      );
+    this.publish(`/game/${this.gameID}/wordChecked`, JSON.stringify(response));
 
-      const info = response.correct
-        ? `${player.username} scored ${foundWord.points} points!`
-        : `${player.username} didn't guess the word!`;
+    const info = response.correct
+      ? `${player.username} scored ${foundWord.points} points!`
+      : `${player.username} didn't guess the word!`;
 
-      this.sendInfo(info);
+    this.sendInfo(info);
 
-      if (this.howManyGuessed === 10) {
-        this.currentTurn = "";
-        this.mqttClient.publish(
-          `/game/${this.gameID}/changeTurn`,
-          this.currentTurn
-        );
+    if (this.howManyGuessed === 10) {
+      this.changeTurn("last");
+      const winner = this.getWinner();
 
-        let winnner;
-        if (this.host.score > this.opponent.score) winnner = this.host;
-        else if (this.host.score === this.opponent.score) winnner = undefined;
-        else winnner = this.opponent;
+      if (winner) this.sendInfo(`${winner.username} has won!`);
+      else this.sendInfo("Game ended with a draw!");
 
-        if (winnner) this.sendInfo(`${winnner.username} has won!`);
-        else this.sendInfo("Game ended with a draw!");
-
-        this.infoLogs.push("This game will be deleted in 15 seconds...");
-        this.mqttClient.publish(`/game/${this.gameID}/endGame`, "15");
-      } else {
-        this.currentTurn =
-          this.currentTurn === this.host.userID
-            ? this.opponent.userID
-            : this.host.userID;
-
-        this.changeTurn();
-      }
+      this.infoLogs.push("This game will be deleted in 15 seconds...");
+      this.publish(`/game/${this.gameID}/endGame`, "15");
+    } else {
+      this.changeTurn();
     }
-  };
-
-  private sendInfo = (message: string) => {
-    this.infoLogs.push(message);
-    this.mqttClient.publish(`/game/${this.gameID}/info`, message);
   };
 
   setOpponent = (opponent: Player) => {
@@ -134,22 +111,27 @@ class Game {
     if (this.opponent !== undefined) return false;
 
     this.opponent = opponent;
-    this.currentTurn = Math.round(Math.random())
-      ? this.host.userID
-      : this.opponent.userID;
 
     this.sendInfo(`Player ${opponent.username} joined game!`);
 
-    this.changeTurn();
+    this.changeTurn("first");
     return true;
   };
 
-  private generateWords = async () => {
+  private getWinner = () => {
+    if (this.host.score > this.opponent.score) return this.host;
+    else if (this.host.score === this.opponent.score) return undefined;
+    else return this.opponent;
+  };
+
+  private generateGame = async () => {
     this.generatingWords = true;
+
     const allWords = await getAllWords();
 
     let letters: Array<string>;
     let filteredWords: Array<Word>;
+
     do {
       letters = generateLetters(10);
       filteredWords = allWords.filter((word) =>
@@ -157,13 +139,17 @@ class Game {
       );
     } while (filteredWords.length < 10);
 
-    this.letters = letters.map((elem, index) => ({ id: index, letter: elem }));
+    this.letters = letters.map((letter, index) => ({
+      id: index,
+      letter: letter,
+    }));
     this.wordsAnswers = [];
     this.guessedWords = [];
 
     while (this.wordsAnswers.length < 10) {
       const chosenWord =
         filteredWords[Math.floor(Math.random() * filteredWords.length)].word;
+
       if (this.wordsAnswers.findIndex((elem) => elem.word === chosenWord) < 0) {
         const id = this.wordsAnswers.length;
 
@@ -176,32 +162,56 @@ class Game {
       }
     }
 
-    console.log(this.wordsAnswers);
-
     this.generatingWords = false;
 
     this.sendInfo("Finished generating game.");
 
-    this.mqttClient.publish(
-      `game/${this.gameID}/generatedGame`,
-      JSON.stringify({
-        letters: this.letters,
-        guessedWords: this.guessedWords,
-        generatingWords: this.generatingWords,
-      })
+    log.info(
+      `Game ${this.gameID} answers: ${JSON.stringify(this.wordsAnswers)}`
     );
+
+    const message = JSON.stringify({
+      letters: this.letters,
+      guessedWords: this.guessedWords,
+      generatingWords: this.generatingWords,
+    });
+
+    this.publish(`/game/${this.gameID}/generatedGame`, message);
   };
 
-  private changeTurn = () => {
-    const player =
-      this.host.userID === this.currentTurn ? this.host : this.opponent;
+  private publish = (topic: string, message: string) => {
+    this.mqttClient.publish(topic, message);
+  };
 
-    this.mqttClient.publish(
-      `/game/${this.gameID}/changeTurn`,
-      this.currentTurn
-    );
+  private sendInfo = (message: string) => {
+    log.info(`Game ${this.gameID}: ${message}`);
+    this.infoLogs.push(message);
+    this.publish(`/game/${this.gameID}/info`, message);
+  };
 
-    this.sendInfo(`It's ${player.username} turn now!`);
+  private changeTurn = (type?: "first" | "last") => {
+    if (type === "last") {
+      this.currentTurn = "";
+      this.publish(`/game/${this.gameID}/changeTurn`, this.currentTurn);
+    } else {
+      if (type === "first") {
+        this.currentTurn = Math.round(Math.random())
+          ? this.host.userID
+          : this.opponent.userID;
+      } else {
+        this.currentTurn =
+          this.currentTurn === this.host.userID
+            ? this.opponent.userID
+            : this.host.userID;
+      }
+
+      const player =
+        this.host.userID === this.currentTurn ? this.host : this.opponent;
+
+      this.publish(`/game/${this.gameID}/changeTurn`, this.currentTurn);
+
+      this.sendInfo(`It's ${player.username} turn now!`);
+    }
   };
 
   toJson = () => {
