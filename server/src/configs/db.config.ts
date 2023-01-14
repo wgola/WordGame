@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import log from "./logs.config";
 
 const dbConnect = () => {
   mongoose.set("strictQuery", false);
@@ -7,8 +8,8 @@ const dbConnect = () => {
 
   mongoose
     .connect(connectionString)
-    .then(() => console.log("Connected to MongoDB"))
-    .catch((err) => console.log(err));
+    .then(() => log.info("Connected to MongoDB"))
+    .catch((err) => log.error(err));
 };
 
 export default dbConnect;
