@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MqttMethods } from "../../types/mqttMethods";
 import { Tile } from "../Tile";
 import { styled } from "@mui/material/styles";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addNewLog, getInfoLogs } from "../../state/GameSlice";
+import { deleteGame } from "../../api/gameAPI/deleteGame";
 
 const StyledDiv = styled("div")`
   border: 1px solid grey;
@@ -25,16 +26,34 @@ const StyledInfoDiv = styled("div")`
 
 export const GameMessageDiv = ({ subscribe, onMessage }: MqttMethods) => {
   const { gameID } = useParams();
+  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const messages = useAppSelector(getInfoLogs);
 
   const infoTopic = `/game/${gameID}/info`;
+  const endTopic = `/game/${gameID}/endGame`;
 
   const messageDiv = useRef<HTMLDivElement>(null);
 
+  const deleteCurrentGame = (seconds: number) =>
+    setTimeout(async () => {
+      try {
+        await deleteGame(gameID);
+
+        navigate("/home/play");
+      } catch (e) {
+        navigate("/home/play");
+      }
+    }, seconds * 1000);
+
   const onNewMessage = (topic: string, payload: Buffer) => {
     if (topic === infoTopic) dispatch(addNewLog(payload.toString()));
+    else if (topic === endTopic) {
+      const seconds = parseInt(payload.toString());
+      dispatch(addNewLog(`This game will be deleted in ${seconds} seconds...`));
+      deleteCurrentGame(seconds);
+    }
   };
 
   const onRender = () => {
@@ -46,7 +65,7 @@ export const GameMessageDiv = ({ subscribe, onMessage }: MqttMethods) => {
         });
       });
     }
-    subscribe(infoTopic);
+    subscribe([infoTopic, endTopic]);
     onMessage(onNewMessage);
   };
 

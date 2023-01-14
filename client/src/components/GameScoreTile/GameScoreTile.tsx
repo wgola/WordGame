@@ -33,7 +33,7 @@ export const GameScoreTile = () => {
   const currentPlayer = useAppSelector(getCurrentPlayer);
 
   return (
-    <Tile dontAddMargin={true}>
+    <Tile dontAddMargin={true} height={164}>
       <UserDiv>
         <CurrentTurn visible={currentPlayer?.userID === host.userID} />
         <Avatar size={30} color={host.color} children={host.username} />

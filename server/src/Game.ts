@@ -30,6 +30,7 @@ class Game {
   letters: Array<Letter>;
   wordsAnswers: Array<wordAnswer>;
   guessedWords: Array<guessedWord>;
+  howManyGuessed: number = 0;
 
   currentTurn: string;
   generatingWords: boolean = false;
@@ -65,6 +66,9 @@ class Game {
 
       if (guessedWord) guessedWord.word = word;
 
+      if (foundWord !== undefined && !ifAlreadyGuessed)
+        this.howManyGuessed += 1;
+
       const response = {
         correct: foundWord !== undefined && !ifAlreadyGuessed,
         player: this.currentTurn,
@@ -75,11 +79,6 @@ class Game {
         this.host.userID === this.currentTurn ? this.host : this.opponent;
 
       player.score += foundWord?.points || 0;
-
-      this.currentTurn =
-        this.currentTurn === this.host.userID
-          ? this.opponent.userID
-          : this.host.userID;
 
       this.mqttClient.publish(
         `/game/${this.gameID}/wordChecked`,
@@ -92,7 +91,31 @@ class Game {
 
       this.sendInfo(info);
 
-      this.changeTurn();
+      if (this.howManyGuessed === 10) {
+        this.currentTurn = "";
+        this.mqttClient.publish(
+          `/game/${this.gameID}/changeTurn`,
+          this.currentTurn
+        );
+
+        let winnner;
+        if (this.host.score > this.opponent.score) winnner = this.host;
+        else if (this.host.score === this.opponent.score) winnner = undefined;
+        else winnner = this.opponent;
+
+        if (winnner) this.sendInfo(`${winnner.username} has won!`);
+        else this.sendInfo("Game ended with a draw!");
+
+        this.infoLogs.push("This game will be deleted in 15 seconds...");
+        this.mqttClient.publish(`/game/${this.gameID}/endGame`, "15");
+      } else {
+        this.currentTurn =
+          this.currentTurn === this.host.userID
+            ? this.opponent.userID
+            : this.host.userID;
+
+        this.changeTurn();
+      }
     }
   };
 

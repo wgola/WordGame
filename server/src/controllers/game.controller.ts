@@ -27,7 +27,7 @@ const getGame = async (req: Request, res: Response) => {
 
 const deleteGame = (req: Request, res: Response) => {
   const game = get(req.params.gameID);
-  if (game.host.userID === res.locals.userID) {
+  if (game?.host?.userID === res.locals.userID) {
     del(req.params.gameID);
     res.sendStatus(204);
   } else res.sendStatus(403);
