@@ -1,6 +1,4 @@
 import mqtt, { OnMessageCallback } from "precompiled-mqtt";
-import { addOpponent, saveGeneratedGame } from "./state/GameSlice";
-import { store } from "./store";
 
 const mqttConnect = () => {
   const client = mqtt.connect("ws://localhost:9000/mqtt");

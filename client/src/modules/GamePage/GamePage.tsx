@@ -112,7 +112,7 @@ export const GamePage = () => {
             <GameMessageDiv {...methods} />
           </Grid>
           <Grid item>
-            <ButtonsTile />
+            <ButtonsTile {...methods} />
           </Grid>
         </Grid>
       </Grid>

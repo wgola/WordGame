@@ -9,6 +9,7 @@ export default defineConfig({
       key: fs.readFileSync("../../ScrabbleCerts/scrabble-key-np.key"),
       cert: fs.readFileSync("../../ScrabbleCerts/scrabble-cert-365.crt"),
     },
+    host: true,
   },
   plugins: [react()],
 });
