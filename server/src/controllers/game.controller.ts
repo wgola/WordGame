@@ -6,6 +6,7 @@ import {
   deleteGame as del,
   joinGame as join,
 } from "..//services/game.service";
+import log from "../configs/logs.config";
 
 const createGame = async (req: Request, res: Response) => {
   const user = await findUserByID(res.locals.userID);
@@ -15,27 +16,46 @@ const createGame = async (req: Request, res: Response) => {
     color: user.color,
     score: 0,
   });
-  res.send(gameID);
+  log.info(`Created game ${gameID}`);
+
+  return res.send(gameID);
 };
 
 const getGame = async (req: Request, res: Response) => {
   const user = await findUserByID(res.locals.userID);
-  return user
-    ? res.json({ userData: user, gameData: get(req.params.gameID) })
-    : res.sendStatus(404);
+  if (user) {
+    log.info(`GET request for game ${req.params.gameID} from user ${user.id}`);
+
+    return res.json({ userData: user, gameData: get(req.params.gameID) });
+  }
+
+  log.warn(`GET request for game ${req.params.gameID} from unauthorized user`);
+
+  return res.sendStatus(404);
 };
 
 const deleteGame = (req: Request, res: Response) => {
   const game = get(req.params.gameID);
   if (game?.host?.userID === res.locals.userID) {
     del(req.params.gameID);
-    res.sendStatus(204);
-  } else res.sendStatus(403);
+    log.info(
+      `DELETE request for game ${req.params.gameID} from user ${res.locals.userID}`
+    );
+
+    return res.sendStatus(204);
+  }
+  log.warn(
+    `DELETE request for game ${req.params.gameID} from unauthorized user`
+  );
+
+  return res.sendStatus(403);
 };
 
 const joinGame = async (req: Request, res: Response) => {
   const user = await findUserByID(res.locals.userID);
-  res.send(
+  log.info(`PUT request for game ${req.params.gameID} from user ${user.id}`);
+
+  return res.send(
     join(req.params.gameID, {
       userID: res.locals.userID,
       username: user.username,
