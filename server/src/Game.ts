@@ -167,7 +167,9 @@ class Game {
     this.sendInfo("Finished generating game.");
 
     log.info(
-      `Game ${this.gameID} answers: ${JSON.stringify(this.wordsAnswers)}`
+      `Game ${this.gameID} answers: ${JSON.stringify(
+        this.wordsAnswers.map((wordAnswer) => wordAnswer.word)
+      )}`
     );
 
     const message = JSON.stringify({
