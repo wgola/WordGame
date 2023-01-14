@@ -24,6 +24,8 @@ app.use("/word", wordsRouter);
 
 app.use("/game", gameRouter);
 
-app.get("/", (req: Request, res: Response) => console.log("Ok"));
+app.get("/", (req: Request, res: Response) =>
+  res.send("Welcome to ScrabbleProject API")
+);
 
 export default app;
