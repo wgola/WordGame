@@ -1,10 +1,9 @@
 import words from "../models/words.model";
+import log from "../configs/logs.config";
 
-const checkIfWordExists = async (word: string) =>
-  (await words.findOne({ word: word })) !== null;
-
-const getWordsPage = async (word: string, page: number, limit: number) =>
-  await words.paginate(
+const getWordsPage = async (word: string, page: number, limit: number) => {
+  log.info("Returned words page");
+  return await words.paginate(
     { word: { $regex: `^${word}` } },
     {
       page: page,
@@ -12,7 +11,11 @@ const getWordsPage = async (word: string, page: number, limit: number) =>
       sort: { word: 1 },
     }
   );
+};
 
-const getAllWords = async () => await words.find();
+const getAllWords = async () => {
+  log.info("Returned all words");
+  return await words.find();
+};
 
-export { checkIfWordExists, getWordsPage, getAllWords };
+export { getWordsPage, getAllWords };
