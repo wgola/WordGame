@@ -1,9 +1,19 @@
-import { Grid } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { getUser, saveUserData } from "../../state/UserSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import mqttConnect from "../../mqtt";
+import { Grid } from "@mui/material";
 import { getGame } from "../../api";
-import { GameChat } from "../../components";
-import { GameScoreTile } from "../../components/GameScoreTile";
+import {
+  GameChat,
+  GameScoreTile,
+  GameBoard,
+  LettersTile,
+  ButtonsTile,
+  GameMessageDiv,
+} from "../../components";
+
 import {
   addOpponent,
   changeTurn,
@@ -11,13 +21,6 @@ import {
   saveGame,
   saveGeneratedGame,
 } from "../../state/GameSlice";
-import { getUser, saveUserData } from "../../state/UserSlice";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import mqttConnect from "../../mqtt";
-import { GameBoard } from "../../components/GameBoard";
-import { LettersTile } from "../../components/LettersTile";
-import { ButtonsTile } from "../../components/ButtonsTile";
-import { GameMessageDiv } from "../../components/GameMessageDiv";
 
 export const GamePage = () => {
   const navigate = useNavigate();

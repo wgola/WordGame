@@ -1,8 +1,8 @@
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Button, Input } from "../../../../components";
+import { getUser } from "../../../../state/UserSlice";
+import { useAppSelector } from "../../../../hooks";
 import { useParams } from "react-router-dom";
-import { Button, Input } from "../../../components";
-import { useAppSelector } from "../../../hooks";
-import { getUser } from "../../../state/UserSlice";
 
 interface MessageType {
   message: string;

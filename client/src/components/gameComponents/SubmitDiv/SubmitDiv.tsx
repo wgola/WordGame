@@ -1,6 +1,6 @@
-import { useDrop } from "react-dnd";
+import { Letter } from "../../../types/letter";
 import { styled } from "@mui/material/styles";
-import { Letter } from "../../types/letter";
+import { useDrop } from "react-dnd";
 
 const StyledDiv = styled("div")`
   display: flex;

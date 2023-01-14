@@ -1,13 +1,13 @@
+import { MqttMethods } from "../../../types/mqttMethods";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useAppSelector } from "../../hooks";
-import { getUser } from "../../state/UserSlice";
-import { Message } from "../../types/message";
-import { Tile } from "../Tile";
-import { MessageForm } from "./MessageForm";
+import { getUser } from "../../../state/UserSlice";
+import { Message } from "../../../types/message";
+import { useAppSelector } from "../../../hooks";
 import { styled } from "@mui/material/styles";
+import { useParams } from "react-router-dom";
+import { MessageForm } from "./MessageForm";
 import { MessageDiv } from "./MessageDiv";
-import { MqttMethods } from "../../types/mqttMethods";
+import { Tile } from "../../Tile";
 
 const StyledDiv = styled("div")`
   border: 1px solid grey;

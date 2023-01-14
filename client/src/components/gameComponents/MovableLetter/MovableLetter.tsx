@@ -1,8 +1,8 @@
-import { useDrag } from "react-dnd";
+import { isPlayerTurn } from "../../../state/GameSlice";
+import { useAppSelector } from "../../../hooks";
+import { Letter } from "../../../types/letter";
 import { styled } from "@mui/material/styles";
-import { Letter } from "../../types/letter";
-import { useAppSelector } from "../../hooks";
-import { isPlayerTurn } from "../../state/GameSlice";
+import { useDrag } from "react-dnd";
 
 interface StyledDivProps {
   canDrag: boolean;

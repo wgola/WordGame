@@ -1,18 +1,18 @@
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { MqttMethods } from "../../../types/mqttMethods";
 import { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks";
+import { Letter } from "../../../types/letter";
+import { styled } from "@mui/material/styles";
+import { useParams } from "react-router-dom";
+import { LettersDiv } from "../LettersDiv";
+import { SubmitDiv } from "../SubmitDiv";
+import { Button } from "../../Button";
+import { Tile } from "../../Tile";
 import {
   getLetters,
   isPlayerTurn,
   saveCorrectWord,
-} from "../../state/GameSlice";
-import { Letter } from "../../types/letter";
-import { Button } from "../Button";
-import { LettersDiv } from "../LettersDiv";
-import { SubmitDiv } from "../SubmitDiv";
-import { Tile } from "../Tile";
-import { styled } from "@mui/material/styles";
-import { MqttMethods } from "../../types/mqttMethods";
-import { useParams } from "react-router-dom";
+} from "../../../state/GameSlice";
 
 const StyledDiv = styled("div")`
   display: flex;

@@ -1,10 +1,10 @@
+import { clearGame, getGameData, isHost } from "../../../state/GameSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { deleteGame } from "../../../api/gameAPI/deleteGame";
 import { useNavigate } from "react-router-dom";
-import { deleteGame } from "../../api/gameAPI/deleteGame";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearGame, getGameData, isHost } from "../../state/GameSlice";
-import { Button } from "../Button/Button";
 import { ButtonDiv } from "../ButtonDiv";
-import { Tile } from "../Tile";
+import { Button } from "../../Button";
+import { Tile } from "../../Tile";
 
 export const ButtonsTile = () => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ export const ButtonsTile = () => {
       dispatch(clearGame());
       navigate("/home/play");
     } catch (e) {
-      console.log("You cant delete this game");
+      navigate("/home/play");
     }
   };
 

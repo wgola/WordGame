@@ -1,9 +1,9 @@
-import { useAppSelector } from "../../hooks";
-import { getGameLoading, getGuessedWords } from "../../state/GameSlice";
-import { BoardWord } from "../BoardWord";
-import { Tile } from "../Tile";
+import { getGameLoading, getGuessedWords } from "../../../state/GameSlice";
+import { useAppSelector } from "../../../hooks";
 import { styled } from "@mui/material/styles";
 import { useParams } from "react-router-dom";
+import { BoardWord } from "../BoardWord";
+import { Tile } from "../../Tile";
 
 const StyledDiv = styled("div")`
   border: 1px solid grey;

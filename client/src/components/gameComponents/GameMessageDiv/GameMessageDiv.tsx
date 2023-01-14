@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { addNewLog, getInfoLogs } from "../../../state/GameSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { deleteGame } from "../../../api/gameAPI/deleteGame";
 import { useNavigate, useParams } from "react-router-dom";
-import { MqttMethods } from "../../types/mqttMethods";
-import { Tile } from "../Tile";
+import { MqttMethods } from "../../../types/mqttMethods";
 import { styled } from "@mui/material/styles";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { addNewLog, getInfoLogs } from "../../state/GameSlice";
-import { deleteGame } from "../../api/gameAPI/deleteGame";
+import { useEffect, useRef } from "react";
+import { Tile } from "../../Tile";
 
 const StyledDiv = styled("div")`
   border: 1px solid grey;

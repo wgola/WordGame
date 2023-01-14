@@ -1,8 +1,8 @@
-import { getCurrentPlayer, getPlayers } from "../../state/GameSlice";
-import { Avatar } from "../Avatar";
-import { Tile } from "../Tile";
+import { getCurrentPlayer, getPlayers } from "../../../state/GameSlice";
+import { useAppSelector } from "../../../hooks";
 import { styled } from "@mui/material/styles";
-import { useAppSelector } from "../../hooks";
+import { Avatar } from "../../Avatar";
+import { Tile } from "../../Tile";
 
 const UserDiv = styled("div")`
   border-radius: 15px;

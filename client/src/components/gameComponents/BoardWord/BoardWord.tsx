@@ -1,4 +1,4 @@
-import { guessedWord } from "../../types/guessedWord";
+import { guessedWord } from "../../../types/guessedWord";
 import { styled } from "@mui/material/styles";
 
 const StyledLetterDiv = styled("div")`

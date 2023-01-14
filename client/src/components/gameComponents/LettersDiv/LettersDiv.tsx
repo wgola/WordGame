@@ -1,6 +1,6 @@
 import { MovableLetter } from "../MovableLetter";
+import { Letter } from "../../../types/letter";
 import { styled } from "@mui/material/styles";
-import { Letter } from "../../types/letter";
 
 const StyledDiv = styled("div")`
   display: flex;
