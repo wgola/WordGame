@@ -1,5 +1,5 @@
-import { registerFieldsTypes } from "../types";
-import API from "./axios";
+import { registerFieldsTypes } from "../../types";
+import API from "../axios";
 
 export const register = async (data: registerFieldsTypes): Promise<boolean> => {
   try {

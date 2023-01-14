@@ -2,6 +2,7 @@ import { createBrowserRouter, RouteObject } from "react-router-dom";
 import App from "./App";
 import { AccountPage } from "./modules/AccountPage";
 import { EditAccountPage } from "./modules/EditAccountPage";
+import { GamePage } from "./modules/GamePage";
 import { HomePage } from "./modules/HomePage";
 import { LoginPage } from "./modules/LoginPage";
 import { PlayPage } from "./modules/PlayPage";
@@ -41,7 +42,7 @@ const routes: RouteObject[] = [
   },
   {
     path: "/game/:gameID",
-    element: <p>Game page</p>,
+    element: <GamePage />,
   },
   {
     path: "/",

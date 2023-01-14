@@ -1,7 +1,11 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import { Button, Tile, Input } from "../../components";
+import { Button, Tile } from "../../components";
+import { JoinGameForm } from "./JoinGameForm";
+import { createGame } from "../../api";
+import { useAppDispatch } from "../../hooks";
+import { clearGame } from "../../state/GameSlice";
 
 const StyledDiv = styled("div")`
   display: flex;
@@ -13,8 +17,16 @@ const StyledDiv = styled("div")`
 
 export const PlayPage = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const [gameID, setGameID] = useState("");
+  const [message, setMessage] = useState("");
+
+  const onCreateGame = async () => {
+    dispatch(clearGame());
+    setMessage("Loading...");
+    const result = await createGame();
+    navigate(`/game/${result.data}`);
+  };
 
   return (
     <Tile width={900}>
@@ -22,24 +34,12 @@ export const PlayPage = () => {
         <Button
           children="Create new game"
           type="button"
-          onClick={() => navigate("/game/0")}
+          onClick={onCreateGame}
         />
         or
-        <div>
-          <Input
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setGameID(event.target.value)
-            }
-            required={true}
-            label="Enter game ID"
-          />
-          <Button
-            children="Join game"
-            type="button"
-            onClick={() => navigate(`/game/${gameID}`)}
-          />
-        </div>
+        <JoinGameForm setMessage={setMessage} />
       </StyledDiv>
+      <p>{message}</p>
     </Tile>
   );
 };

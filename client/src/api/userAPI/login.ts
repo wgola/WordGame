@@ -1,5 +1,5 @@
-import { userType, loginFieldsTypes } from "../types";
-import API from "./axios";
+import { userType, loginFieldsTypes } from "../../types";
+import API from "../axios";
 
 export const login = async (
   data: loginFieldsTypes

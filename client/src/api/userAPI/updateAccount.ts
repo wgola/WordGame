@@ -1,5 +1,5 @@
-import { editFieldsTypes } from "../types";
-import API from "./axios";
+import { editFieldsTypes } from "../../types";
+import API from "../axios";
 
 export const updateAccount = async (
   data: editFieldsTypes

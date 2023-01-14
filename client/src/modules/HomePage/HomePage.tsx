@@ -13,19 +13,24 @@ export const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const user = useSelector(getUser);
 
+  const onRender = async () => {
+    if (user._id === undefined) {
+      try {
+        const user = await getUserData();
+        if (user !== null) {
+          dispatch(saveUserData(user));
+          setLoading(false);
+        } else navigate("/login");
+      } catch (e) {
+        navigate("/login");
+      }
+    }
+    setLoading(false);
+  };
+
   const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender) {
-      if (user._id === undefined) {
-        getUserData().then((user) => {
-          if (user !== null) {
-            dispatch(saveUserData(user));
-            setLoading(false);
-          } else navigate("/login");
-        });
-      }
-      setLoading(false);
-    }
+    if (isSecondRender.current) onRender();
     isSecondRender.current = true;
   }, [user]);
 
