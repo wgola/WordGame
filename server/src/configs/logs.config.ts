@@ -1,4 +1,4 @@
-import { createSimpleLogger, ISimpleLoggerOptions } from "simple-node-logger";
+import { createSimpleLogger } from "simple-node-logger";
 
 const options = {
   logFilePath: "scrabble_logs.log",
