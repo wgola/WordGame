@@ -1,0 +1,7 @@
+node_modules
+scrabble_logs.log
+.git
+.gitignore
+.env.example
+.env
+dist
