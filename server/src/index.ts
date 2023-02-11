@@ -13,7 +13,7 @@ const mqttClient = mqttConnect();
 const port = process.env.PORT || 8000;
 
 app.listen(port, () =>
-  log.info(`Server is running at https://localhost:${port}`)
+  log.info(`Server is running at http://localhost:${port}`)
 );
 
 export { mqttClient };

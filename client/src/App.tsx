@@ -7,7 +7,7 @@ const App = () => {
   return (
     <Tile width={500}>
       <Form>
-        <h1>Welcome to ScrabbleApp!</h1>
+        <h1>Welcome to WordGame!</h1>
         <ButtonDiv>
           <Button
             type="button"
