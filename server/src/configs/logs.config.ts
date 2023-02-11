@@ -1,7 +1,7 @@
 import { createSimpleLogger } from "simple-node-logger";
 
 const options = {
-  logFilePath: "scrabble_logs.log",
+  logFilePath: "wordgame_logs.log",
 };
 
 const log = createSimpleLogger(options);
