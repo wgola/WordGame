@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    ports:
+      - 8000:8000
+    env_file: ./server/.env
+    volumes:
+      - ./server/:/app
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    ports:
+      - 5173:5173
+    volumes:
+      - ./client/:/app
+
+  mqtt-broker:
+    build:
+      context: ./mqtt-broker
+    ports:
+      - 9000:9000
+      - 1883:1883
