@@ -1,3 +1,11 @@
-FROM hivemq/hivemq-ce
+FROM rabbitmq:3.8.0-management
 
-COPY config.xml /opt/hivemq-ce-2023.1/conf/
+COPY rabbitmq.conf /etc/rabbitmq/
+
+ENV RABBITMQ_NODENAME=rabbit@localhost
+
+RUN chown rabbitmq:rabbitmq /etc/rabbitmq/rabbitmq.conf
+
+USER rabbitmq:rabbitmq
+
+RUN rabbitmq-plugins enable rabbitmq_web_mqtt
