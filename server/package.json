@@ -25,9 +25,9 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.8.0",
     "mongoose-paginate-v2": "^1.7.1",
-    "mqtt": "^4.3.7",
     "short-uuid": "^4.2.2",
-    "simple-node-logger": "^21.8.12"
+    "simple-node-logger": "^21.8.12",
+    "socket.io": "^4.6.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
