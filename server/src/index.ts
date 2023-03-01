@@ -13,7 +13,7 @@ const port = process.env.PORT || 8000;
 
 const server = new HttpServer(app);
 
-const io = new WsServer(server);
+const io = new WsServer(server, { cors: { origin: "*" } });
 
 server.listen(port, () =>
   log.info(`Server is running at http://localhost:${port}`)
