@@ -4,12 +4,12 @@
 
 WordGame is a project which I've made during my studies on course "Network Protocols". It consists of:
 
-- [client](client/README.md) written in [TypeScript](https://www.typescriptlang.org/),
-- [server](server/README.md) also written in [TypeScript](https://www.typescriptlang.org/),
-- [MQTT broker](mqtt-broker/README.md),
-- [MongoDB Atlas](https://www.mongodb.com/atlas/database) database,
+- [**client**](client) written in [TypeScript](https://www.typescriptlang.org/),
+- [**server**](server) also written in [TypeScript](https://www.typescriptlang.org/),
+- [**MQTT broker**](mqtt-broker/README.md),
+- [**MongoDB Atlas**](https://www.mongodb.com/atlas/database) **database**,
 
-and it uses HTTP and MQTT (over WebSocket) protocols.
+and it uses **HTTP** and **MQTT** (over **WebSocket**) protocols.
 
 ---
 
@@ -42,7 +42,7 @@ I'm working on re-designing both client and server so they will use WebSocket co
 
 ## :computer: Running app
 
-This app uses [Docker](https://www.docker.com/) (and [Docker Compose](https://docs.docker.com/compose/)) for both development and production. You can check their versions with following commands:
+This app uses [**Docker**](https://www.docker.com/) (and [**Docker Compose**](https://docs.docker.com/compose/)) for both development and production. You can check their versions with following commands:
 
 ```
 $ docker version
