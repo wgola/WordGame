@@ -1,4 +1,4 @@
-# RabbitMQ MQTT Broker
+# :incoming_envelope: RabbitMQ MQTT Broker
 
 ## :notebook: Description
 
