@@ -4,9 +4,9 @@
 
 WordGame is a project which I've made during my studies on course "Network Protocols". It consists of:
 
-- [**client**](client) written in [TypeScript](https://www.typescriptlang.org/),
-- [**server**](server) also written in [TypeScript](https://www.typescriptlang.org/),
-- [**MQTT broker**](mqtt-broker/README.md),
+- [**client**](client) (written in [TypeScript](https://www.typescriptlang.org/)),
+- [**server**](server) (also written in [TypeScript](https://www.typescriptlang.org/)),
+- [**MQTT broker**](mqtt-broker) ([RabbitMQ](https://www.rabbitmq.com/)),
 - [**MongoDB Atlas**](https://www.mongodb.com/atlas/database) **database**,
 
 and it uses **HTTP** and **MQTT** (over **WebSocket**) protocols.
@@ -36,7 +36,7 @@ The main features of this app are:
 
 ## :chart_with_upwards_trend: Future improvements
 
-I'm working on re-designing both client and server so they will use WebSocket connection instead of MQTT. When it's done, the app will be hosted online for preview. In the future I also plan to rewrite server from TypeScript to some other language (probably [Go](https://go.dev/) which I'm learning now).
+I'm working on re-designing both client and server so they will use WebSocket connection instead of MQTT. When it's done, the app will be hosted online for preview. In the future I also plan to rewrite server from TypeScript to some other language (probably [Go](https://go.dev/) which I'm currently learning).
 
 ---
 
