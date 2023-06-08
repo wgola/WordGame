@@ -1,4 +1,4 @@
-import { MqttClient } from "mqtt";
+import io from "./configs/ws.config";
 import log from "./configs/logs.config";
 import { getAllWords } from "./services/words.service";
 import { Player } from "./types/Player";
@@ -37,20 +37,18 @@ class Game {
   generatingWords: boolean = false;
   infoLogs: Array<string> = [];
 
-  mqttClient: MqttClient;
-
-  constructor(gameID: string, host: Player, mqttClient: MqttClient) {
+  constructor(gameID: string, host: Player) {
     this.gameID = gameID;
     this.host = host;
-    this.mqttClient = mqttClient;
 
-    this.mqttClient.subscribe(`/game/${this.gameID}/checkWord`);
-    this.mqttClient.on("message", this.onWordCheck);
+    // this.mqttClient.subscribe(`/game/${this.gameID}/checkWord`);
+    // this.mqttClient.on("message", this.onWordCheck);
+    io.on(`/game/${this.gameID}/checkWord`, this.onWordCheck);
     this.generateGame();
   }
 
-  private onWordCheck = (topic: string, payload: Buffer) => {
-    const word = payload.toString();
+  private onWordCheck = (payload: string) => {
+    const word = payload;
 
     const foundWord = this.wordsAnswers.find(
       (wordAnswer) => wordAnswer.word === word
@@ -182,7 +180,8 @@ class Game {
   };
 
   private publish = (topic: string, message: string) => {
-    this.mqttClient.publish(topic, message);
+    io.to(this.gameID).emit(topic, message);
+    // this.mqttClient.publish(topic, message);
   };
 
   private sendInfo = (message: string) => {

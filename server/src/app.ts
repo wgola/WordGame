@@ -5,6 +5,7 @@ import wordsRouter from "./routes/words.route";
 import usersRouter from "./routes/users.route";
 import gameRouter from "./routes/game.route";
 import cookieParser from "cookie-parser";
+import http from "http";
 
 const app: Express = express();
 
@@ -28,4 +29,6 @@ app.get("/", (req: Request, res: Response) =>
   res.send("Welcome to ScrabbleProject API")
 );
 
-export default app;
+const server = http.createServer(app);
+
+export default server;
