@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { CircularProgress } from "@mui/material";
 import { WordEntry } from "../../../components";
+import { styled } from "@mui/material/styles";
+import { useEffect, useMemo } from "react";
 import {
   fetchNewPage,
   getIsFetching,
   getWordsFromPage,
 } from "../../../state/WordsSlice";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { styled } from "@mui/material/styles";
 
 interface WordsListProps {
   search: string;
@@ -32,11 +32,9 @@ export const WordsList = ({ search, page, rowsPerPage }: WordsListProps) => {
     [words]
   );
 
-  const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current && words.length === 0)
+    if (words.length === 0)
       dispatch(fetchNewPage(search, page + 1, rowsPerPage));
-    isSecondRender.current = true;
   }, [page, rowsPerPage, search]);
 
   return isFetching ? (

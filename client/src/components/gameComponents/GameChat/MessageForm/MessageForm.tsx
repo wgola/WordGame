@@ -2,15 +2,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Input } from "../../../../components";
 import { getUser } from "../../../../state/UserSlice";
 import { useAppSelector } from "../../../../hooks";
-import { useParams } from "react-router-dom";
 import socket from "../../../../ws";
 
 interface MessageType {
   message: string;
-}
-
-interface MessageFormProps {
-  publish: (topic: string, message: string) => void;
 }
 
 export const MessageForm = () => {
@@ -20,12 +15,11 @@ export const MessageForm = () => {
   const { ref: inputRef, ...inputProps } = register("message");
 
   const user = useAppSelector(getUser);
-  const { gameID } = useParams();
 
   const onSubmit: SubmitHandler<MessageType> = (data) => {
     reset();
     const message = { author: user.username || "", body: data.message };
-    socket.emit(`/game/${gameID}/chat`, JSON.stringify(message));
+    socket.emit("chat", JSON.stringify(message));
   };
 
   return (

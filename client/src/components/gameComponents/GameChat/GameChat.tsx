@@ -1,10 +1,8 @@
-import { MqttMethods } from "../../../types/mqttMethods";
 import { useEffect, useRef, useState } from "react";
 import { getUser } from "../../../state/UserSlice";
 import { Message } from "../../../types/message";
 import { useAppSelector } from "../../../hooks";
 import { styled } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
 import { MessageForm } from "./MessageForm";
 import { MessageDiv } from "./MessageDiv";
 import { Tile } from "../../Tile";
@@ -31,7 +29,6 @@ const ChatDiv = styled("div")`
 
 export const GameChat = () => {
   const user = useAppSelector(getUser);
-  const { gameID } = useParams();
 
   const [messages, setMessages] = useState<Array<Message>>([]);
 
@@ -51,13 +48,15 @@ export const GameChat = () => {
         });
       });
     }
-    socket.on(`/game/${gameID}/chat`, onChatMessage);
+    socket.on("chat", onChatMessage);
   };
 
-  const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) onRender();
-    isSecondRender.current = true;
+    onRender();
+
+    return () => {
+      socket.off("chat", onChatMessage);
+    };
   }, []);
 
   return (

@@ -1,12 +1,11 @@
-import { clearGame, getGameData, isHost } from "../../../state/GameSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { clearGame, isHost } from "../../../state/GameSlice";
 import { deleteGame } from "../../../api/gameAPI/deleteGame";
-import { MqttMethods } from "../../../types/mqttMethods";
 import { useNavigate, useParams } from "react-router-dom";
 import { ButtonDiv } from "../../ButtonDiv";
 import { Button } from "../../Button";
 import { Tile } from "../../Tile";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import socket from "../../../ws";
 
 export const ButtonsTile = () => {
@@ -15,19 +14,18 @@ export const ButtonsTile = () => {
   const { gameID } = useParams();
   const isPlayerHost = useAppSelector(isHost);
 
-  const gameDeletedTopic = `/game/${gameID}/deleted`;
-
   const onExit = () => {
+    socket.disconnect();
     dispatch(clearGame());
     navigate("/home/play");
   };
 
   const onDelete = () => {
     socket.emit(
-      `/game/${gameID}/info`,
+      "info",
       "Host deleted this game! You will be redirected to home page in 5 seconds..."
     );
-    socket.emit(gameDeletedTopic, "game deleted");
+    socket.emit("deleted", "game deleted");
   };
 
   const onGameDeleted = (payload: string) => {
@@ -35,18 +33,19 @@ export const ButtonsTile = () => {
       try {
         await deleteGame(gameID);
       } finally {
+        socket.disconnect();
         navigate("/home/play");
         dispatch(clearGame());
       }
     }, 5000);
   };
 
-  const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) {
-      socket.on(gameDeletedTopic, onGameDeleted);
-    }
-    isSecondRender.current = true;
+    socket.on("deleted", onGameDeleted);
+
+    return () => {
+      socket.off("deleted", onGameDeleted);
+    };
   }, []);
 
   return (

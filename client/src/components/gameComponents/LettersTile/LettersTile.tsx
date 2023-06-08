@@ -1,9 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { MqttMethods } from "../../../types/mqttMethods";
-import { useEffect, useRef, useState } from "react";
 import { Letter } from "../../../types/letter";
 import { styled } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { LettersDiv } from "../LettersDiv";
 import { SubmitDiv } from "../SubmitDiv";
 import { Button } from "../../Button";
@@ -29,8 +27,6 @@ export const LettersTile = () => {
   const [showedLetters, setShowedLetters] = useState<Array<Letter>>([]);
   const [answer, setAnswer] = useState("");
 
-  const { gameID } = useParams();
-
   useEffect(() => setShowedLetters(availableLetters), [availableLetters]);
 
   const onDrop = (letter: Letter) => {
@@ -46,23 +42,21 @@ export const LettersTile = () => {
   };
 
   const onSubmit = () => {
-    socket.emit(`/game/${gameID}/checkWord`, answer);
+    socket.emit("checkWord", answer);
     onReset();
   };
 
-  const onWordChecked = (payload: string) => {
-    const message = JSON.parse(payload);
-    if (message.correct) dispatch(saveCorrectWord(message));
-  };
-
-  const onRender = () => {
-    socket.on(`/game/${gameID}/wordChecked`, onWordChecked);
-  };
-
-  const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) onRender();
-    isSecondRender.current = true;
+    const onWordChecked = (payload: string) => {
+      const message = JSON.parse(payload);
+      if (message.correct) dispatch(saveCorrectWord(message));
+    };
+
+    socket.on("wordChecked", onWordChecked);
+
+    return () => {
+      socket.off("wordChecked", onWordChecked);
+    };
   }, []);
 
   return (

@@ -1,10 +1,9 @@
 import { getUser, saveUserData } from "../../state/UserSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
-// import mqttConnect from "../../mqtt";
 import { Grid } from "@mui/material";
 import { getGame } from "../../api";
+import { useEffect } from "react";
 import {
   GameChat,
   GameScoreTile,
@@ -30,10 +29,6 @@ export const GamePage = () => {
   const user = useAppSelector(getUser);
   const game = useAppSelector(getGameData);
 
-  const connectedTopic = `/game/${gameID}/connected`;
-  const gameReadyTopic = `/game/${gameID}/generatedGame`;
-  const changeTurnTopic = `/game/${gameID}/changeTurn`;
-
   const onConnected = (payload: string) => {
     const data = JSON.parse(payload);
     if (game.opponent.userID === "") dispatch(addOpponent(data));
@@ -58,28 +53,34 @@ export const GamePage = () => {
         dispatch(saveUserData(userData));
 
         socket.emit("join-game", gameID);
-        socket.on(connectedTopic, onConnected);
-        socket.on(gameReadyTopic, onGameReady);
-        socket.on(changeTurnTopic, onChangeTurn);
 
         if (gameData !== null) {
           dispatch(saveGame(gameData));
           if (gameData.opponent)
-            socket.emit(
-              `/game/${gameID}/connected`,
-              JSON.stringify(gameData.opponent)
-            );
-        } else navigate("/home/play");
+            socket.emit("connected", JSON.stringify(gameData.opponent));
+        } else {
+          socket.disconnect();
+          navigate("/home/play");
+        }
       } catch (e) {
+        socket.disconnect();
         navigate("/login");
       }
     }
   };
 
-  const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) onRender();
-    isSecondRender.current = true;
+    socket.connect();
+    onRender();
+    socket.on("connected", onConnected);
+    socket.on("generatedGame", onGameReady);
+    socket.on("changeTurn", onChangeTurn);
+
+    return () => {
+      socket.off("connected", onConnected);
+      socket.off("generatedGame", onGameReady);
+      socket.off("changeTurn", onChangeTurn);
+    };
   }, [user]);
 
   return (

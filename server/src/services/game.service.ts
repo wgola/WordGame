@@ -1,9 +1,8 @@
+import log from "../configs/logs.config";
 import { Player } from "../types/Player";
 import * as uuid from "short-uuid";
+import games from "../games";
 import Game from "../Game";
-import log from "../configs/logs.config";
-
-const games: { [index: string]: Game } = {};
 
 const createGame = (host: Player) => {
   const gameID = uuid.generate();

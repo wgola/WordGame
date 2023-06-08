@@ -2,7 +2,6 @@ import { addNewLog, getInfoLogs } from "../../../state/GameSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { deleteGame } from "../../../api/gameAPI/deleteGame";
 import { useNavigate, useParams } from "react-router-dom";
-import { MqttMethods } from "../../../types/mqttMethods";
 import { styled } from "@mui/material/styles";
 import { useEffect, useRef } from "react";
 import { Tile } from "../../Tile";
@@ -32,9 +31,6 @@ export const GameMessageDiv = () => {
   const dispatch = useAppDispatch();
   const messages = useAppSelector(getInfoLogs);
 
-  const infoTopic = `/game/${gameID}/info`;
-  const endTopic = `/game/${gameID}/endGame`;
-
   const messageDiv = useRef<HTMLDivElement>(null);
 
   const deleteCurrentGame = (seconds: number) =>
@@ -48,17 +44,17 @@ export const GameMessageDiv = () => {
       }
     }, seconds * 1000);
 
-  const onInfo = (payload: string) => {
-    dispatch(addNewLog(payload));
-  };
+  useEffect(() => {
+    const onInfo = (payload: string) => {
+      dispatch(addNewLog(payload));
+    };
 
-  const onEnd = (payload: string) => {
-    const seconds = parseInt(payload);
-    dispatch(addNewLog(`This game will be deleted in ${seconds} seconds...`));
-    deleteCurrentGame(seconds);
-  };
+    const onEnd = (payload: string) => {
+      const seconds = parseInt(payload);
+      dispatch(addNewLog(`This game will be deleted in ${seconds} seconds...`));
+      deleteCurrentGame(seconds);
+    };
 
-  const onRender = () => {
     if (messageDiv) {
       messageDiv.current?.addEventListener("DOMNodeInserted", (event) => {
         messageDiv.current?.scroll({
@@ -67,14 +63,14 @@ export const GameMessageDiv = () => {
         });
       });
     }
-    socket.on(infoTopic, onInfo);
-    socket.on(endTopic, onEnd);
-  };
 
-  const isSecondRef = useRef(false);
-  useEffect(() => {
-    if (isSecondRef.current) onRender();
-    isSecondRef.current = true;
+    socket.on("info", onInfo);
+    socket.on("endGame", onEnd);
+
+    return () => {
+      socket.off("info", onInfo);
+      socket.off("endGame", onEnd);
+    };
   }, []);
 
   return (
