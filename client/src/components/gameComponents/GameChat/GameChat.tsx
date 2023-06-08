@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { MessageForm } from "./MessageForm";
 import { MessageDiv } from "./MessageDiv";
 import { Tile } from "../../Tile";
+import socket from "../../../ws";
 
 const StyledDiv = styled("div")`
   border: 1px solid grey;
@@ -28,7 +29,7 @@ const ChatDiv = styled("div")`
   overflow-y: auto;
 `;
 
-export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
+export const GameChat = () => {
   const user = useAppSelector(getUser);
   const { gameID } = useParams();
 
@@ -36,11 +37,9 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
 
   const chatDiv = useRef<HTMLDivElement>(null);
 
-  const onChatMessage = (topic: string, payload: Buffer) => {
-    if (topic === `/game/${gameID}/chat`) {
-      const message = JSON.parse(payload.toString());
-      setMessages((messages) => [...messages, message]);
-    }
+  const onChatMessage = (payload: string) => {
+    const message = JSON.parse(payload);
+    setMessages((messages) => [...messages, message]);
   };
 
   const onRender = () => {
@@ -52,8 +51,7 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
         });
       });
     }
-    subscribe(`/game/${gameID}/chat`);
-    onMessage(onChatMessage);
+    socket.on(`/game/${gameID}/chat`, onChatMessage);
   };
 
   const isSecondRender = useRef(false);
@@ -76,7 +74,7 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
           ))}
         </ChatDiv>
       </StyledDiv>
-      <MessageForm publish={publish} />
+      <MessageForm />
     </Tile>
   );
 };

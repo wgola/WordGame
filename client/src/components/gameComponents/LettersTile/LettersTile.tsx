@@ -13,6 +13,7 @@ import {
   isPlayerTurn,
   saveCorrectWord,
 } from "../../../state/GameSlice";
+import socket from "../../../ws";
 
 const StyledDiv = styled("div")`
   display: flex;
@@ -20,7 +21,7 @@ const StyledDiv = styled("div")`
   justify-content: space-between;
 `;
 
-export const LettersTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
+export const LettersTile = () => {
   const availableLetters = useAppSelector(getLetters);
   const ifPlayerTurn = useAppSelector(isPlayerTurn);
   const dispatch = useAppDispatch();
@@ -45,20 +46,17 @@ export const LettersTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
   };
 
   const onSubmit = () => {
-    publish(`/game/${gameID}/checkWord`, answer);
+    socket.emit(`/game/${gameID}/checkWord`, answer);
     onReset();
   };
 
-  const onWordChecked = (topic: string, payload: Buffer) => {
-    if (topic === `/game/${gameID}/wordChecked`) {
-      const message = JSON.parse(payload.toString());
-      if (message.correct) dispatch(saveCorrectWord(message));
-    }
+  const onWordChecked = (payload: string) => {
+    const message = JSON.parse(payload);
+    if (message.correct) dispatch(saveCorrectWord(message));
   };
 
   const onRender = () => {
-    subscribe(`/game/${gameID}/wordChecked`);
-    onMessage(onWordChecked);
+    socket.on(`/game/${gameID}/wordChecked`, onWordChecked);
   };
 
   const isSecondRender = useRef(false);

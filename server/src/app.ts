@@ -6,6 +6,8 @@ import usersRouter from "./routes/users.route";
 import gameRouter from "./routes/game.route";
 import cookieParser from "cookie-parser";
 import http from "http";
+import { Server } from "socket.io";
+import log from "./configs/logs.config";
 
 const app: Express = express();
 
@@ -31,4 +33,25 @@ app.get("/", (req: Request, res: Response) =>
 
 const server = http.createServer(app);
 
-export default server;
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.on("connection", (socket) => {
+  log.info(`Socket ${socket.id} connected`);
+  let gameID: string;
+
+  socket.on("join-game", (data) => {
+    gameID = data;
+    socket.join(gameID);
+  });
+
+  socket.on("disconnect", () => {
+    socket.leave(gameID);
+    log.info(`Socket ${socket.id} disconnected`);
+  });
+});
+
+export { server, io };

@@ -7,8 +7,9 @@ import { ButtonDiv } from "../../ButtonDiv";
 import { Button } from "../../Button";
 import { Tile } from "../../Tile";
 import { useEffect, useRef } from "react";
+import socket from "../../../ws";
 
-export const ButtonsTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
+export const ButtonsTile = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { gameID } = useParams();
@@ -22,31 +23,28 @@ export const ButtonsTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
   };
 
   const onDelete = () => {
-    publish(
+    socket.emit(
       `/game/${gameID}/info`,
       "Host deleted this game! You will be redirected to home page in 5 seconds..."
     );
-    publish(gameDeletedTopic, "game deleted");
+    socket.emit(gameDeletedTopic, "game deleted");
   };
 
-  const onGameDeleted = (topic: string, payload: Buffer) => {
-    if (topic === gameDeletedTopic) {
-      setTimeout(async () => {
-        try {
-          await deleteGame(gameID);
-        } finally {
-          navigate("/home/play");
-          dispatch(clearGame());
-        }
-      }, 5000);
-    }
+  const onGameDeleted = (payload: string) => {
+    setTimeout(async () => {
+      try {
+        await deleteGame(gameID);
+      } finally {
+        navigate("/home/play");
+        dispatch(clearGame());
+      }
+    }, 5000);
   };
 
   const isSecondRender = useRef(false);
   useEffect(() => {
     if (isSecondRender.current) {
-      subscribe(gameDeletedTopic);
-      onMessage(onGameDeleted);
+      socket.on(gameDeletedTopic, onGameDeleted);
     }
     isSecondRender.current = true;
   }, []);

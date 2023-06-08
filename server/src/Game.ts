@@ -1,4 +1,4 @@
-import io from "./configs/ws.config";
+import { io } from "./app";
 import log from "./configs/logs.config";
 import { getAllWords } from "./services/words.service";
 import { Player } from "./types/Player";

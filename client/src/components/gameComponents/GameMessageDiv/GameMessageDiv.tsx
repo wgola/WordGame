@@ -6,6 +6,7 @@ import { MqttMethods } from "../../../types/mqttMethods";
 import { styled } from "@mui/material/styles";
 import { useEffect, useRef } from "react";
 import { Tile } from "../../Tile";
+import socket from "../../../ws";
 
 const StyledDiv = styled("div")`
   border: 1px solid grey;
@@ -24,7 +25,7 @@ const StyledInfoDiv = styled("div")`
   height: 100px;
 `;
 
-export const GameMessageDiv = ({ subscribe, onMessage }: MqttMethods) => {
+export const GameMessageDiv = () => {
   const { gameID } = useParams();
   const navigate = useNavigate();
 
@@ -47,13 +48,14 @@ export const GameMessageDiv = ({ subscribe, onMessage }: MqttMethods) => {
       }
     }, seconds * 1000);
 
-  const onNewMessage = (topic: string, payload: Buffer) => {
-    if (topic === infoTopic) dispatch(addNewLog(payload.toString()));
-    else if (topic === endTopic) {
-      const seconds = parseInt(payload.toString());
-      dispatch(addNewLog(`This game will be deleted in ${seconds} seconds...`));
-      deleteCurrentGame(seconds);
-    }
+  const onInfo = (payload: string) => {
+    dispatch(addNewLog(payload));
+  };
+
+  const onEnd = (payload: string) => {
+    const seconds = parseInt(payload);
+    dispatch(addNewLog(`This game will be deleted in ${seconds} seconds...`));
+    deleteCurrentGame(seconds);
   };
 
   const onRender = () => {
@@ -65,8 +67,8 @@ export const GameMessageDiv = ({ subscribe, onMessage }: MqttMethods) => {
         });
       });
     }
-    subscribe([infoTopic, endTopic]);
-    onMessage(onNewMessage);
+    socket.on(infoTopic, onInfo);
+    socket.on(endTopic, onEnd);
   };
 
   const isSecondRef = useRef(false);

@@ -2,7 +2,7 @@ import { getUser, saveUserData } from "../../state/UserSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import mqttConnect from "../../mqtt";
+// import mqttConnect from "../../mqtt";
 import { Grid } from "@mui/material";
 import { getGame } from "../../api";
 import {
@@ -13,7 +13,7 @@ import {
   ButtonsTile,
   GameMessageDiv,
 } from "../../components";
-
+import socket from "../../ws";
 import {
   addOpponent,
   changeTurn,
@@ -30,23 +30,23 @@ export const GamePage = () => {
   const user = useAppSelector(getUser);
   const game = useAppSelector(getGameData);
 
-  const methods = mqttConnect();
-
   const connectedTopic = `/game/${gameID}/connected`;
   const gameReadyTopic = `/game/${gameID}/generatedGame`;
   const changeTurnTopic = `/game/${gameID}/changeTurn`;
 
-  const OnMessageCallback = (topic: string, payload: Buffer) => {
-    if (topic === connectedTopic) {
-      const data = JSON.parse(payload.toString());
-      if (game.opponent.userID === "") dispatch(addOpponent(data));
-    } else if (topic === gameReadyTopic) {
-      const data = JSON.parse(payload.toString());
-      dispatch(saveGeneratedGame(data));
-    } else if (topic === changeTurnTopic) {
-      const data = payload.toString();
-      dispatch(changeTurn(data));
-    }
+  const onConnected = (payload: string) => {
+    const data = JSON.parse(payload);
+    if (game.opponent.userID === "") dispatch(addOpponent(data));
+  };
+
+  const onGameReady = (payload: string) => {
+    const data = JSON.parse(payload);
+    dispatch(saveGeneratedGame(data));
+  };
+
+  const onChangeTurn = (payload: string) => {
+    const data = payload;
+    dispatch(changeTurn(data));
   };
 
   const onRender = async () => {
@@ -56,12 +56,16 @@ export const GamePage = () => {
           data: { userData, gameData },
         } = await getGame(gameID);
         dispatch(saveUserData(userData));
-        methods.subscribe([connectedTopic, gameReadyTopic, changeTurnTopic]);
-        methods.onMessage(OnMessageCallback);
+
+        socket.emit("join-game", gameID);
+        socket.on(connectedTopic, onConnected);
+        socket.on(gameReadyTopic, onGameReady);
+        socket.on(changeTurnTopic, onChangeTurn);
+
         if (gameData !== null) {
           dispatch(saveGame(gameData));
           if (gameData.opponent)
-            methods.publish(
+            socket.emit(
               `/game/${gameID}/connected`,
               JSON.stringify(gameData.opponent)
             );
@@ -91,7 +95,7 @@ export const GamePage = () => {
             <GameBoard />
           </Grid>
           <Grid item xs={3}>
-            <LettersTile {...methods} />
+            <LettersTile />
           </Grid>
         </Grid>
       </Grid>
@@ -106,13 +110,13 @@ export const GamePage = () => {
             <GameScoreTile />
           </Grid>
           <Grid item>
-            <GameChat {...methods} />
+            <GameChat />
           </Grid>
           <Grid item>
-            <GameMessageDiv {...methods} />
+            <GameMessageDiv />
           </Grid>
           <Grid item>
-            <ButtonsTile {...methods} />
+            <ButtonsTile />
           </Grid>
         </Grid>
       </Grid>

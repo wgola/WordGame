@@ -1,7 +1,7 @@
 import dbConnect from "./configs/db.config";
 import log from "./configs/logs.config";
 import dotenv from "dotenv";
-import server from "./app";
+import { server } from "./app";
 
 dotenv.config();
 
