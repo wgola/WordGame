@@ -1,4 +1,5 @@
-import { MqttClient } from "mqtt";
+import { Socket } from "socket.io";
+import { io } from "../src/index";
 import log from "./configs/logs.config";
 import { getAllWords } from "./services/words.service";
 import { Player } from "./types/Player";
@@ -37,21 +38,24 @@ class Game {
   generatingWords: boolean = false;
   infoLogs: Array<string> = [];
 
-  mqttClient: MqttClient;
-
-  constructor(gameID: string, host: Player, mqttClient: MqttClient) {
+  constructor(gameID: string, host: Player) {
     this.gameID = gameID;
     this.host = host;
-    this.mqttClient = mqttClient;
 
-    this.mqttClient.subscribe(`/game/${this.gameID}/checkWord`);
-    this.mqttClient.on("message", this.onWordCheck);
+    io.on("connection", (socket: Socket) => {
+      log.info(`${socket.id} connected`);
+
+      socket.join(this.gameID);
+
+      socket.on("checkWord", (word: string) => this.onWordCheck(word));
+
+      socket.on("disconnect", () => log.info(`${socket.id} disconnected`));
+    });
+
     this.generateGame();
   }
 
-  private onWordCheck = (topic: string, payload: Buffer) => {
-    const word = payload.toString();
-
+  private onWordCheck = (word: string) => {
     const foundWord = this.wordsAnswers.find(
       (wordAnswer) => wordAnswer.word === word
     );
@@ -79,7 +83,7 @@ class Game {
 
     player.score += foundWord?.points || 0;
 
-    this.publish(`/game/${this.gameID}/wordChecked`, JSON.stringify(response));
+    io.to(`${this.gameID}`).emit("wordChecked", JSON.stringify(response));
 
     const info = response.correct
       ? `${player.username} scored ${foundWord.points} points!`
@@ -95,7 +99,7 @@ class Game {
       else this.sendInfo("Game ended with a draw!");
 
       this.infoLogs.push("This game will be deleted in 15 seconds...");
-      this.publish(`/game/${this.gameID}/endGame`, "15");
+      io.to(`${this.gameID}`).emit("endGame", "15");
     } else {
       this.changeTurn();
     }
@@ -178,23 +182,19 @@ class Game {
       generatingWords: this.generatingWords,
     });
 
-    this.publish(`/game/${this.gameID}/generatedGame`, message);
-  };
-
-  private publish = (topic: string, message: string) => {
-    this.mqttClient.publish(topic, message);
+    io.to(`${this.gameID}`).emit("generatedGame", message);
   };
 
   private sendInfo = (message: string) => {
     log.info(`Game ${this.gameID}: ${message}`);
     this.infoLogs.push(message);
-    this.publish(`/game/${this.gameID}/info`, message);
+    io.to(`${this.gameID}`).emit("info", message);
   };
 
   private changeTurn = (type?: "first" | "last") => {
     if (type === "last") {
       this.currentTurn = "";
-      this.publish(`/game/${this.gameID}/changeTurn`, this.currentTurn);
+      io.to(`${this.gameID}`).emit("changeTurn", this.currentTurn);
     } else {
       if (type === "first") {
         this.currentTurn = Math.round(Math.random())
@@ -210,7 +210,7 @@ class Game {
       const player =
         this.host.userID === this.currentTurn ? this.host : this.opponent;
 
-      this.publish(`/game/${this.gameID}/changeTurn`, this.currentTurn);
+      io.to(`${this.gameID}`).emit("changeTurn", this.currentTurn);
 
       this.sendInfo(`It's ${player.username} turn now!`);
     }

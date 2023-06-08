@@ -1,4 +1,3 @@
-import { MqttMethods } from "../../../types/mqttMethods";
 import { useEffect, useRef, useState } from "react";
 import { getUser } from "../../../state/UserSlice";
 import { Message } from "../../../types/message";
@@ -8,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { MessageForm } from "./MessageForm";
 import { MessageDiv } from "./MessageDiv";
 import { Tile } from "../../Tile";
+import { Socket } from "socket.io-client";
 
 const StyledDiv = styled("div")`
   border: 1px solid grey;
@@ -28,20 +28,12 @@ const ChatDiv = styled("div")`
   overflow-y: auto;
 `;
 
-export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
+export const GameChat = ({ socket }: { socket: Socket }) => {
   const user = useAppSelector(getUser);
-  const { gameID } = useParams();
 
   const [messages, setMessages] = useState<Array<Message>>([]);
 
   const chatDiv = useRef<HTMLDivElement>(null);
-
-  const onChatMessage = (topic: string, payload: Buffer) => {
-    if (topic === `/game/${gameID}/chat`) {
-      const message = JSON.parse(payload.toString());
-      setMessages((messages) => [...messages, message]);
-    }
-  };
 
   const onRender = () => {
     if (chatDiv) {
@@ -52,8 +44,10 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
         });
       });
     }
-    subscribe(`/game/${gameID}/chat`);
-    onMessage(onChatMessage);
+    socket.on("chat", (payload) => {
+      const message = JSON.parse(payload);
+      setMessages((messages) => [...messages, message]);
+    });
   };
 
   const isSecondRender = useRef(false);
@@ -76,7 +70,7 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
           ))}
         </ChatDiv>
       </StyledDiv>
-      <MessageForm publish={publish} />
+      <MessageForm socket={socket} />
     </Tile>
   );
 };

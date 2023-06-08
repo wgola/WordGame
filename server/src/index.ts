@@ -1,4 +1,5 @@
-import mqttConnect from "./configs/mqtt.config";
+import { Server as WsServer } from "socket.io";
+import { Server as HttpServer } from "http";
 import dbConnect from "./configs/db.config";
 import log from "./configs/logs.config";
 import dotenv from "dotenv";
@@ -8,12 +9,14 @@ dotenv.config();
 
 dbConnect();
 
-const mqttClient = mqttConnect();
-
 const port = process.env.PORT || 8000;
 
-app.listen(port, () =>
+const server = new HttpServer(app);
+
+const io = new WsServer(server, { cors: { origin: "*" } });
+
+server.listen(port, () =>
   log.info(`Server is running at http://localhost:${port}`)
 );
 
-export { mqttClient };
+export { io };

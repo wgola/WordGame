@@ -1,20 +1,18 @@
 import { clearGame, getGameData, isHost } from "../../../state/GameSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { deleteGame } from "../../../api/gameAPI/deleteGame";
-import { MqttMethods } from "../../../types/mqttMethods";
 import { useNavigate, useParams } from "react-router-dom";
 import { ButtonDiv } from "../../ButtonDiv";
 import { Button } from "../../Button";
 import { Tile } from "../../Tile";
 import { useEffect, useRef } from "react";
+import { Socket } from "socket.io-client";
 
-export const ButtonsTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
+export const ButtonsTile = ({ socket }: { socket: Socket }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { gameID } = useParams();
   const isPlayerHost = useAppSelector(isHost);
-
-  const gameDeletedTopic = `/game/${gameID}/deleted`;
 
   const onExit = () => {
     dispatch(clearGame());
@@ -22,31 +20,26 @@ export const ButtonsTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
   };
 
   const onDelete = () => {
-    publish(
-      `/game/${gameID}/info`,
+    socket.emit(
+      "info",
       "Host deleted this game! You will be redirected to home page in 5 seconds..."
     );
-    publish(gameDeletedTopic, "game deleted");
-  };
-
-  const onGameDeleted = (topic: string, payload: Buffer) => {
-    if (topic === gameDeletedTopic) {
-      setTimeout(async () => {
-        try {
-          await deleteGame(gameID);
-        } finally {
-          navigate("/home/play");
-          dispatch(clearGame());
-        }
-      }, 5000);
-    }
+    socket.emit("deleted", "game deleted");
   };
 
   const isSecondRender = useRef(false);
   useEffect(() => {
     if (isSecondRender.current) {
-      subscribe(gameDeletedTopic);
-      onMessage(onGameDeleted);
+      socket.on("deleted", (payload) => {
+        setTimeout(async () => {
+          try {
+            await deleteGame(gameID);
+          } finally {
+            navigate("/home/play");
+            dispatch(clearGame());
+          }
+        }, 5000);
+      });
     }
     isSecondRender.current = true;
   }, []);
