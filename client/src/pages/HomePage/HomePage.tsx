@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { getUser, saveUserData } from "../../state/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { LoadingPage } from "../LoadingPage";
-import { NavBar } from "./NavBar";
-import { getUser, saveUserData } from "../../state/UserSlice";
+import { useEffect, useState } from "react";
 import { getUserData } from "../../api";
+import { NavBar } from "./NavBar";
 
 export const HomePage = () => {
   const dispatch = useDispatch();
@@ -28,10 +28,8 @@ export const HomePage = () => {
     setLoading(false);
   };
 
-  const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) onRender();
-    isSecondRender.current = true;
+    onRender();
   }, [user]);
 
   return loading ? (

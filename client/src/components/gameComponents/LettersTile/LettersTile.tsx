@@ -1,9 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { MqttMethods } from "../../../types/mqttMethods";
-import { useEffect, useRef, useState } from "react";
 import { Letter } from "../../../types/letter";
 import { styled } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { LettersDiv } from "../LettersDiv";
 import { SubmitDiv } from "../SubmitDiv";
 import { Button } from "../../Button";
@@ -13,6 +11,7 @@ import {
   isPlayerTurn,
   saveCorrectWord,
 } from "../../../state/GameSlice";
+import socket from "../../../ws";
 
 const StyledDiv = styled("div")`
   display: flex;
@@ -20,15 +19,13 @@ const StyledDiv = styled("div")`
   justify-content: space-between;
 `;
 
-export const LettersTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
+export const LettersTile = () => {
   const availableLetters = useAppSelector(getLetters);
   const ifPlayerTurn = useAppSelector(isPlayerTurn);
   const dispatch = useAppDispatch();
 
   const [showedLetters, setShowedLetters] = useState<Array<Letter>>([]);
   const [answer, setAnswer] = useState("");
-
-  const { gameID } = useParams();
 
   useEffect(() => setShowedLetters(availableLetters), [availableLetters]);
 
@@ -45,26 +42,21 @@ export const LettersTile = ({ publish, subscribe, onMessage }: MqttMethods) => {
   };
 
   const onSubmit = () => {
-    publish(`/game/${gameID}/checkWord`, answer);
+    socket.emit("checkWord", answer);
     onReset();
   };
 
-  const onWordChecked = (topic: string, payload: Buffer) => {
-    if (topic === `/game/${gameID}/wordChecked`) {
-      const message = JSON.parse(payload.toString());
-      if (message.correct) dispatch(saveCorrectWord(message));
-    }
-  };
-
-  const onRender = () => {
-    subscribe(`/game/${gameID}/wordChecked`);
-    onMessage(onWordChecked);
-  };
-
-  const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) onRender();
-    isSecondRender.current = true;
+    const onWordChecked = (payload: string) => {
+      const message = JSON.parse(payload);
+      if (message.correct) dispatch(saveCorrectWord(message));
+    };
+
+    socket.on("wordChecked", onWordChecked);
+
+    return () => {
+      socket.off("wordChecked", onWordChecked);
+    };
   }, []);
 
   return (

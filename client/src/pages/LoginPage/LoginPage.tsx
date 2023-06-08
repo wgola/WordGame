@@ -1,10 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Tile } from "../../components";
-import { LoadingPage } from "../LoadingPage";
-import { LoginForm } from "./LoginForm";
 import { getUser, saveUserData } from "../../state/UserSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { LoadingPage } from "../LoadingPage";
+import { useEffect, useState } from "react";
+import { Tile } from "../../components";
+import { LoginForm } from "./LoginForm";
 import { getUserData } from "../../api";
 
 export const LoginPage = () => {
@@ -27,10 +27,8 @@ export const LoginPage = () => {
     }
   };
 
-  const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) onRender();
-    isSecondRender.current = true;
+    onRender();
   }, [user]);
 
   return loading ? (

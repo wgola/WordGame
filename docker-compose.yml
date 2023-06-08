@@ -14,7 +14,6 @@ services:
       - 8000:8000
     env_file: ./server/.env
     environment:
-      - MQTT_CONNECTION=ws://mqtt-broker:15675/ws
       - MONGO_PATH=scrabbledb.t7nrpcq.mongodb.net/ScrabbleDB?retryWrites=true
 
   client:
@@ -27,10 +26,3 @@ services:
       - ./client/:/app
     ports:
       - 5173:5173
-
-  mqtt-broker:
-    build:
-      context: ./mqtt-broker
-    ports:
-      - 15675:15675
-      - 5672:5672

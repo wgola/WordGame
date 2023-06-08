@@ -1,10 +1,10 @@
+import { getUser, saveUserData } from "../../state/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tile } from "../../components";
 import { RegsiterForm } from "./RegisterForm";
 import { LoadingPage } from "../LoadingPage";
-import { getUser, saveUserData } from "../../state/UserSlice";
+import { useEffect, useState } from "react";
+import { Tile } from "../../components";
 import { getUserData } from "../../api";
 
 export const RegisterPage = () => {
@@ -27,10 +27,8 @@ export const RegisterPage = () => {
     }
   };
 
-  const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) onRender();
-    isSecondRender.current = true;
+    onRender();
   }, [user]);
 
   return loading ? (

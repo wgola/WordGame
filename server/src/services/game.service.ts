@@ -1,14 +1,12 @@
+import log from "../configs/logs.config";
 import { Player } from "../types/Player";
 import * as uuid from "short-uuid";
+import games from "../games";
 import Game from "../Game";
-import { mqttClient } from "../index";
-import log from "../configs/logs.config";
-
-const games: { [index: string]: Game } = {};
 
 const createGame = (host: Player) => {
   const gameID = uuid.generate();
-  const newGame = new Game(gameID, host, mqttClient);
+  const newGame = new Game(gameID, host);
   games[gameID] = newGame;
   log.info(`Game ${gameID} created by user ${host.userID}`);
   return gameID;

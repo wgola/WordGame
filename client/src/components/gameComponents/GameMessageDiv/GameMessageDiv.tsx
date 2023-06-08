@@ -2,10 +2,10 @@ import { addNewLog, getInfoLogs } from "../../../state/GameSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { deleteGame } from "../../../api/gameAPI/deleteGame";
 import { useNavigate, useParams } from "react-router-dom";
-import { MqttMethods } from "../../../types/mqttMethods";
 import { styled } from "@mui/material/styles";
 import { useEffect, useRef } from "react";
 import { Tile } from "../../Tile";
+import socket from "../../../ws";
 
 const StyledDiv = styled("div")`
   border: 1px solid grey;
@@ -24,15 +24,12 @@ const StyledInfoDiv = styled("div")`
   height: 100px;
 `;
 
-export const GameMessageDiv = ({ subscribe, onMessage }: MqttMethods) => {
+export const GameMessageDiv = () => {
   const { gameID } = useParams();
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const messages = useAppSelector(getInfoLogs);
-
-  const infoTopic = `/game/${gameID}/info`;
-  const endTopic = `/game/${gameID}/endGame`;
 
   const messageDiv = useRef<HTMLDivElement>(null);
 
@@ -47,16 +44,17 @@ export const GameMessageDiv = ({ subscribe, onMessage }: MqttMethods) => {
       }
     }, seconds * 1000);
 
-  const onNewMessage = (topic: string, payload: Buffer) => {
-    if (topic === infoTopic) dispatch(addNewLog(payload.toString()));
-    else if (topic === endTopic) {
-      const seconds = parseInt(payload.toString());
+  useEffect(() => {
+    const onInfo = (payload: string) => {
+      dispatch(addNewLog(payload));
+    };
+
+    const onEnd = (payload: string) => {
+      const seconds = parseInt(payload);
       dispatch(addNewLog(`This game will be deleted in ${seconds} seconds...`));
       deleteCurrentGame(seconds);
-    }
-  };
+    };
 
-  const onRender = () => {
     if (messageDiv) {
       messageDiv.current?.addEventListener("DOMNodeInserted", (event) => {
         messageDiv.current?.scroll({
@@ -65,14 +63,14 @@ export const GameMessageDiv = ({ subscribe, onMessage }: MqttMethods) => {
         });
       });
     }
-    subscribe([infoTopic, endTopic]);
-    onMessage(onNewMessage);
-  };
 
-  const isSecondRef = useRef(false);
-  useEffect(() => {
-    if (isSecondRef.current) onRender();
-    isSecondRef.current = true;
+    socket.on("info", onInfo);
+    socket.on("endGame", onEnd);
+
+    return () => {
+      socket.off("info", onInfo);
+      socket.off("endGame", onEnd);
+    };
   }, []);
 
   return (

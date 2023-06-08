@@ -1,13 +1,12 @@
-import { MqttMethods } from "../../../types/mqttMethods";
 import { useEffect, useRef, useState } from "react";
 import { getUser } from "../../../state/UserSlice";
 import { Message } from "../../../types/message";
 import { useAppSelector } from "../../../hooks";
 import { styled } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
 import { MessageForm } from "./MessageForm";
 import { MessageDiv } from "./MessageDiv";
 import { Tile } from "../../Tile";
+import socket from "../../../ws";
 
 const StyledDiv = styled("div")`
   border: 1px solid grey;
@@ -28,19 +27,16 @@ const ChatDiv = styled("div")`
   overflow-y: auto;
 `;
 
-export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
+export const GameChat = () => {
   const user = useAppSelector(getUser);
-  const { gameID } = useParams();
 
   const [messages, setMessages] = useState<Array<Message>>([]);
 
   const chatDiv = useRef<HTMLDivElement>(null);
 
-  const onChatMessage = (topic: string, payload: Buffer) => {
-    if (topic === `/game/${gameID}/chat`) {
-      const message = JSON.parse(payload.toString());
-      setMessages((messages) => [...messages, message]);
-    }
+  const onChatMessage = (payload: string) => {
+    const message = JSON.parse(payload);
+    setMessages((messages) => [...messages, message]);
   };
 
   const onRender = () => {
@@ -52,14 +48,15 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
         });
       });
     }
-    subscribe(`/game/${gameID}/chat`);
-    onMessage(onChatMessage);
+    socket.on("chat", onChatMessage);
   };
 
-  const isSecondRender = useRef(false);
   useEffect(() => {
-    if (isSecondRender.current) onRender();
-    isSecondRender.current = true;
+    onRender();
+
+    return () => {
+      socket.off("chat", onChatMessage);
+    };
   }, []);
 
   return (
@@ -76,7 +73,7 @@ export const GameChat = ({ publish, subscribe, onMessage }: MqttMethods) => {
           ))}
         </ChatDiv>
       </StyledDiv>
-      <MessageForm publish={publish} />
+      <MessageForm />
     </Tile>
   );
 };
