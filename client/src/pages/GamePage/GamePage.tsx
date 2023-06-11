@@ -20,6 +20,8 @@ import {
   saveGame,
   saveGeneratedGame,
 } from "../../state/GameSlice";
+import keycloak from "../../keycloak";
+import { getColorFromString } from "../../utils/getColorFromString";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -48,9 +50,19 @@ export const GamePage = () => {
     if (user.id === undefined || game.gameID === "") {
       try {
         const {
-          data: { userData, gameData },
+          data: { gameData },
         } = await getGame(gameID);
-        dispatch(saveUserData(userData));
+        // dispatch(saveUserData(userData));
+        const { preferred_username, sub, email } = keycloak.tokenParsed || {};
+        const color = getColorFromString(preferred_username);
+        dispatch(
+          saveUserData({
+            id: sub || "",
+            email: email,
+            username: preferred_username,
+            color: color,
+          })
+        );
 
         socket.emit("join-game", gameID);
 

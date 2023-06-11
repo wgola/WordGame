@@ -20,6 +20,8 @@ export const HomePage = () => {
       if (!keycloak.authenticated) {
         navigate("/");
       }
+      console.log(keycloak.token);
+
       if (user.id === undefined) {
         const { preferred_username, sub, email } = keycloak.tokenParsed || {};
         const color = getColorFromString(preferred_username);

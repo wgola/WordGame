@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
+import { keycloak } from "./middlewares/keycloak.middleware";
 import wordsRouter from "./routes/words.route";
-import usersRouter from "./routes/users.route";
-import gameRouter from "./routes/game.route";
+// import gameRouter from "./routes/game.route";
 import cookieParser from "cookie-parser";
 import log from "./configs/logs.config";
 import bodyParser from "body-parser";
@@ -21,12 +21,11 @@ app.use(
   })
 );
 app.use(cookieParser());
-
-app.use("/user", usersRouter);
+app.use(keycloak.middleware());
 
 app.use("/word", wordsRouter);
 
-app.use("/game", gameRouter);
+// app.use("/game", gameRouter);
 
 app.get("/", (req: Request, res: Response) =>
   res.send("Welcome to ScrabbleProject API")
@@ -74,4 +73,4 @@ io.on("connection", (socket) => {
   });
 });
 
-export { server, io };
+export { keycloak, server, io };

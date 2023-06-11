@@ -1,9 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { Avatar, Tile, Button } from "../../components";
-import { deleteUserData, getUser } from "../../state/UserSlice";
-import { deleteAccount } from "../../api";
+import { getUser } from "../../state/UserSlice";
 import { useKeycloak } from "@react-keycloak/web";
 
 const StyledNavDiv = styled("div")`

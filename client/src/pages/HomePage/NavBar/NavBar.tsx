@@ -3,8 +3,6 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import { Button, Tile } from "../../../components";
-import { deleteUserData } from "../../../state/UserSlice";
-import { logout } from "../../../api";
 import { useKeycloak } from "@react-keycloak/web";
 
 const StyledDiv = styled("div")`
@@ -16,7 +14,6 @@ const StyledDiv = styled("div")`
 `;
 
 export const NavBar = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { keycloak } = useKeycloak();
