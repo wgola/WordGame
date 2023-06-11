@@ -45,7 +45,7 @@ export const GamePage = () => {
   };
 
   const onRender = async () => {
-    if (user._id === undefined || game.gameID === "") {
+    if (user.id === undefined || game.gameID === "") {
       try {
         const {
           data: { userData, gameData },

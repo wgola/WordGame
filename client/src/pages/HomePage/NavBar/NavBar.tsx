@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import { Button, Tile } from "../../../components";
 import { deleteUserData } from "../../../state/UserSlice";
 import { logout } from "../../../api";
+import { useKeycloak } from "@react-keycloak/web";
 
 const StyledDiv = styled("div")`
   margin: auto;
@@ -18,6 +19,7 @@ export const NavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { keycloak } = useKeycloak();
   const [loading, setLoading] = useState(false);
 
   return (
@@ -45,12 +47,9 @@ export const NavBar = () => {
           children="logout"
           type="button"
           deleteButton={true}
-          onClick={async () => {
-            setLoading(true);
-            await logout();
-            dispatch(deleteUserData());
-            navigate("/");
-          }}
+          onClick={() =>
+            keycloak.logout({ redirectUri: "http://localhost:5173" })
+          }
           disabled={loading}
         />
       </StyledDiv>

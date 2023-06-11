@@ -3,10 +3,9 @@ import { RootState } from "../store";
 import { userType } from "../types";
 
 interface userState {
-  _id?: string;
+  id?: string;
   email?: string;
   username?: string;
-  password?: string;
   color?: string;
 }
 

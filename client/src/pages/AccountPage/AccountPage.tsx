@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import { Avatar, Tile, Button } from "../../components";
 import { deleteUserData, getUser } from "../../state/UserSlice";
 import { deleteAccount } from "../../api";
+import { useKeycloak } from "@react-keycloak/web";
 
 const StyledNavDiv = styled("div")`
   display: flex;
@@ -19,9 +20,7 @@ const StyledDiv = styled("div")`
 `;
 
 export const AccountPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
+  const { keycloak } = useKeycloak();
   const user = useSelector(getUser);
 
   return (
@@ -33,24 +32,9 @@ export const AccountPage = () => {
           <p>{user.email}</p>
         </StyledDiv>
         <Button
-          children="edit"
+          children="manage account"
           type="button"
-          onClick={() => navigate("/home/account/edit")}
-        />
-        or
-        <Button
-          children="delete account"
-          type="button"
-          deleteButton={true}
-          onClick={async () => {
-            const result = await deleteAccount();
-            if (result) {
-              dispatch(deleteUserData());
-              navigate("/login");
-            } else {
-              navigate("/home/account");
-            }
-          }}
+          onClick={() => keycloak.accountManagement()}
         />
       </StyledNavDiv>
     </Tile>
