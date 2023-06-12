@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import { Button, Tile } from "../../../components";
