@@ -1,6 +1,5 @@
 export * from "./Avatar";
 export * from "./Button";
-export * from "./ErrorDiv";
 export * from "./Form";
 export * from "./Input";
 export * from "./Tile";

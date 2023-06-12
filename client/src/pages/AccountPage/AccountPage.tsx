@@ -22,7 +22,7 @@ export const AccountPage = () => {
   const user = useSelector(getUser);
 
   return (
-    <Tile width={900}>
+    <Tile width={700}>
       <StyledNavDiv>
         <Avatar size={85} color={user.color} children={user.username} />
         <StyledDiv>

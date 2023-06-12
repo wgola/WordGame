@@ -1,4 +1,3 @@
-import { getUser, saveUserData } from "../../state/UserSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { Grid } from "@mui/material";
@@ -20,17 +19,13 @@ import {
   saveGame,
   saveGeneratedGame,
 } from "../../state/GameSlice";
-import { getColorFromString } from "../../utils/getColorFromString";
-import { useKeycloak } from "@react-keycloak/web";
 
 export const GamePage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const { gameID } = useParams();
-  const user = useAppSelector(getUser);
   const game = useAppSelector(getGameData);
-  const { keycloak, initialized } = useKeycloak();
 
   const onConnected = (payload: string) => {
     const data = JSON.parse(payload);
@@ -48,43 +43,26 @@ export const GamePage = () => {
   };
 
   const onRender = async () => {
-    if (initialized) {
-      if (!keycloak.authenticated) navigate("/");
+    if (game.gameID === "") {
+      socket.connect();
+      try {
+        const {
+          data: { gameData },
+        } = await getGame(gameID);
 
-      if (user.id === undefined) {
-        const { preferred_username, sub, email } = keycloak.tokenParsed || {};
-        const color = getColorFromString(preferred_username);
-        dispatch(
-          saveUserData({
-            id: sub || "",
-            email: email,
-            username: preferred_username,
-            color: color,
-          })
-        );
-      }
+        socket.emit("join-game", gameID);
 
-      if (game.gameID === "") {
-        socket.connect();
-        try {
-          const {
-            data: { gameData },
-          } = await getGame(gameID);
-
-          socket.emit("join-game", gameID);
-
-          if (gameData !== null) {
-            dispatch(saveGame(gameData));
-            if (gameData.opponent)
-              socket.emit("connected", JSON.stringify(gameData.opponent));
-          } else {
-            socket.disconnect();
-            navigate("/home/play");
-          }
-        } catch {
+        if (gameData !== null) {
+          dispatch(saveGame(gameData));
+          if (gameData.opponent)
+            socket.emit("connected", JSON.stringify(gameData.opponent));
+        } else {
           socket.disconnect();
           navigate("/home/play");
         }
+      } catch {
+        socket.disconnect();
+        navigate("/home/play");
       }
     }
   };
@@ -100,7 +78,7 @@ export const GamePage = () => {
       socket.off("generatedGame", onGameReady);
       socket.off("changeTurn", onChangeTurn);
     };
-  }, [initialized]);
+  });
 
   return (
     <Grid container spacing={2} margin={"40px auto"} width={"1300px"}>

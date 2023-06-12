@@ -1,11 +1,13 @@
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 import App from "./App";
-import { AccountPage } from "./pages/AccountPage";
-import { GamePage } from "./pages/GamePage";
-import { HomePage } from "./pages/HomePage";
-import { PlayPage } from "./pages/PlayPage";
-import { WordsListPage } from "./pages/WordsListPage";
-import { ProtectedPage } from "./pages/ProtectedPage";
+import {
+  AccountPage,
+  GamePage,
+  HomePage,
+  PlayPage,
+  WordsListPage,
+  ProtectedPage,
+} from "./pages";
 
 const routes: RouteObject[] = [
   {
@@ -32,7 +34,11 @@ const routes: RouteObject[] = [
   },
   {
     path: "/game/:gameID",
-    element: <GamePage />,
+    element: (
+      <ProtectedPage>
+        <GamePage />
+      </ProtectedPage>
+    ),
   },
   {
     path: "/",

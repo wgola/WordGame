@@ -5,6 +5,6 @@ export const config = {
   "ssl-required": "external",
   resource: "WordGameServer",
   realmPublicKey:
-    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1rsYsi1G1c0lWrxQNOYF7qXVghqz4953F4XrzM+kLwOL9j3/Ze/rM0x0HYRFZnINrSojsP4ltczL0sFUAQC0i5Ub2ZtwvlSGD/duZJo77TaMIUfb+Hdv6YohOy0MvLK931EKWbkx9PACr/I9KgtfZILZoHmMuzay67DnMTalAu+yN8Xw+lhiKqEtbUwD3eKq9NEMb65nGqHPfugmKvje09LeyND58iurGdeULjlvE1K1ewpatbLIkTZBBVf6dOdGIMp+vdNB1AIvAk+3vbdjSxtcpDTHdVivcVmGtTO6kc95T4+nzkPYGFAB9PscJm/n5ckgqJNDdYqgSaJOUgUx8wIDAQAB",
+    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx3D0l3vyVRFQ8maE8QPXh/8hm3acTvnM8hLrpi99eanbXraMvmVaVrvoyYr1993few8Twk9csnjnTU0agFIhLfWOrdld7/dHZIuLQdmkJv1f5xtNWdg4C74i1BMtMfaukcR8sdcRWbLIbwCAJ53K3T2njefwPqb6QxE0vej2B3ve1VwctxzTckchTKgtOD99oX2w9fJDJGMpdjkrspG8FhTk7p2BUnvAtzyXUoS7lkJ965hJnr4KNEkZS1CJ6z02E9dO1u7ts/OlmvOWNLdZbtoXW+c6/qcVE1Qu6pomQmHupHGejgM7SsVf/Mr4iqPf51/RT8dreCy2yAKKCfD/DwIDAQAB",
   "bearer-only": true,
 };
