@@ -26,10 +26,6 @@ const getGame = async (req: Request, res: Response) => {
   );
 
   return res.json({ gameData: get(req.params.gameID) });
-
-  // log.warn(`GET request for game ${req.params.gameID} from unauthorized user`);
-
-  // return res.sendStatus(404);
 };
 
 const deleteGame = (req: Request, res: Response) => {

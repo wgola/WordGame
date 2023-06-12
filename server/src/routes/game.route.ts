@@ -6,15 +6,19 @@ import {
   getGame,
   joinGame,
 } from "../controllers/game.controller";
+import {
+  protectionMiddleware,
+  keycloak,
+} from "../middlewares/keycloak.middleware";
 
 const router = express.Router();
 
-router.post("/", auth, createGame);
+router.post("/", keycloak.protect(protectionMiddleware), createGame);
 
-router.put("/:gameID/", auth, joinGame);
+router.put("/:gameID/", keycloak.protect(protectionMiddleware), joinGame);
 
-router.get("/:gameID", auth, getGame);
+router.get("/:gameID", keycloak.protect(protectionMiddleware), getGame);
 
-router.delete("/:gameID", auth, deleteGame);
+router.delete("/:gameID", keycloak.protect(protectionMiddleware), deleteGame);
 
 export default router;

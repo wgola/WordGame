@@ -1,6 +1,5 @@
 import NodeAdapter from "keycloak-connect";
 import { config } from "../keycloak";
-import { decode } from "jsonwebtoken";
 const keycloak = new NodeAdapter({}, config);
 
 const protectionMiddleware: NodeAdapter.GuardFn = (
@@ -9,13 +8,16 @@ const protectionMiddleware: NodeAdapter.GuardFn = (
   res
 ): boolean => {
   const retrievedToken = req.headers.authorization.split(" ")[1];
-  const decoded = JSON.parse(decode(retrievedToken).toString());
 
-  const { sub, preferred_username } = decoded;
+  const decodedToken = JSON.parse(
+    Buffer.from(retrievedToken.split(".")[1], "base64").toString()
+  );
+
+  const { sub, preferred_username } = decodedToken;
   res.locals.user = {
     userID: sub,
     username: preferred_username,
-    color: "#abcdef", ////poprwaić!!!
+    color: "#abcdef",
   };
 
   return true;

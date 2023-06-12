@@ -20,8 +20,8 @@ import {
   saveGame,
   saveGeneratedGame,
 } from "../../state/GameSlice";
-import keycloak from "../../keycloak";
 import { getColorFromString } from "../../utils/getColorFromString";
+import { useKeycloak } from "@react-keycloak/web";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -30,6 +30,7 @@ export const GamePage = () => {
   const { gameID } = useParams();
   const user = useAppSelector(getUser);
   const game = useAppSelector(getGameData);
+  const { keycloak, initialized } = useKeycloak();
 
   const onConnected = (payload: string) => {
     const data = JSON.parse(payload);
@@ -47,12 +48,10 @@ export const GamePage = () => {
   };
 
   const onRender = async () => {
-    if (user.id === undefined || game.gameID === "") {
-      try {
-        const {
-          data: { gameData },
-        } = await getGame(gameID);
-        // dispatch(saveUserData(userData));
+    if (initialized) {
+      if (!keycloak.authenticated) navigate("/");
+
+      if (user.id === undefined) {
         const { preferred_username, sub, email } = keycloak.tokenParsed || {};
         const color = getColorFromString(preferred_username);
         dispatch(
@@ -63,26 +62,34 @@ export const GamePage = () => {
             color: color,
           })
         );
+      }
 
-        socket.emit("join-game", gameID);
+      if (game.gameID === "") {
+        socket.connect();
+        try {
+          const {
+            data: { gameData },
+          } = await getGame(gameID);
 
-        if (gameData !== null) {
-          dispatch(saveGame(gameData));
-          if (gameData.opponent)
-            socket.emit("connected", JSON.stringify(gameData.opponent));
-        } else {
+          socket.emit("join-game", gameID);
+
+          if (gameData !== null) {
+            dispatch(saveGame(gameData));
+            if (gameData.opponent)
+              socket.emit("connected", JSON.stringify(gameData.opponent));
+          } else {
+            socket.disconnect();
+            navigate("/home/play");
+          }
+        } catch {
           socket.disconnect();
           navigate("/home/play");
         }
-      } catch (e) {
-        socket.disconnect();
-        navigate("/login");
       }
     }
   };
 
   useEffect(() => {
-    socket.connect();
     onRender();
     socket.on("connected", onConnected);
     socket.on("generatedGame", onGameReady);
@@ -93,7 +100,7 @@ export const GamePage = () => {
       socket.off("generatedGame", onGameReady);
       socket.off("changeTurn", onChangeTurn);
     };
-  }, [user]);
+  }, [initialized]);
 
   return (
     <Grid container spacing={2} margin={"40px auto"} width={"1300px"}>

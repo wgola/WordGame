@@ -53,6 +53,7 @@ export const GameMessageDiv = () => {
       const seconds = parseInt(payload);
       dispatch(addNewLog(`This game will be deleted in ${seconds} seconds...`));
       deleteCurrentGame(seconds);
+      socket.disconnect();
     };
 
     if (messageDiv) {
