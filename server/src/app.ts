@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from "express";
-import { keycloak } from "./middlewares/keycloak.middleware";
+import keycloak from "./configs/keycloak.config";
 import wordsRouter from "./routes/words.route";
 import gameRouter from "./routes/game.route";
 import cookieParser from "cookie-parser";

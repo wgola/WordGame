@@ -1,12 +1,7 @@
-import NodeAdapter from "keycloak-connect";
-import { config } from "../keycloak";
-const keycloak = new NodeAdapter({}, config);
+import { getColorFromString } from "../utils/getColorFromString";
+import keycloak from "../configs/keycloak.config";
 
-const protectionMiddleware: NodeAdapter.GuardFn = (
-  token,
-  req,
-  res
-): boolean => {
+const protectionMiddleware = keycloak.protect((token, req, res) => {
   const retrievedToken = req.headers.authorization.split(" ")[1];
 
   const decodedToken = JSON.parse(
@@ -17,10 +12,10 @@ const protectionMiddleware: NodeAdapter.GuardFn = (
   res.locals.user = {
     userID: sub,
     username: preferred_username,
-    color: "#abcdef",
+    color: getColorFromString(preferred_username),
   };
 
   return true;
-};
+});
 
-export { keycloak, protectionMiddleware };
+export { protectionMiddleware };

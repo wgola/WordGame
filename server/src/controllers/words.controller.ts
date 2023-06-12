@@ -6,7 +6,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
   const word = !!req.query.word ? req.query.word.toString().toUpperCase() : "";
 
   log.info(
-    `GET request for words page ${req.query.page}, limit ${req.query.limit}, word to find ${word} from user ${res.locals.userID}`
+    `GET request for words page ${req.query.page}, limit ${req.query.limit}, word to find ${word} from user ${res.locals.user.userID}`
   );
   return res.send(
     await getWordsPage(

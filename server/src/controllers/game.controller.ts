@@ -30,10 +30,10 @@ const getGame = async (req: Request, res: Response) => {
 
 const deleteGame = (req: Request, res: Response) => {
   const game = get(req.params.gameID);
-  if (game?.host?.userID === res.locals.userID) {
+  if (game?.host?.userID === res.locals.user.userID) {
     del(req.params.gameID);
     log.info(
-      `DELETE request for game ${req.params.gameID} from user ${res.locals.userID}`
+      `DELETE request for game ${req.params.gameID} from user ${res.locals.user.userID}`
     );
 
     return res.sendStatus(204);
