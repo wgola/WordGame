@@ -1,4 +1,3 @@
-import { getUser, saveUserData } from "../../state/UserSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { Grid } from "@mui/material";
@@ -26,7 +25,6 @@ export const GamePage = () => {
   const dispatch = useAppDispatch();
 
   const { gameID } = useParams();
-  const user = useAppSelector(getUser);
   const game = useAppSelector(getGameData);
 
   const onConnected = (payload: string) => {
@@ -45,12 +43,12 @@ export const GamePage = () => {
   };
 
   const onRender = async () => {
-    if (user._id === undefined || game.gameID === "") {
+    if (game.gameID === "") {
+      socket.connect();
       try {
         const {
-          data: { userData, gameData },
+          data: { gameData },
         } = await getGame(gameID);
-        dispatch(saveUserData(userData));
 
         socket.emit("join-game", gameID);
 
@@ -62,15 +60,14 @@ export const GamePage = () => {
           socket.disconnect();
           navigate("/home/play");
         }
-      } catch (e) {
+      } catch {
         socket.disconnect();
-        navigate("/login");
+        navigate("/home/play");
       }
     }
   };
 
   useEffect(() => {
-    socket.connect();
     onRender();
     socket.on("connected", onConnected);
     socket.on("generatedGame", onGameReady);
@@ -81,7 +78,7 @@ export const GamePage = () => {
       socket.off("generatedGame", onGameReady);
       socket.off("changeTurn", onChangeTurn);
     };
-  }, [user]);
+  });
 
   return (
     <Grid container spacing={2} margin={"40px auto"} width={"1300px"}>

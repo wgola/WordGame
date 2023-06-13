@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { findUserByID } from "../services/users.service";
 import {
   createGame as create,
   getGame as get,
@@ -9,9 +8,9 @@ import {
 import log from "../configs/logs.config";
 
 const createGame = async (req: Request, res: Response) => {
-  const user = await findUserByID(res.locals.userID);
+  const user = res.locals.user;
   const gameID = create({
-    userID: res.locals.userID,
+    userID: user.userID,
     username: user.username,
     color: user.color,
     score: 0,
@@ -22,24 +21,19 @@ const createGame = async (req: Request, res: Response) => {
 };
 
 const getGame = async (req: Request, res: Response) => {
-  const user = await findUserByID(res.locals.userID);
-  if (user) {
-    log.info(`GET request for game ${req.params.gameID} from user ${user.id}`);
+  log.info(
+    `GET request for game ${req.params.gameID} from user ${res.locals.user.userID}`
+  );
 
-    return res.json({ userData: user, gameData: get(req.params.gameID) });
-  }
-
-  log.warn(`GET request for game ${req.params.gameID} from unauthorized user`);
-
-  return res.sendStatus(404);
+  return res.json({ gameData: get(req.params.gameID) });
 };
 
 const deleteGame = (req: Request, res: Response) => {
   const game = get(req.params.gameID);
-  if (game?.host?.userID === res.locals.userID) {
+  if (game?.host?.userID === res.locals.user.userID) {
     del(req.params.gameID);
     log.info(
-      `DELETE request for game ${req.params.gameID} from user ${res.locals.userID}`
+      `DELETE request for game ${req.params.gameID} from user ${res.locals.user.userID}`
     );
 
     return res.sendStatus(204);
@@ -52,12 +46,14 @@ const deleteGame = (req: Request, res: Response) => {
 };
 
 const joinGame = async (req: Request, res: Response) => {
-  const user = await findUserByID(res.locals.userID);
-  log.info(`PUT request for game ${req.params.gameID} from user ${user.id}`);
+  const user = res.locals.user;
+  log.info(
+    `PUT request for game ${req.params.gameID} from user ${user.userID}`
+  );
 
   return res.send(
     join(req.params.gameID, {
-      userID: res.locals.userID,
+      userID: user.userID,
       username: user.username,
       color: user.color,
       score: 0,

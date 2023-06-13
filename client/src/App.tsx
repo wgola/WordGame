@@ -1,8 +1,8 @@
+import { useKeycloak } from "@react-keycloak/web";
 import { Button, Form, Tile, ButtonDiv } from "./components";
-import { useNavigate } from "react-router-dom";
 
 const App = () => {
-  const navigate = useNavigate();
+  const { keycloak } = useKeycloak();
 
   return (
     <Tile width={500}>
@@ -12,13 +12,21 @@ const App = () => {
           <Button
             type="button"
             children="Log in"
-            onClick={() => navigate("/login")}
+            onClick={() =>
+              keycloak.login({
+                redirectUri: `${window.location.origin}/home/play`,
+              })
+            }
           />
           or
           <Button
             type="button"
             children="Create account"
-            onClick={() => navigate("/register")}
+            onClick={() =>
+              keycloak.register({
+                redirectUri: `${window.location.origin}/home/play`,
+              })
+            }
           />
         </ButtonDiv>
       </Form>

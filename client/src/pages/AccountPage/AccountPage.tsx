@@ -1,9 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { Avatar, Tile, Button } from "../../components";
-import { deleteUserData, getUser } from "../../state/UserSlice";
-import { deleteAccount } from "../../api";
+import { getUser } from "../../state/UserSlice";
+import { useKeycloak } from "@react-keycloak/web";
 
 const StyledNavDiv = styled("div")`
   display: flex;
@@ -19,13 +18,11 @@ const StyledDiv = styled("div")`
 `;
 
 export const AccountPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
+  const { keycloak } = useKeycloak();
   const user = useSelector(getUser);
 
   return (
-    <Tile width={900}>
+    <Tile width={700}>
       <StyledNavDiv>
         <Avatar size={85} color={user.color} children={user.username} />
         <StyledDiv>
@@ -33,24 +30,9 @@ export const AccountPage = () => {
           <p>{user.email}</p>
         </StyledDiv>
         <Button
-          children="edit"
+          children="manage account"
           type="button"
-          onClick={() => navigate("/home/account/edit")}
-        />
-        or
-        <Button
-          children="delete account"
-          type="button"
-          deleteButton={true}
-          onClick={async () => {
-            const result = await deleteAccount();
-            if (result) {
-              dispatch(deleteUserData());
-              navigate("/login");
-            } else {
-              navigate("/home/account");
-            }
-          }}
+          onClick={() => keycloak.accountManagement()}
         />
       </StyledNavDiv>
     </Tile>

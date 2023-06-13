@@ -1,8 +1,7 @@
 import io from "socket.io-client";
 
-const wsURL =
-  process.env.NODE_ENV === "development" ? "ws://localhost:8000/" : "";
-
-const socket = io(wsURL, { autoConnect: false });
+const socket = io(`ws://${import.meta.env.VITE_BACKEND_URL}`, {
+  autoConnect: false,
+});
 
 export default socket;

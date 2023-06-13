@@ -112,7 +112,7 @@ export const getGuessedWords = (state: RootState) =>
 export const getLetters = (state: RootState) => state.gameData.letters;
 
 export const isPlayerTurn = (state: RootState) =>
-  state.gameData.currentTurn === state.userData._id;
+  state.gameData.currentTurn === state.userData.id;
 
 export const getCurrentPlayer = (state: RootState) => {
   if (state.gameData.currentTurn === "") return null;
@@ -123,6 +123,6 @@ export const getCurrentPlayer = (state: RootState) => {
 };
 
 export const isHost = (state: RootState) =>
-  state.gameData.host.userID === state.userData._id;
+  state.gameData.host.userID === state.userData.id;
 
 export const getInfoLogs = (state: RootState) => state.gameData.infoLogs;

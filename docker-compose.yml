@@ -4,8 +4,7 @@ services:
   server:
     image: node:18.14-alpine3.17
     container_name: server
-    build:
-      context: ./server
+    build: ./server
     command: sh ./entrypoint.sh
     working_dir: /app
     volumes:
@@ -18,11 +17,37 @@ services:
 
   client:
     image: node:18.14-alpine3.17
-    build:
-      context: ./client
+    container_name: client
+    build: ./client
     command: sh ./entrypoint.sh
     working_dir: /app
     volumes:
       - ./client/:/app
     ports:
       - 5173:5173
+    environment:
+      - VITE_KEYCLOAK_URL=http://localhost:8080
+      - VITE_BACKEND_URL=localhost:8000
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    command: start-dev --db=postgres --db-url=jdbc:postgresql://postgres/keycloak --db-username=keycloak --db-password=keycloak
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    ports:
+      - 8080:8080
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+
+  postgres:
+    image: postgres:15.2-alpine3.17
+    container_name: postgres
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=keycloak
+    ports:
+      - 5432:5432

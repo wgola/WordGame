@@ -1,10 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import { Button, Tile } from "../../../components";
-import { deleteUserData } from "../../../state/UserSlice";
-import { logout } from "../../../api";
+import { useKeycloak } from "@react-keycloak/web";
 
 const StyledDiv = styled("div")`
   margin: auto;
@@ -15,10 +12,9 @@ const StyledDiv = styled("div")`
 `;
 
 export const NavBar = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
+  const { keycloak } = useKeycloak();
 
   return (
     <Tile width={1200}>
@@ -27,31 +23,24 @@ export const NavBar = () => {
           children="play"
           type="button"
           onClick={() => navigate("/home/play")}
-          disabled={loading}
         />
         <Button
           children="account"
           type="button"
           onClick={() => navigate("/home/account")}
-          disabled={loading}
         />
         <Button
           children="words list"
           type="button"
           onClick={() => navigate("/home/wordslist/?page=1&limit=10&word=")}
-          disabled={loading}
         />
         <Button
           children="logout"
           type="button"
           deleteButton={true}
-          onClick={async () => {
-            setLoading(true);
-            await logout();
-            dispatch(deleteUserData());
-            navigate("/");
-          }}
-          disabled={loading}
+          onClick={() =>
+            keycloak.logout({ redirectUri: window.location.origin })
+          }
         />
       </StyledDiv>
     </Tile>

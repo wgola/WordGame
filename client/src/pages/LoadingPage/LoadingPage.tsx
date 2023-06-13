@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 
 const StyledDiv = styled("div")`
   width: 100px;
-  margin: 150px auto;
+  margin: 325px auto;
 `;
 
 export const LoadingPage = () => (

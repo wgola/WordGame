@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
+import keycloak from "./configs/keycloak.config";
 import wordsRouter from "./routes/words.route";
-import usersRouter from "./routes/users.route";
 import gameRouter from "./routes/game.route";
 import cookieParser from "cookie-parser";
 import log from "./configs/logs.config";
@@ -21,8 +21,7 @@ app.use(
   })
 );
 app.use(cookieParser());
-
-app.use("/user", usersRouter);
+app.use(keycloak.middleware());
 
 app.use("/word", wordsRouter);
 
