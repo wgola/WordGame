@@ -6,7 +6,7 @@ WordGame is a project which I've made during my studies on course "Network Proto
 
 - [**client**](client) (written in [TypeScript](https://www.typescriptlang.org/)),
 - [**server**](server) (also written in [TypeScript](https://www.typescriptlang.org/)),
-- **Identity provider (Keycloak)** with **PostgreSQL** database,
+- **Identity provider ([Keycloak](https://www.keycloak.org/))** with **[PostgreSQL](https://www.postgresql.org/)** database,
 - [**MongoDB Atlas**](https://www.mongodb.com/atlas/database) **database**,
 
 and it uses **HTTP**, **WebSockets** and **OAuth 2.0** protocols.
