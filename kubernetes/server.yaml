@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+spec:
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+        - name: server
+          image: wgola/wordgame-server:latest
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "2000m"
+          env:
+            - name: MONGO_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: wordgame-config
+                  key: mongo-path
+            - name: KEYCLOAK_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: wordgame-config
+                  key: keycloak-url
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: wordgame-secret
+                  key: mongo-user
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wordgame-secret
+                  key: mongo-password
+            - name: REALM_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wordgame-secret
+                  key: realm-public-key
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+spec:
+  type: LoadBalancer
+  selector:
+    app: server
+  ports:
+    - port: 8000
+      targetPort: 8000
