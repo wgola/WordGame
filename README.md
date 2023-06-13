@@ -6,9 +6,10 @@ WordGame is a project which I've made during my studies on course "Network Proto
 
 - [**client**](client) (written in [TypeScript](https://www.typescriptlang.org/)),
 - [**server**](server) (also written in [TypeScript](https://www.typescriptlang.org/)),
+- **Identity provider (Keycloak)** with **PostgreSQL** database,
 - [**MongoDB Atlas**](https://www.mongodb.com/atlas/database) **database**,
 
-and it uses **HTTP** and **MQTT** (over **WebSocket**) protocols.
+and it uses **HTTP**, **WebSockets** and **OAuth 2.0** protocols.
 
 ---
 
@@ -48,7 +49,7 @@ $ docker version
 $ docker compose version
 ```
 
-In order to run this app for development, first you have to create `.env` file inside `server` directory according to `.env.example` pattern - it includes credentials for Atlas database, JWT secret and bcrypt salt (needed for working with hashed passwords stored in database).
+In order to run this app for development, first you have to create `.env` file inside `server` directory according to `.env.example` pattern - it includes credentials for Atlas database and Keycloak's URL and public key of used realm.
 
 When it's done, you have to start Docker and run following command:
 
@@ -56,6 +57,8 @@ When it's done, you have to start Docker and run following command:
 $ docker compose -p <project_name> up
 ```
 
-It will create project named `project_name` and start all 2 parts of this app inside separate Docker containers. Apps will automatically refresh upon source files updates.
+It will create project named `project_name` and start all 4 parts of this app inside separate Docker containers. Apps will automatically refresh upon source files updates. Data created by Keycloak will be stored inside PostgreSQL database and it will be mounted to `postgres` directory.
+
+The app is also configured for running in Kubernetes. For more information check [`kubernetes`](./kubernetes/) directory.
 
 ---
