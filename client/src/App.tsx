@@ -13,7 +13,9 @@ const App = () => {
             type="button"
             children="Log in"
             onClick={() =>
-              keycloak.login({ redirectUri: "http://localhost:5173/home/play" })
+              keycloak.login({
+                redirectUri: `${window.location.origin}/home/play`,
+              })
             }
           />
           or
@@ -22,7 +24,7 @@ const App = () => {
             children="Create account"
             onClick={() =>
               keycloak.register({
-                redirectUri: "http://localhost:5173/home/play",
+                redirectUri: `${window.location.origin}/home/play`,
               })
             }
           />

@@ -39,7 +39,7 @@ export const NavBar = () => {
           type="button"
           deleteButton={true}
           onClick={() =>
-            keycloak.logout({ redirectUri: "http://localhost:5173" })
+            keycloak.logout({ redirectUri: window.location.origin })
           }
         />
       </StyledDiv>

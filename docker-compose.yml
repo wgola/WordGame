@@ -25,12 +25,14 @@ services:
       - ./client/:/app
     ports:
       - 5173:5173
+    environment:
+      - VITE_KEYCLOAK_URL=http://localhost:8080
+      - VITE_BACKEND_URL=localhost:8000
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
-    command: start-dev --import-realm --db postgres  \
-      --db-url jdbc:postgresql://postgres/keycloak --db-username=keycloak --db-password=keycloak
+    command: start-dev --db=postgres --db-url=jdbc:postgresql://postgres/keycloak --db-username=keycloak --db-password=keycloak
     volumes:
       - ./keycloak:/opt/keycloak/data/import
     ports:
