@@ -2,6 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Button, Tile } from "../../../components";
 import { useKeycloak } from "@react-keycloak/web";
+import { useAppDispatch } from "../../../hooks";
+import { useEffect } from "react";
+import { clearData } from "../../../state/WordsSlice";
 
 const StyledDiv = styled("div")`
   margin: auto;
@@ -13,8 +16,13 @@ const StyledDiv = styled("div")`
 
 export const NavBar = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const { keycloak } = useKeycloak();
+
+  useEffect(() => {
+    if (window.location.pathname !== "/home/wordslist/") dispatch(clearData());
+  }, [window.location.pathname]);
 
   return (
     <Tile width={1200}>
