@@ -34,6 +34,14 @@ The main features of this app are:
 
 ---
 
+## :globe_with_meridians: App preview
+
+Both [client](https://wordgame-client.onrender.com) and [server](https://wordgame-server.onrender.com) are hosted online on [Render](https://render.com/). If you want to access them, it may take a while before they get loaded for the first time. This deployment uses [Cloud IAM Keycloak](https://www.cloud-iam.com/) as identity provider.
+
+:warning: It's normal for game to load for some time because of the amount of words in database. Also, sometimes there is a bug involving WebSockets and CORS settings, which occurs when creating the game. It will be solved in the future and for now, if the game doesn't load for some longer time (and there are errors in the brower's console), refreshing the page should make it load.
+
+---
+
 ## :chart_with_upwards_trend: Future improvements
 
 In the future I'm planning to rewrite server from TypeScript to some other language (probably [Go](https://go.dev/) which I'm currently learning).
