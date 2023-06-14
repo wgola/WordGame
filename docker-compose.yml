@@ -27,7 +27,7 @@ services:
       - 5173:5173
     environment:
       - VITE_KEYCLOAK_URL=http://localhost:8080
-      - VITE_BACKEND_URL=localhost:8000
+      - VITE_BACKEND_URL=http://localhost:8000
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
