@@ -2,7 +2,7 @@ import NodeAdapter from "keycloak-connect";
 
 const config = {
   "confidential-port": 8443,
-  realm: "WordGame",
+  realm: "wordgame",
   "auth-server-url": process.env.KEYCLOAK_URL,
   "ssl-required": "external",
   resource: "WordGameServer",
