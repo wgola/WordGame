@@ -7,6 +7,7 @@ const wsProtocl = serverProtocol === "https" ? "wss" : "ws";
 
 const socket = io(`${wsProtocl}:${serverAddress}:${serverPort}`, {
   autoConnect: false,
+  withCredentials: true,
 });
 
 export default socket;
